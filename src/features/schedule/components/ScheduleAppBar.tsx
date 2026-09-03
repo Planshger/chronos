@@ -20,14 +20,13 @@ export default function ScheduleAppBar({isAiOpen, setIsAiOpen, setActiveModal}: 
     return (
         <AppBar position="sticky" sx={{backdropFilter: 'blur(10px)'}}>
             <Toolbar sx={{justifyContent: 'space-between'}}>
-
                 <Typography variant="h6"  sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                     <AccessTime sx={{fontSize: 38, color: theme.palette.primary.main}} />
                     {appName}
                 </Typography>
 
                 <Stack direction="row" spacing={2} sx={{alignItems: "center"}}>
-                    <Button variant="outlined" startIcon={<Chat />} onClick={() => setIsAiOpen(!isAiOpen)} sx={{color: theme.palette.primary.main, bgcolor: `${theme.palette.primary.main}15`,'&:hover': {borderColor: theme.palette.primary.main, bgcolor: `${theme.palette.primary.main}15`}}}>
+                    <Button variant="outlined" startIcon={<Chat/>} onClick={() => setIsAiOpen(!isAiOpen)} sx={{color: theme.palette.primary.main, bgcolor: `${theme.palette.primary.main}15`,'&:hover': {borderColor: theme.palette.primary.main, bgcolor: `${theme.palette.primary.main}15`}}}>
                         ИИ-ассистент
                     </Button>
 

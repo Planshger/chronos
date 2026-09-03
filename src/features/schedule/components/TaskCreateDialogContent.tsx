@@ -16,6 +16,7 @@ export default function TaskCreateDialogContent({newTaskTitle, setNewTaskTitle, 
         <Stack spacing={3}>
               <Stack direction="row" spacing={1} sx={{bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3}}>
                 <Button fullWidth variant={newTaskType === 'задача' ? 'contained' : 'text'} onClick={() => setNewTaskType('задача')} sx={{borderRadius: 2, textTransform: 'none'}}>Задача</Button>
+                
                 <Button fullWidth variant={newTaskType === 'встреча' ? 'contained' : 'text'} onClick={() => setNewTaskType('встреча')} sx={{borderRadius: 2, textTransform: 'none'}}>Встреча</Button>
               </Stack>
 

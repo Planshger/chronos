@@ -14,11 +14,11 @@ function App() {
       <CssBaseline/>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
-          <Route path="/plans" element={<PlansPage />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/settings/*" element={<Settings />} />
+          <Route path="/" element={<LandingPage/>}/>
+          <Route path="/register" element={<RegistrationPage/>}/>
+          <Route path="/plans" element={<PlansPage/>}/>
+          <Route path="/schedule" element={<Schedule/>}/>
+          <Route path="/settings/*" element={<Settings/>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -6,13 +6,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ManagePlansSettings from "./components/ManagePlansSettings";
 import SettingsData from "./data/SettingsData";
 import AnalyticsSettings from "./components/AnalyticsSettings";
+import WhatsAppSettings from "./components/WhatsAppSettings";
+import TelegramSettings from "./components/TelegramSettings";
 
 const settingsComponents: Record<string, React.ComponentType> = {
   'profile_settings': ProfileSettings,
   'manage_plans': ManagePlansSettings,
   'analytics': AnalyticsSettings,
-//   'maps_settings': MapsSettings,
-//   'messengers': MessengersSettings,
+  'telegram': TelegramSettings,
+  'whatsapp': WhatsAppSettings,
 };
 
 export default function Settings() {
@@ -38,7 +40,7 @@ export default function Settings() {
 
                                 return (
                                     item.id === currentPath || messenger ? 
-                                    <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: {xs: "1rem", sm: "1.25rem"}}}>
+                                    <Typography key={item.id} variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: {xs: "1rem", sm: "1.25rem"}}}>
                                         <Box sx={{ p: 0.8, bgcolor: 'primary.main', borderRadius: 2, display: 'flex' }}>
                                             <IconComponent/>
                                         </Box>

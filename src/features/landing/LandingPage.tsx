@@ -3,6 +3,7 @@ import { CalendarToday, Chat, LocationOn, CheckCircle, FlashOn } from '@mui/icon
 import theme from '../../core/theme/darkTheme';
 import { appName } from '../../core/constants/name';
 import LandingAppBar from './components/LandingAppBar';
+import { useNavigate } from 'react-router-dom';
 
 const features = [
   {icon: <CalendarToday />,title: 'Умный календарь',desc: 'Организуйте дни с интуитивным и красивым календарем. Добавляйте задачи в один клик.',color: theme.palette.primary.main,bg: `${theme.palette.primary.main}15`},
@@ -11,6 +12,8 @@ const features = [
 ];
 
 export default function LandingPage() {
+  const navigator = useNavigate();
+
   return (
     <Box sx={{minHeight: '100vh', bgcolor: theme.palette.background.default}}>
       <LandingAppBar />
@@ -21,28 +24,28 @@ export default function LandingPage() {
         </Box>
 
         <Container maxWidth="lg" sx={{position: 'relative', zIndex: 1, textAlign: 'center'}}>
-          <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 20, bgcolor: theme.custom.background.glass, border: `2px solid ${theme.custom.border.light}`, fontSize: '15px', color: theme.palette.text.primary, mb: 4}}>
+          <Box sx={{display: 'inline-flex', alignItems: 'center', gap: 1, px: 2, py: 0.5, borderRadius: 20, bgcolor: theme.custom.background.glass, border: `2px solid ${theme.custom.border.light}`, fontSize: {lg: '0.875rem', xs: '0.75rem'}, color: theme.palette.text.primary, mb: 4}}>
             <FlashOn sx={{fontSize: 20, color: theme.custom.accent.amber}} />
             <span>Новый стандарт личной продуктивности</span>
           </Box>
 
-          <Typography variant="h3" sx={{fontSize: '4.5rem', lineHeight: 1.2, mb: 3}}>
+          <Typography variant="h3" sx={{fontSize: {lg:'4.5rem', xs: '2.5rem'}, lineHeight: 1.2, mb: 3}}>
             Управляйте временем с{' '}
             <span style={{background: theme.custom.gradients.primary, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'}}>
               ИИ-ассистентом.
             </span>
           </Typography>
 
-          <Typography variant="h6" sx={{color: theme.palette.text.secondary, maxWidth: 672, mx: 'auto', mb: 5, fontSize: '1.25rem'}}>
+          <Typography variant="h6" sx={{color: theme.palette.text.secondary, maxWidth: 672, mx: 'auto', mb: 5, fontSize: {lg: '1.25rem', xs: '1rem'}}}>
             Единое пространство, объединяющее ваш календарь, задачи, ИИ-ассистента и бронирование сервисов в одном интерфейсе.
           </Typography>
 
           <Stack direction="row" spacing={2} sx={{mb: 4, justifyContent: 'center'}}>
-            <Button variant="contained" sx={{px: 5, py: 1.8, borderRadius: 30, color: theme.palette.text.primary}}>
+            <Button variant="contained" onClick={() => navigator('/register')} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, color: theme.palette.text.primary}}>
               Начать бесплатно
             </Button>
 
-            <Button variant="outlined" sx={{px: 5, py: 1.8, borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
+            <Button variant="outlined" onClick={() => navigator('/plans')} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
               Тарифы
             </Button>
           </Stack>
@@ -64,17 +67,19 @@ export default function LandingPage() {
 
           <Grid container spacing={4}>
             {features.map((f) => (
-              <Card key={f.title} sx={{height: '100%', borderRadius: 4, border: `1px solid ${theme.custom.border.light}`, boxShadow: theme.custom.shadows.sm, '&:hover': { boxShadow: theme.custom.shadows.md, transform: 'translateY(-4px)', '& .icon-wrapper': { transform: 'scale(1.1)'}}}}>
-                <CardContent sx={{p: 4}}>
-                  <Box className="icon-wrapper" sx={{width: 56, height: 56, borderRadius: 2, bgcolor: f.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, transition: 'transform 0.2s', color: f.color}}>
-                    {f.icon}
-                  </Box>
+              <Grid key={f.title} size={10}>
+                <Card  sx={{height: '100%', borderRadius: 4, border: `1px solid ${theme.custom.border.light}`, boxShadow: theme.custom.shadows.sm, '&:hover': { boxShadow: theme.custom.shadows.md, transform: 'translateY(-4px)', '& .icon-wrapper': { transform: 'scale(1.1)'}}}}>
+                  <CardContent sx={{p: 4}}>
+                    <Box className="icon-wrapper" sx={{width: 56, height: 56, borderRadius: 2, bgcolor: f.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 3, transition: 'transform 0.2s', color: f.color}}>
+                      {f.icon}
+                    </Box>
 
-                  <Typography variant="h5" sx={{mb: 1}}>{f.title}</Typography>
+                    <Typography variant="h5" sx={{mb: 1}}>{f.title}</Typography>
 
-                  <Typography variant="body2" sx={{color: theme.palette.text.secondary}}>{f.desc}</Typography>
-                </CardContent>
-              </Card>
+                    <Typography variant="body2" sx={{color: theme.palette.text.secondary}}>{f.desc}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
             ))}
           </Grid>
         </Container>
@@ -96,7 +101,7 @@ export default function LandingPage() {
             ))}
           </Stack>
 
-          <Button variant="contained" sx={{px: 6, py: 1.8, borderRadius: 30, bgcolor: theme.palette.text.primary, boxShadow: theme.custom.shadows.lg, '&:hover': {boxShadow: '0 20px 25px -5px #a855f7'}}}>
+          <Button variant="contained" onClick={() => navigator('/register')} sx={{px: 6, py: 1.8, borderRadius: 30, bgcolor: theme.palette.text.primary, boxShadow: theme.custom.shadows.lg, '&:hover': {boxShadow: '0 20px 25px -5px #a855f7'}}}>
             Создать аккаунт
           </Button>
         </Container>

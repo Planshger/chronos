@@ -12,7 +12,13 @@ interface ScheduleMenuUserProps {
 export default function ScheduleMenuUser({openMenu, closeUserMenu}: ScheduleMenuUserProps) {
     const navigate = useNavigate();
 
-    function onClick(id: string) {navigate(`/settings/${id}`)}
+    function onClick(id: string) {
+        if (id === 'telegram' || id === 'whatsapp') {
+            navigate(`/settings/${id}`, {state: {open: true} });
+        } else {
+            navigate(`/settings/${id}`);
+        }
+    }
     
     return (
         <Menu id="menu-appbar" anchorEl={openMenu} open={Boolean(openMenu)} onClose={() => closeUserMenu()} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} transformOrigin={{ vertical: 'top', horizontal: 'right' }}>

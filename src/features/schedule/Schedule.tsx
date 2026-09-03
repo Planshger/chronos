@@ -46,6 +46,7 @@ export default  function Schedule() {
       <Container sx={{py: 3, ml: 0, minWidth: '100%'}}>
         <Stack spacing={4} direction={'row'}>
           <Calendary currentMonth={currentMonth} nextMonth={nextMonth} prevMonth={prevMonth} selectedDate={selectedDate} tasks={tasks} setSelectedDate={setSelectedDate}/>
+          
           <Scheduling selectedDate={selectedDate} tasks={tasks} setActiveModal={setActiveModal}/>          
         </Stack>
       </Container>
