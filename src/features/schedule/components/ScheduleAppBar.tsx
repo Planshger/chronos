@@ -8,17 +8,16 @@ import ScheduleMenuUser from "./ScheduleMenuUser";
 interface MainAppBarProps {
     isAiOpen: boolean;
     setIsAiOpen: Function;
-    setActiveModal: Function;
 }
 
-export default function ScheduleAppBar({isAiOpen, setIsAiOpen, setActiveModal}: MainAppBarProps) {
+export default function ScheduleAppBar({isAiOpen, setIsAiOpen}: MainAppBarProps) {
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
 
     function openUserMenu(event: React.MouseEvent<HTMLElement>) {setOpenMenu(event.currentTarget);};
     function closeUserMenu() {setOpenMenu(null)};
 
     return (
-        <AppBar position="sticky" sx={{backdropFilter: 'blur(10px)'}}>
+        <AppBar position="sticky">
             <Toolbar sx={{justifyContent: 'space-between'}}>
                 <Typography variant="h6"  sx={{display: 'flex', alignItems: 'center', gap: 1}}>
                     <AccessTime sx={{fontSize: 38, color: theme.palette.primary.main}} />

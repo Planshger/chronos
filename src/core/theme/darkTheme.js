@@ -114,10 +114,7 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(12px)',
-          color: '#f1f5f9',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backgroundColor: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(12px)', color: '#f1f5f9', borderBottom: '1px solid rgba(255,255,255,0.08)',
         },
       },
     },
@@ -125,6 +122,13 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none', 
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          borderBottom: '2px solid rgba(255,255,255,0.08)', 
         },
       },
     },

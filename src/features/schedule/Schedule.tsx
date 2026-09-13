@@ -41,7 +41,7 @@ export default  function Schedule() {
 
   return (
     <Box sx={{minHeight: '100vh', bgcolor: theme.palette.background.paper}}>
-      <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen} setActiveModal={setActiveModal}/>
+      <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen}/>
 
       <Container sx={{py: 3, ml: 0, minWidth: '100%'}}>
         <Stack spacing={4} direction={'row'}>

@@ -7,6 +7,7 @@ import PlansPage from './features/plans/PlansPage';
 import Schedule from './features/schedule/Schedule';
 import Settings from './features/settings/Settings';
 import theme from './core/theme/darkTheme';
+import Admin from './features/admin/Admin';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/plans" element={<PlansPage/>}/>
           <Route path="/schedule" element={<Schedule/>}/>
           <Route path="/settings/*" element={<Settings/>}/>
+          <Route path='/admin' element={<Admin/>}/>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
