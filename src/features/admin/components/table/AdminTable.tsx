@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import theme from '../../../../core/theme/darkTheme';
-import { deleteUserData, getSortBy, getUsersWithPagination, Loading } from '../../data/datasources/admin_local_data_source';
+import { deleteUserData, getSortBy, getUsersWithPagination, Loading, updateUserData } from '../../data/datasources/admin_local_data_source';
 import { PaginationModel } from '../../data/models/pagination_model';
 import AdminTableFilterMenu from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
@@ -17,6 +17,8 @@ import AdminTablePagination from './AdminTablePagination';
 import Loader from '../../../../core/components/Loader';
 import { Edit } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
+import AdminTableEditMenu from './AdminTableEditMenu';
+import UserModel from '../../data/models/user_model';
 
 const initialUsersProps: PaginationModel = {items: [], meta: {  total_items: 0, total_pages: 0, current_page: 1, per_page: 5, remaining_count: 0}};
 
@@ -25,9 +27,16 @@ export default function AdminTable() {
   const [selected, setSelected] = React.useState<number[]>([]);
   const [openFilter, setOpenFilter] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState(false);
-  const [onEdit, setEdit] = React.useState<boolean>(false)
+  const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: {id: 0, name: '', email: '', plan: '', status: ''}});
 
-  const switchFilterMenu = React.useCallback(() =>  {setOpenFilter((prev) => !prev)}, []);
+  const switchFilterMenu = React.useCallback(() => {setOpenFilter((prev) => !prev)}, []);
+
+  const switchEditMenu = React.useCallback((user?: UserModel) =>  {
+    setOpenEdit((prev) => {
+        if (user) return { open: !prev.open, user };
+        else return { open: !prev.open, user: prev.user };
+    });
+  }, []);
   
   const loadDataWithPagination = React.useCallback((page: number, limit: number) => {
     Loading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading);
@@ -42,6 +51,11 @@ export default function AdminTable() {
     setSelected([]);
     loadDataWithPagination(data.meta.current_page, data.meta.per_page);
   }, [selected])
+
+  const loadDataWithEditUser = React.useCallback(async (user: UserModel) => {
+    await updateUserData(user);
+    loadDataWithPagination(data.meta.current_page, data.meta.per_page);
+  }, [data]);
 
   const handleSelectAllClick = React.useCallback(({target}: React.ChangeEvent<HTMLInputElement>) => {
     if (target.checked) {
@@ -65,7 +79,7 @@ export default function AdminTable() {
   return (
     <Box sx={{ width: '100%', p: {xs: 1.5, lg: 10}, }}>
       <Paper sx={{ width: '100%', mb: 2, borderRadius: '20px'}}>
-        <AdminTableToolbar numSelected={selected.length} openFilterMenu={switchFilterMenu} deleteUserData={() => Loading(loadDataWithDeleteUser, setLoading)}/>
+        <AdminTableToolbar numSelected={selected.length} openFilterMenu={switchFilterMenu} deleteUserData={loadDataWithDeleteUser}/>
 
         <TableContainer sx={{bgcolor: theme.palette.background.default}}>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -91,7 +105,7 @@ export default function AdminTable() {
                     <TableCell align="center">{row.status}</TableCell>
 
                     <TableCell align="left" padding="none">
-                      <IconButton className="edit-button" size="small" onClick={(e) => {e.stopPropagation();}}>
+                      <IconButton className="edit-button" size="small" onClick={(e) => {e.stopPropagation(); switchEditMenu(row);}}>
                         <Edit fontSize="small" sx={{color: theme.palette.text.primary}}/>
                       </IconButton>
                     </TableCell>
@@ -105,6 +119,8 @@ export default function AdminTable() {
         <AdminTablePagination loadDataWithPagination={loadDataWithPagination} meta={data}/>
 
         <AdminTableFilterMenu onClose={switchFilterMenu} open={openFilter} setData={setData} currentPage={data.meta.current_page} perPage={data.meta.per_page}/>
+
+        <AdminTableEditMenu onClose={switchEditMenu} open={openEdit.open} user={openEdit.user} onClick={loadDataWithEditUser}/>
 
         {loading && (
           <Loader size={80} />

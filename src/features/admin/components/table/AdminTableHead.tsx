@@ -37,13 +37,7 @@ function AdminTableHead({ onSelectAllClick, numSelected, rowCount, onSort }: Adm
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            slotProps={{ input: { 'aria-label': 'select all desserts' } }}
-          />
+          <Checkbox color="primary" indeterminate={numSelected > 0 && numSelected < rowCount} checked={rowCount > 0 && numSelected === rowCount} onChange={onSelectAllClick} slotProps={{input: {'aria-label': 'select all desserts'}}}/>
         </TableCell>
 
         {headCells.map((headCell) => (

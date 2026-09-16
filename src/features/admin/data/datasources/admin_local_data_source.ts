@@ -4,6 +4,15 @@ import { FilterValuesProps } from "../../components/table/AdminTableFilterMenu";
 import { PaginationModel } from "../models/pagination_model";
 import UserModel from "../models/user_model";
 
+export const Loading = async (fn: () => Promise<unknown> | unknown, onLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
+    onLoading(true);
+    try {
+        await fn();
+    } finally {
+        onLoading(false);
+    }
+}
+
 export function getAllUsers(): Promise<UserModel[]> {
     return fetch(API_BASE_URL, {method: 'GET'}).then(res => res.json());;
 }
@@ -33,12 +42,7 @@ export async function deleteUserData(idsToDelete: number[]) {
     }
 }
 
-export const Loading = async (fn: () => Promise<unknown> | unknown, onLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
-    onLoading(true);
-    try {
-        await fn();
-    } finally {
-        onLoading(false);
-    }
+export async function updateUserData(user: UserModel) {
+    await fetch(`${API_BASE_URL}/${user.id}`, {method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user)});
 }
 

@@ -6,6 +6,7 @@ import { getAllUsers, getFilterData, getUsersWithPagination } from "../../data/d
 import { Close } from "@mui/icons-material";
 import theme from "../../../../core/theme/darkTheme";
 import { headCells } from "./AdminTableHead";
+import AutocompleteList from "../AutocompleteList";
 
 const style = {
   position: 'absolute',
@@ -33,28 +34,35 @@ interface AdminTableFilterMenuProps {
     perPage: number,
 }
 
-const imitialprops = [{id: 'name', value: ''},{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}]
+const initialprops = [{id: 'name', value: ''},{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}]
 
 function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: AdminTableFilterMenuProps) {
     const [dataFromFilter, setDataFromFilter] = useState<UsersModel[]>([] as UsersModel[])
-    const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(imitialprops);
+    const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);
 
-    const handleChange = useCallback((event: SelectChangeEvent<string>, id: string) => {
+    const handleChange = useCallback((e: SelectChangeEvent<string>, id: string) => {
         setFilterValues((prev) =>
             prev.map((f) => {
-                if (f.id === id) return { ...f, value: event.target.value };
+                if (f.id === id) return { ...f, value: e.target.value };
                 return f;
             })
         );
     }, []);
 
+    const handleInput = useCallback((value: string, id: string ) => {
+        setFilterValues((prev) =>
+            prev.map((f) => {
+                if (f.id === id) return { ...f, value: value };
+                return f;
+            })
+        );
+    }, [])
+
     const loadDataFromFilter = useCallback(() => {
         if(filterValues.some((f) => (f.value !== ''))) {
             getFilterData(currentPage, perPage, filterValues).then(res => setData(res));
-            onClose();
-        } else {
-            return;
-        }
+        } 
+        onClose();
     }, [filterValues, currentPage, perPage, onClose])
 
     useEffect(() => {getAllUsers().then(res => setDataFromFilter(res))}, []);
@@ -66,25 +74,29 @@ function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: Ad
                     <Close />
                 </IconButton>
 
+                <Typography variant="h6" align="center" sx={{mt: 2, mb: 2}}>Фильтр пользователей</Typography>
+
                 {headCells.map((item) => {
                     const key = item.id as keyof UsersModel;
                     const menuItems: string[] = [];
+
                     if(item.id == 'status') {
                         menuItems.push('Активен', 'Заблокирован', 'Ожидает')
                     } else if(item.id == 'plan') {
                         menuItems.push('Базовый', 'Премиум', 'Пробный')
                     } else {
                         dataFromFilter.map((i) => {menuItems.push(i[key].toString())});
+                        return <AutocompleteList key={key} id={key.toString()} label={item.label} options={menuItems} onChange={handleInput} value={filterValues.find((i) => i.id == key.toString())?.value} sx={{p: 1}}/>
                     }
-                    return <DropdownList key={key} id={key.toString()} label={item.label} menuItems={menuItems} filterValues={filterValues} onChange={handleChange}/>
+                    return <DropdownList key={key} id={key.toString()} label={item.label} menuItems={menuItems} onChange={handleChange} value={filterValues.find((i) => i.id == key.toString())?.value} sx={{p: 1}}/>
                 })}
 
-                <Stack direction={'row'} spacing={10} sx={{pt: 3}}>
-                    <Button variant="outlined" onClick={loadDataFromFilter} sx={{borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
+                <Stack direction={'row'} spacing={2} sx={{mt: 3, justifyContent: 'center'}}>
+                    <Button variant="contained" onClick={loadDataFromFilter} color="primary"  sx={{color: theme.palette.text.primary}}>
                         Сохранить
                     </Button>
 
-                    <Button variant="outlined" onClick={() => {setFilterValues(imitialprops); getUsersWithPagination(currentPage, perPage).then(res => setData(res))}} sx={{borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
+                    <Button variant="outlined" color="secondary" onClick={() => {setFilterValues(initialprops); getUsersWithPagination(currentPage, perPage).then(res => setData(res));}}>
                         Очистить
                     </Button>
                 </Stack>
