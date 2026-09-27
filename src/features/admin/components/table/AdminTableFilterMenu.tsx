@@ -1,12 +1,10 @@
 import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, Typography } from "@mui/material";
 import DropdownList from "../DropdownList";
 import { memo, useCallback, useEffect, useState } from "react";
-import UsersModel from "../../data/models/user_model";
-import { getAllUsers, getFilterData, getUsersWithPagination } from "../../data/datasources/admin_local_data_source";
 import { Close } from "@mui/icons-material";
 import theme from "../../../../core/theme/darkTheme";
 import { headCells } from "./AdminTableHead";
-import AutocompleteList from "../AutocompleteList";
+import { getFilterData } from "../../../../core/datasources/admin_data_source";
 
 const style = {
   position: 'absolute',
@@ -32,12 +30,14 @@ interface AdminTableFilterMenuProps {
     setData: Function,
     currentPage: number,
     perPage: number,
+    searchProp: string,
 }
 
-const initialprops = [{id: 'name', value: ''},{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}]
+const initialprops = [{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}];
 
-function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: AdminTableFilterMenuProps) {
-    const [dataFromFilter, setDataFromFilter] = useState<UsersModel[]>([] as UsersModel[])
+const menuItems = new Map<string, string[]>([['status', ['Активен', 'Заблокирован', 'Ожидает']], ['plan', ['Базовый', 'Премиум', 'Пробный']]]);
+
+function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage, searchProp}: AdminTableFilterMenuProps) {
     const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);
 
     const handleChange = useCallback((e: SelectChangeEvent<string>, id: string) => {
@@ -49,23 +49,12 @@ function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: Ad
         );
     }, []);
 
-    const handleInput = useCallback((value: string, id: string ) => {
-        setFilterValues((prev) =>
-            prev.map((f) => {
-                if (f.id === id) return { ...f, value: value };
-                return f;
-            })
-        );
-    }, [])
-
     const loadDataFromFilter = useCallback(() => {
-        if(filterValues.some((f) => (f.value !== ''))) {
-            getFilterData(currentPage, perPage, filterValues).then(res => setData(res));
-        } 
+        getFilterData(currentPage, perPage, filterValues).then(res => setData(res));
         onClose();
     }, [filterValues, currentPage, perPage, onClose])
 
-    useEffect(() => {getAllUsers().then(res => setDataFromFilter(res))}, []);
+    useEffect(() => {setFilterValues((prev) => [...prev, {id: 'name', value: searchProp}])}, [searchProp])
 
     return (
         <Modal open={open} onClose={(reason) => {if(reason !== 'backdropClick') return; onClose();}} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -73,22 +62,13 @@ function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: Ad
                 <IconButton aria-label="close" onClick={onClose} sx={{position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500]}}>
                     <Close />
                 </IconButton>
-
+                
                 <Typography variant="h6" align="center" sx={{mt: 2, mb: 2}}>Фильтр пользователей</Typography>
 
                 {headCells.map((item) => {
-                    const key = item.id as keyof UsersModel;
-                    const menuItems: string[] = [];
-
-                    if(item.id == 'status') {
-                        menuItems.push('Активен', 'Заблокирован', 'Ожидает')
-                    } else if(item.id == 'plan') {
-                        menuItems.push('Базовый', 'Премиум', 'Пробный')
-                    } else {
-                        dataFromFilter.map((i) => {menuItems.push(i[key].toString())});
-                        return <AutocompleteList key={key} id={key.toString()} label={item.label} options={menuItems} onChange={handleInput} value={filterValues.find((i) => i.id == key.toString())?.value} sx={{p: 1}}/>
+                    if(menuItems.has(item.id)) {
+                        return <DropdownList key={item.id} id={item.id} label={item.label} menuItems={menuItems.get(item.id) ?? []} onChange={handleChange} value={filterValues.find((i) => i.id == item.id)?.value} sx={{p: 1}}/>
                     }
-                    return <DropdownList key={key} id={key.toString()} label={item.label} menuItems={menuItems} onChange={handleChange} value={filterValues.find((i) => i.id == key.toString())?.value} sx={{p: 1}}/>
                 })}
 
                 <Stack direction={'row'} spacing={2} sx={{mt: 3, justifyContent: 'center'}}>
@@ -96,7 +76,7 @@ function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage}: Ad
                         Сохранить
                     </Button>
 
-                    <Button variant="outlined" color="secondary" onClick={() => {setFilterValues(initialprops); getUsersWithPagination(currentPage, perPage).then(res => setData(res));}}>
+                    <Button variant="outlined" color="secondary" onClick={() => {setFilterValues([...initialprops, {id: 'name', value: searchProp}]);}}>
                         Очистить
                     </Button>
                 </Stack>

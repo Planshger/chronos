@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, FormControl, IconButton, Modal, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { memo, useCallback } from "react";
 import theme from "../../../../core/theme/darkTheme";
-import UserModel from "../../data/models/user_model";
+import UserModel from "../../models/user_model";
 import React from "react";
 import DropdownList from "../DropdownList";
 

@@ -1,18 +1,20 @@
-import {Collapse, List, ListItemButton, ListItemIcon, ListItemText, SvgIcon} from "@mui/material";
+import {Collapse, List, ListItemButton, ListItemIcon, ListItemText, SvgIcon, SvgIconProps} from "@mui/material";
 import theme from "../../../core/theme/darkTheme";
-import SettingsData from "../data/SettingsData";
-import { ArrowBack, ExpandLess, ExpandMore, Message } from "@mui/icons-material";
+import { ArrowBack, ExpandLess, ExpandMore, Message, Settings, SvgIconComponent, TouchApp } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SettingsModel } from "../models/SettingsModel";
 import { useEffect, useState } from "react";
+import { SettingIcons } from "../../../core/constants/SettingIcons";
 
 interface ListSettingsProps {
   onSelect: (id: string) => void;
+  settingsData: SettingsModel[];
 }
 
-export default function ListSettings({onSelect}: ListSettingsProps) {
+export default function ListSettings({onSelect, settingsData}: ListSettingsProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const backPath = location.pathname.startsWith('/settings/admin_') ? '/admin' : '/schedule';
   const [open, setOpen] = useState(false);
 
   function handleSelect(id: string) {
@@ -27,7 +29,7 @@ export default function ListSettings({onSelect}: ListSettingsProps) {
 
   return (
     <List sx={{width: {xs: "100%", md: 340}, display: {xs: 'flex', lg: 'block'}, flexDirection: {xs: 'row', md: 'column', lg: 'column'}}} component="nav">
-      <ListItemButton key="back" onClick={() => navigate('/schedule')} sx={{'&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
+      <ListItemButton key="back" onClick={() => navigate(backPath)} sx={{'&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
         <ListItemIcon>
           <ArrowBack sx={{color: theme.palette.text.primary}}/>
         </ListItemIcon>
@@ -35,29 +37,32 @@ export default function ListSettings({onSelect}: ListSettingsProps) {
         <ListItemText primary='Назад' sx={{display: {xs: "none", md: "block"}}}/>
       </ListItemButton>
 
-      {SettingsData.map((item: SettingsModel) => (
-        <ListItemButton key={item.id} onClick={() => handleSelect(item.id)} sx={{'&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
+      {settingsData.map((item: SettingsModel) => {
+        const Icon = SettingIcons.get(item.id) ?? TouchApp;
+        return <ListItemButton key={item.id} onClick={() => handleSelect(item.id)} sx={{'&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
           <ListItemIcon>
-            <item.icon sx={{color: theme.palette.text.primary}}/>
+            <Icon sx={{color: theme.palette.text.primary}}/>
           </ListItemIcon>
 
           <ListItemText primary={item.label} sx={{display: {xs: "none", md: "block"}}}/>
 
           {item.id === 'messengers' ? open ? <ExpandLess /> : <ExpandMore /> : null}
         </ListItemButton> 
-      ))}
+      })}
 
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {SettingsData.find((i) => i.id === 'messengers')?.messenger?.map((messenger) => (
-            <ListItemButton key={messenger.id} onClick={() => onSelect(messenger.id)} sx={{ pl: 4, '&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
-              <ListItemIcon>
-                <messenger.icon/>
-              </ListItemIcon>
+          {settingsData.find((i) => i.id === 'messengers')?.messenger?.map((messenger) => {
+            const Icon = SettingIcons.get(messenger.id) ?? TouchApp;
 
-              <ListItemText primary={messenger.label} sx={{display: {xs: "none", md: "block"}}}/>
-            </ListItemButton>
-          ))}
+            return <ListItemButton key={messenger.id} onClick={() => onSelect(messenger.id)} sx={{ pl: 4, '&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
+                      <ListItemIcon>
+                        <Icon/>
+                      </ListItemIcon>
+
+                      <ListItemText primary={messenger.label} sx={{display: {xs: "none", md: "block"}}}/>
+                    </ListItemButton>
+          })}
         </List>
       </Collapse>
     </List>

@@ -1,1 +1,0 @@
-export const API_BASE_URL = "https://278465bc4840a875.mokky.dev/users";

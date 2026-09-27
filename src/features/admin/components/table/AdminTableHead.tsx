@@ -11,6 +11,7 @@ export const headCells: readonly HeadCell[] = [
   { id: 'email', label: 'Почта' },
   { id: 'plan', label: 'Тариф' },
   { id: 'status', label: 'Статус' },
+  { id: 'role', label: 'Роль'}
 ];
 
 interface AdminTableProps {

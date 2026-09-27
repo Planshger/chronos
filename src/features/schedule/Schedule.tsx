@@ -52,7 +52,7 @@ export default  function Schedule() {
       </Container>
 
       {isAiOpen && (
-        <AiDialog setIsAiOpen={setIsAiOpen} />
+        <AiDialog setIsAiOpen={setIsAiOpen}/>
       )}
 
       <OptionsDialog activeModal={activeModal} setActiveModal={setActiveModal} selectedDate={selectedDate} tasks={tasks} newTaskTitle={newTaskTitle} setNewTaskTitle={setNewTaskTitle} newTaskDescription={newTaskDescription} setNewTaskDescription={setNewTaskDescription} newTaskType={newTaskType} setNewTaskType={setNewTaskType} handleSaveTask={handleSaveTask}/>

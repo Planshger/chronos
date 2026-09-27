@@ -1,18 +1,18 @@
-import { BarChart, CreditCard, Settings, Map, Message } from "@mui/icons-material";
 import { SettingsModel } from "../models/SettingsModel";
-import TelegramIcon from "../components/TelegramIcon";
-import WhatsAppIcon from "../components/WhatsAppIcon";
 
-
-const SettingsData: SettingsModel[] = [
-    {id: 'profile_settings', icon: Settings, label: 'Настройки профиля'},
-    {id: 'manage_plans', icon: CreditCard, label: 'Управление тарифом'},
-    {id: 'analytics', icon: BarChart, label: 'Аналитика'},
-    {id: 'maps_settings', icon: Map, label: 'Карты для такси'},
-    {id: 'messengers', icon: Message, label: 'Мессенджеры', messenger: [
-        {id: 'telegram', icon: TelegramIcon, label: 'Telegram'},
-        {id: 'whatsapp', icon: WhatsAppIcon, label: 'WhatsApp'},
+export const SettingsData: SettingsModel[] = [
+    {id: 'profile_settings', label: 'Настройки профиля'},
+    {id: 'manage_plans', label: 'Управление тарифом'},
+    {id: 'analytics', label: 'Аналитика'},
+    {id: 'maps_settings', label: 'Карты для такси'},
+    {id: 'messengers', label: 'Мессенджеры', messenger: [
+        {id: 'telegram', label: 'Telegram'},
+        {id: 'whatsapp', label: 'WhatsApp'},
     ]}
 ];
 
-export default SettingsData;
+export const AdminSettingsData: SettingsModel[] = [
+    {id: 'admin_profile_settings', label: 'Настройки профиля'},
+    {id: 'admin_manage_plans', label: 'Управление тарифами'},
+];
+

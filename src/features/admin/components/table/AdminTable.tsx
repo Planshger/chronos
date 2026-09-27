@@ -8,17 +8,19 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import theme from '../../../../core/theme/darkTheme';
-import { deleteUserData, getSortBy, getUsersWithPagination, Loading, updateUserData } from '../../data/datasources/admin_local_data_source';
-import { PaginationModel } from '../../data/models/pagination_model';
-import AdminTableFilterMenu from './AdminTableFilterMenu';
+
+import { PaginationModel } from '../../models/pagination_model';
+import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
-import AdminTableHead from './AdminTableHead';
+import AdminTableHead, { headCells } from './AdminTableHead';
 import AdminTablePagination from './AdminTablePagination';
 import Loader from '../../../../core/components/Loader';
 import { Edit } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
+import { IconButton, Stack, Switch, TextField } from '@mui/material';
 import AdminTableEditMenu from './AdminTableEditMenu';
-import UserModel from '../../data/models/user_model';
+import UserModel from '../../models/user_model';
+import AutocompleteList from '../AutocompleteList';
+import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination, Loading, updateUserData } from '../../../../core/datasources/admin_data_source';
 
 const initialUsersProps: PaginationModel = {items: [], meta: {  total_items: 0, total_pages: 0, current_page: 1, per_page: 5, remaining_count: 0}};
 
@@ -27,16 +29,32 @@ export default function AdminTable() {
   const [selected, setSelected] = React.useState<number[]>([]);
   const [openFilter, setOpenFilter] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState(false);
+  const [editDomain, setEditDomain] = React.useState(false);
+  const [domain, setDomain] = React.useState('@example.com');
   const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: {id: 0, name: '', email: '', plan: '', status: ''}});
+  const [input, setInput] = React.useState<FilterValuesProps>({id: 'name', value: ''} as FilterValuesProps);
+  const timeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const switchFilterMenu = React.useCallback(() => {setOpenFilter((prev) => !prev)}, []);
 
   const switchEditMenu = React.useCallback((user?: UserModel) =>  {
     setOpenEdit((prev) => {
-        if (user) return { open: !prev.open, user };
-        else return { open: !prev.open, user: prev.user };
+      if (user) return { open: !prev.open, user };
+      else return { open: !prev.open, user: prev.user };
     });
   }, []);
+
+  const switchSearchWithDomain = React.useCallback((e: React.ChangeEvent<HTMLInputElement, Element>) => {
+    const isON = e.target.checked
+    setEditDomain(isON); 
+    if(input.value !== '') {
+      if(isON) {
+        searchWithEmail(input.value+domain);
+      } else {
+        handleInput(input.value, 'name');
+      }
+    } 
+  }, [input.value, domain])
   
   const loadDataWithPagination = React.useCallback((page: number, limit: number) => {
     Loading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading);
@@ -50,7 +68,7 @@ export default function AdminTable() {
     await deleteUserData(selected); 
     setSelected([]);
     loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, [selected])
+  }, [selected, data]);
 
   const loadDataWithEditUser = React.useCallback(async (user: UserModel) => {
     await updateUserData(user);
@@ -66,6 +84,11 @@ export default function AdminTable() {
     setSelected([]);
   }, [data]);
 
+  const handleInput = React.useCallback((value: string, id: string ) => {
+    setInput({id: id, value: value});
+    Loading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: id, value: value}]).then((res) => setData(res)), setLoading);
+  }, [data]);
+
   const handleClick = React.useCallback((id: number) => {
     setSelected((prev) => {
         const selectedIndex = prev.indexOf(id);
@@ -74,10 +97,31 @@ export default function AdminTable() {
     });
   }, []);
 
+  const searchWithEmail = (value: string) => {
+    Loading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: 'email', value: value}]).then((res) => setData(res)), setLoading);
+  }
+
+  const debouncedSearch = React.useCallback((searchWithEmailValue: string) => {
+    if (timeout.current) clearTimeout(timeout.current);
+    timeout.current = setTimeout(() => {
+      searchWithEmail(searchWithEmailValue);
+    }, 800);
+  }, []);
+
   React.useEffect(() => {loadDataWithPagination(data.meta.current_page, data.meta.per_page);}, []);
 
   return (
     <Box sx={{ width: '100%', p: {xs: 1.5, lg: 10}, }}>
+      <Box sx={{ pb: 2, display: 'flex', justifyContent: 'center' }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <AutocompleteList key={editDomain ? 'email' : 'name'} id={editDomain ? 'email' : 'name'} label="Поиск" disableClearable={false} options={data.items.map((i) => i.name)} onChange={handleInput} value={input.value} sx={{ width: '500px' }} />
+          
+          <TextField value={domain} onChange={(e) => {setDomain(e.target.value); debouncedSearch(input.value+e.target.value);}} disabled={!editDomain} size="small" variant="standard" sx={{ width: 160, '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: theme.palette.text.secondary }}} />
+              
+          <Switch checked={editDomain} onChange={(e) => {switchSearchWithDomain(e)}} size="small" />
+        </Stack>
+      </Box>
+
       <Paper sx={{ width: '100%', mb: 2, borderRadius: '20px'}}>
         <AdminTableToolbar numSelected={selected.length} openFilterMenu={switchFilterMenu} deleteUserData={loadDataWithDeleteUser}/>
 
@@ -104,6 +148,8 @@ export default function AdminTable() {
 
                     <TableCell align="center">{row.status}</TableCell>
 
+                    <TableCell align="center">{row.role}</TableCell>
+
                     <TableCell align="left" padding="none">
                       <IconButton className="edit-button" size="small" onClick={(e) => {e.stopPropagation(); switchEditMenu(row);}}>
                         <Edit fontSize="small" sx={{color: theme.palette.text.primary}}/>
@@ -118,7 +164,7 @@ export default function AdminTable() {
 
         <AdminTablePagination loadDataWithPagination={loadDataWithPagination} meta={data}/>
 
-        <AdminTableFilterMenu onClose={switchFilterMenu} open={openFilter} setData={setData} currentPage={data.meta.current_page} perPage={data.meta.per_page}/>
+        <AdminTableFilterMenu onClose={switchFilterMenu} open={openFilter} setData={setData} currentPage={data.meta.current_page} perPage={data.meta.per_page} searchProp={input.value}/>
 
         <AdminTableEditMenu onClose={switchEditMenu} open={openEdit.open} user={openEdit.user} onClick={loadDataWithEditUser}/>
 

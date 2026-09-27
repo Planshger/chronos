@@ -46,7 +46,7 @@ export default function Calendary({currentMonth, prevMonth, nextMonth, selectedD
 			<Stack direction={'column'} spacing={3}>
 				<Grid container spacing={17} sx={{ pl: 6 }}>
 					{['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
-						<Typography variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, py: 0.5, fontWeight: "bold", color: theme.palette.text.secondary }}>
+						<Typography key={day} variant="caption" sx={{ textTransform: 'uppercase', letterSpacing: 0.5, py: 0.5, fontWeight: "bold", color: theme.palette.text.secondary }}>
 							{day}
 						</Typography>
 					))}
