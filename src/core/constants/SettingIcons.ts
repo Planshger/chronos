@@ -1,7 +1,7 @@
 import { BarChart, CreditCard, Settings, Message, MapOutlined } from "@mui/icons-material";
-import TelegramIcon from "../../features/settings/components/TelegramIcon";
-import WhatsAppIcon from "../../features/settings/components/WhatsAppIcon";
 import { SvgIconProps } from "@mui/material";
+import TelegramIcon from "../../features/settings/components/user/TelegramIcon";
+import WhatsAppIcon from "../../features/settings/components/user/WhatsAppIcon";
 
 
 export const SettingIcons: Map<string, React.ComponentType<SvgIconProps>> = new Map<string, React.ComponentType<SvgIconProps>>([

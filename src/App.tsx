@@ -10,11 +10,11 @@ import theme from './core/theme/darkTheme';
 import Admin from './features/admin/Admin';
 import AuthProvider from './providers/AuthProvider';
 import PrivateRoute from './routes/PrivateRoute';
-import ProfileSettings from './features/settings/components/ProfileSettings';
-import ManagePlansSettings from './features/settings/components/ManagePlansSettings';
-import AnalyticsSettings from './features/settings/components/AnalyticsSettings';
-import TelegramSettings from './features/settings/components/TelegramSettings';
-import WhatsAppSettings from './features/settings/components/WhatsAppSettings';
+import ProfileSettings from './features/settings/components/user/ProfileSettings';
+import ManagePlansSettings from './features/settings/components/user/ManagePlansSettings';
+import AnalyticsSettings from './features/settings/components/user/AnalyticsSettings';
+import TelegramSettings from './features/settings/components/user/TelegramSettings';
+import WhatsAppSettings from './features/settings/components/user/WhatsAppSettings';
 
 
 function App() {

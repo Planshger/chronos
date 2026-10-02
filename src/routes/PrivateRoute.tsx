@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
-import { Role } from "../features/admin/models/user_model";
+import { Role } from "../core/ models/user_model";
 
 interface PrivateRouteProps {
   roles?: Role[];
@@ -14,8 +14,12 @@ export default function PrivateRoute({ roles }: PrivateRouteProps) {
     return null; 
   }
 
-  if (!token) {
+  if (token === '') {
     return <Navigate to="/register" state={{ from: location }} replace />;
+  }
+
+  if (user?.plan === '' && user.role === 'user') {
+    return <Navigate to="/plans" state={{ from: location }} replace />;
   }
 
   if (roles && !roles.includes(user?.role ?? 'user')) {

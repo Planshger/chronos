@@ -30,7 +30,7 @@ export default function ScheduleMenuUser({openMenu, closeUserMenu}: ScheduleMenu
             <Box sx={{px: 2, py: 1.5, borderBottom: `1px solid ${theme.custom.border.light}`}}>
                 <Typography variant="body2">{user?.name}</Typography>
 
-                <Chip label="Премиум тариф" size="small" color="primary" sx={{mt: 0.5}}/>
+                <Chip label={`${user?.plan} тариф`} size="small" color="primary" sx={{mt: 0.5}}/>
             </Box>
 
             {SettingsData.map((item) => {

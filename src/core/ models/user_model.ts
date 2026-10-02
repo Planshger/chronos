@@ -1,4 +1,4 @@
-export type Role = 'user' | 'admin';
+export type Role = 'user' | 'admin' | '';
 
 export default interface UserModel {
     id: number,
@@ -6,6 +6,6 @@ export default interface UserModel {
     email: string,
     plan: string,
     status: string,
-    password?: string,
-    role?: Role,
+    password?: string 
+    role: Role,
 }

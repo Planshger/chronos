@@ -1,10 +1,10 @@
 import { Button, Stack, TextField } from "@mui/material";
-import theme from "../../../core/theme/darkTheme";
 import { ChangeEvent, useCallback, useState } from "react";
-import UserModel from "../../admin/models/user_model";
-import { useAuth } from "../../../providers/AuthProvider";
-import { useLoading } from "../Settings";
-import { Loading, updateUserData } from "../../../core/datasources/admin_data_source";
+import UserModel from "../../../../core/ models/user_model";
+import { useLoading } from "../../Settings";
+import { useAuth } from "../../../../providers/AuthProvider";
+import { Loading, updateUserData } from "../../../../core/datasources/admin_data_source";
+import theme from "../../../../core/theme/darkTheme";
 
 
 export default function ProfileSettings() {

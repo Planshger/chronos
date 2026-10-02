@@ -1,5 +1,6 @@
 import { SvgIcon } from "@mui/material";
-import theme from "../../../core/theme/darkTheme";
+import theme from "../../../../core/theme/darkTheme";
+
 
 export default function WhatsAppIcon() {
     return (

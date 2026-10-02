@@ -33,9 +33,9 @@ interface AdminTableFilterMenuProps {
     searchProp: string,
 }
 
-const initialprops = [{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}];
+const initialprops = [{id: 'email', value: ''},{id: 'plan', value: ''},{id: 'status', value: ''}, {id: 'role', value: ''}];
 
-const menuItems = new Map<string, string[]>([['status', ['Активен', 'Заблокирован', 'Ожидает']], ['plan', ['Базовый', 'Премиум', 'Пробный']]]);
+const menuItems = new Map<string, string[]>([['status', ['Активен', 'Заблокирован', 'Ожидает']], ['plan', ['Базовый', 'Премиум', 'Пробный']], ['role', ['user', 'admin']]]);
 
 function AdminTableFilterMenu({onClose, open, setData, perPage, currentPage, searchProp}: AdminTableFilterMenuProps) {
     const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);

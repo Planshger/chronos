@@ -2,7 +2,7 @@ import { Close } from "@mui/icons-material";
 import { Box, Button, FormControl, IconButton, Modal, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { memo, useCallback } from "react";
 import theme from "../../../../core/theme/darkTheme";
-import UserModel from "../../models/user_model";
+import UserModel from "../../../../core/ models/user_model";
 import React from "react";
 import DropdownList from "../DropdownList";
 
@@ -35,7 +35,7 @@ function AdminTableEditMenu({onClick, onClose, open, user}: AdminTableEditMenuPr
     }, []);
 
     const handleSelectChange = useCallback((event: SelectChangeEvent<string>, id: string) => {
-        setEditedUser((prev) => {return {...prev, [id as keyof UserModel]: event.target.value}})
+        setEditedUser((prev) => {return {...prev, [id as keyof UserModel]: event.target.value === 'Нет' ? '' : event.target.value}})
     }, []);
 
     const handleSave = useCallback(() => {
@@ -63,9 +63,9 @@ function AdminTableEditMenu({onClick, onClose, open, user}: AdminTableEditMenuPr
 
                     <TextField name="email" id="filled-basic" label="Email" variant="standard" value={editedUser.email} onChange={handleChange} sx={{'& input::-webkit-contacts-auto-fill-button': {visibility: 'hidden'}}}/>
 
-                    <DropdownList id='plan' label='Тариф' menuItems={['Базовый', 'Премиум', 'Пробный']} value={editedUser.plan} variant='standard' onChange={(event) => handleSelectChange(event, 'plan')}/>
+                    <DropdownList id='plan' label='Тариф' menuItems={['Базовый', 'Премиум', 'Пробный', 'Нет']} value={editedUser.plan} variant='standard' onChange={(event) => handleSelectChange(event, 'plan')}/>
                         
-                    <DropdownList id='status' label='Статус' menuItems={['Активен', 'Заблокирован', 'Ожидает']} value={editedUser.status} variant='standard' onChange={(event) => handleSelectChange(event, 'status')}/>
+                    <DropdownList id='status' label='Статус' menuItems={['Активен', 'Заблокирован', 'Ожидание оплаты']} value={editedUser.status} variant='standard' onChange={(event) => handleSelectChange(event, 'status')}/>
                 </Stack>
 
                 <Stack direction="row" spacing={2} sx={{mt: 3, justifyContent: 'center'}}>

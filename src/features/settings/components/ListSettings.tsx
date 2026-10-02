@@ -28,7 +28,7 @@ export default function ListSettings({onSelect, settingsData}: ListSettingsProps
   useEffect(() => {setOpen(location.state?.open)}, []);
 
   return (
-    <List sx={{width: {xs: "100%", md: 340}, display: {xs: 'flex', lg: 'block'}, flexDirection: {xs: 'row', md: 'column', lg: 'column'}}} component="nav">
+    <List sx={{width: {xs: "100%", md: 340, sm: 200}, display: {xs: 'flex', md: 'block', lg: 'block'}, flexDirection: {xs: 'row', md: 'column', lg: 'column'}}} component="nav">
       <ListItemButton key="back" onClick={() => navigate(backPath)} sx={{'&:hover': {transform: 'translateY(-4px)', background: theme.palette.background.paper}}}>
         <ListItemIcon>
           <ArrowBack sx={{color: theme.palette.text.primary}}/>

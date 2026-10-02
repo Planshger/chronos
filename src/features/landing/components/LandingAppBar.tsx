@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 import { useAuth } from '../../../providers/AuthProvider';
 
 const LandingAppBar = () => {
-    const {token, role} = useAuth();
+    const {token, role, logout} = useAuth();
     const navigate = useNavigate();
 
     const onClick = useCallback((url: string) => {
@@ -25,7 +25,12 @@ const LandingAppBar = () => {
             <AppBar position="fixed" sx={{backdropFilter: 'blur(10px)'}}>
                 <Toolbar>
                     <Typography variant="h3" component="div" sx={{flexGrow: 1}}>Chronos</Typography>
-                    <Button onClick={() => onClick(role === 'admin' ? '/admin' : '/schedule')} sx={{color: theme.palette.text.primary}}>Вход</Button>
+
+                    {token ?
+                       <Button onClick={logout} sx={{color: 'error.main'}}>Выход</Button>
+                       :
+                       <Button onClick={() => onClick(role === 'admin' ? '/admin' : '/schedule')} sx={{color: theme.palette.text.primary}}>Вход</Button>
+                    }
                 </Toolbar>
             </AppBar>
         </Box>

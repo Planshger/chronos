@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import theme from '../../../../core/theme/darkTheme';
 
-import { PaginationModel } from '../../models/pagination_model';
+import { PaginationModel } from '../../../../core/ models/pagination_model';
 import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
 import AdminTableHead, { headCells } from './AdminTableHead';
@@ -18,7 +18,7 @@ import Loader from '../../../../core/components/Loader';
 import { Edit } from '@mui/icons-material';
 import { IconButton, Stack, Switch, TextField } from '@mui/material';
 import AdminTableEditMenu from './AdminTableEditMenu';
-import UserModel from '../../models/user_model';
+import UserModel from '../../../../core/ models/user_model';
 import AutocompleteList from '../AutocompleteList';
 import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination, Loading, updateUserData } from '../../../../core/datasources/admin_data_source';
 
@@ -31,7 +31,7 @@ export default function AdminTable() {
   const [loading, setLoading] = React.useState(false);
   const [editDomain, setEditDomain] = React.useState(false);
   const [domain, setDomain] = React.useState('@example.com');
-  const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: {id: 0, name: '', email: '', plan: '', status: ''}});
+  const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: {id: 0, name: '', email: '', plan: '', status: '', role: ''}});
   const [input, setInput] = React.useState<FilterValuesProps>({id: 'name', value: ''} as FilterValuesProps);
   const timeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 

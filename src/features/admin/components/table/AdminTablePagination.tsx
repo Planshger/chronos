@@ -1,7 +1,7 @@
 import { memo } from "react";
 import theme from "../../../../core/theme/darkTheme";
 import { TablePagination } from "@mui/material";
-import { PaginationModel } from "../../models/pagination_model";
+import { PaginationModel } from "../../../../core/ models/pagination_model";
 
 interface AdminTablePaginationProps {
   loadDataWithPagination: (page: number, limit: number) => void;

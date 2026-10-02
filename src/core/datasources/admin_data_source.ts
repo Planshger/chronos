@@ -1,7 +1,7 @@
 import { FilterValuesProps } from "../../features/admin/components/table/AdminTableFilterMenu";
-import { PaginationModel } from "../../features/admin/models/pagination_model";
-import UserModel from "../../features/admin/models/user_model";
+import { PaginationModel } from "../ models/pagination_model";
 import { API_BASE_URL } from "../api/URL";
+import UserModel from "../ models/user_model";
 
 
 export const Loading = async (fn: () => Promise<unknown> | unknown, onLoading: (value: boolean) => void) => {
@@ -42,7 +42,8 @@ export async function deleteUserData(idsToDelete: number[]) {
     }
 }
 
-export async function updateUserData(user: UserModel) {
-    await fetch(`${API_BASE_URL}/users/${user.id}`, {method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user)});
+export async function updateUserData(user: UserModel): Promise<UserModel> {
+    const res = await fetch(`${API_BASE_URL}/users/${user.id}`, {method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user)})
+    return res.json()
 }
 

@@ -1,6 +1,7 @@
 import { AutoAwesome } from "@mui/icons-material";
 import { Avatar, Button, Grid, Stack, Typography } from "@mui/material";
-import theme from "../../../core/theme/darkTheme";
+import theme from "../../../../core/theme/darkTheme";
+
 
 export default function ManagePlansSettings() {
     return (

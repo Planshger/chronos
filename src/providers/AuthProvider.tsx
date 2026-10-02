@@ -1,10 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { authMe, getToken, setTokenInStorage } from "../core/datasources/authorization_data_source";
-import UserModel from "../features/admin/models/user_model";
+import UserModel from "../core/ models/user_model";
 
 interface AuthContextType {
   token: string;
-  role: string; 
   user: UserModel | null;
   isAuthChecked: boolean;
   setToken: (token: string) => void; 
@@ -12,7 +11,7 @@ interface AuthContextType {
   logout: () => void; 
 };
 
-const AuthContext = createContext<AuthContextType>({token: '', role: '', user: null, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false});
+const AuthContext = createContext<AuthContextType>({token: '', user: null, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false});
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -21,7 +20,6 @@ interface AuthProviderProps {
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken_] = useState<string>(getToken() ?? '');
   const [user, setUser] = useState<UserModel | null>(null);
-  const [role, setRole] = useState<string>('');
   const [isAuthChecked, setIsAuthChecked] = useState<boolean>(!getToken());
 
   const setToken = useCallback((newToken: string) => {
@@ -33,7 +31,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setToken_("");
     setTokenInStorage(null);
     setUser(null);
-    setRole("");
     setIsAuthChecked(true);   
   }, []);
 
@@ -46,13 +43,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     (async () => {
       try {
         const user = await authMe(token);
-        if (cancelled) return;
+        if (cancelled) { 
+          return; 
+        } else {
           setUser(user);
-          setRole(user?.role ?? '');
+        }
+       
         } catch (e) {
           if (!cancelled) {
             setUser(null);
-            setRole('');
           }
         } finally {
           if (!cancelled) setIsAuthChecked(true);
@@ -62,7 +61,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return () => { cancelled = true; };
   }, [token]);
 
-  const contextValue = useMemo(() => ({token, setToken, user, role, logout, isAuthChecked, setUser} as AuthContextType),[token, setToken, user, role, logout, isAuthChecked, setUser]);
+  const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser} as AuthContextType),[token, setToken, user, logout, isAuthChecked, setUser]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

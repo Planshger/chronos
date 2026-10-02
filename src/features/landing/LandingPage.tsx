@@ -5,7 +5,7 @@ import { appName } from '../../core/constants/name';
 import LandingAppBar from './components/LandingAppBar';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 const features = [
   {icon: <CalendarToday />,title: 'Умный календарь',desc: 'Организуйте дни с интуитивным и красивым календарем. Добавляйте задачи в один клик.',color: theme.palette.primary.main,bg: `${theme.palette.primary.main}15`},
@@ -14,20 +14,28 @@ const features = [
 ];
 
 export default function LandingPage() {
-  const {token, role} = useAuth();
+  const {token, user} = useAuth();
   const navigator = useNavigate();
 
-  const onClick = useCallback((url: string) => {
-    if(!token) {
-      navigator('/register')
+  const onClick = useCallback(() => {
+    if(token) {
+      if(user?.role === 'admin') {
+        navigator('/admin');
+      } else {
+        navigator('/schedule');
+      }
     } else {
-      navigator(url)
+      navigator('/register');
+    }
+
+    if (user?.plan === '' && user?.role !== 'admin') {
+      navigator('/plans');
     }
   }, [navigator, token])
 
   return (
     <Box sx={{minHeight: '100vh', bgcolor: theme.palette.background.default}}>
-      <LandingAppBar />
+      <LandingAppBar/>
 
       <Box sx={{pt: 16, pb: 14}}>
         <Box sx={{position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '100%', maxWidth: 768, height: 500, opacity: 0.5, pointerEvents: 'none'}}>
@@ -52,11 +60,11 @@ export default function LandingPage() {
           </Typography>
 
           <Stack direction="row" spacing={2} sx={{mb: 4, justifyContent: 'center'}}>
-            <Button variant="contained" onClick={() => onClick(role === 'admin' ? '/admin' : '/schedule')} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, color: theme.palette.text.primary}}>
-              Начать бесплатно
+            <Button variant="contained" onClick={() => onClick()} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, color: theme.palette.text.primary}}>
+              {token ? 'Продолжить': 'Начать бесплатно'}
             </Button>
 
-            <Button variant="outlined" onClick={() => onClick('/plans')} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
+            <Button variant="outlined" onClick={() => navigator('/plans')} sx={{px: {lg: 5, xs: 2}, py: {lg: 1.8, xs: 1.2}, borderRadius: 30, borderColor: theme.custom.border.light, color: theme.palette.text.primary, '&:hover': {backgroundColor: theme.custom.background.muted}}}>
               Тарифы
             </Button>
           </Stack>
@@ -112,7 +120,7 @@ export default function LandingPage() {
             ))}
           </Stack>
 
-          <Button variant="contained" onClick={() => onClick('/register')} sx={{px: 6, py: 1.8, borderRadius: 30, bgcolor: theme.palette.text.primary, boxShadow: theme.custom.shadows.lg, '&:hover': {boxShadow: '0 20px 25px -5px #a855f7'}}}>
+          <Button variant="contained" onClick={() => onClick()} sx={{px: 6, py: 1.8, borderRadius: 30, bgcolor: theme.palette.text.primary, boxShadow: theme.custom.shadows.lg, '&:hover': {boxShadow: '0 20px 25px -5px #a855f7'}}}>
             Создать аккаунт
           </Button>
         </Container>

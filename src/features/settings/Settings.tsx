@@ -1,12 +1,6 @@
 import { Box, Container, Paper, Stack, Typography } from "@mui/material";
 import theme from "../../core/theme/darkTheme";
-import ListSettings from "./components/ListSettings";
-import ProfileSettings from "./components/ProfileSettings";
 import { useLocation, useNavigate } from "react-router-dom";
-import ManagePlansSettings from "./components/ManagePlansSettings";
-import AnalyticsSettings from "./components/AnalyticsSettings";
-import WhatsAppSettings from "./components/WhatsAppSettings";
-import TelegramSettings from "./components/TelegramSettings";
 import { SettingsModel } from "./models/SettingsModel";
 import { SettingIcons } from "../../core/constants/SettingIcons";
 import { TouchApp } from "@mui/icons-material";
@@ -14,6 +8,13 @@ import React, { createContext, useContext, useState } from "react";
 import { AdminSettingsData, SettingsData } from "./data/SettingsData";
 import { useAuth } from "../../providers/AuthProvider";
 import Loader from "../../core/components/Loader";
+import AdminManagePlansSettings from "./components/admin/AdminManagePlansSettings";
+import ProfileSettings from "./components/user/ProfileSettings";
+import ManagePlansSettings from "./components/user/ManagePlansSettings";
+import AnalyticsSettings from "./components/user/AnalyticsSettings";
+import TelegramSettings from "./components/user/TelegramSettings";
+import WhatsAppSettings from "./components/user/WhatsAppSettings";
+import ListSettings from "./components/ListSettings";
 
 const settingsComponents: Record<string, React.ComponentType> = {
     'profile_settings': ProfileSettings,
@@ -22,7 +23,7 @@ const settingsComponents: Record<string, React.ComponentType> = {
     'telegram': TelegramSettings,
     'whatsapp': WhatsAppSettings,
     'admin_profile_settings': ProfileSettings,
-    'admin_manage_plans': ManagePlansSettings,
+    'admin_manage_plans': AdminManagePlansSettings,
 };
 
 interface LoadingContextProps {
@@ -38,23 +39,22 @@ export function useLoading() {
 export default function Settings() {
     const [loading, setLoading] = useState(false);
     const location = useLocation();
-    const {role} = useAuth();
+    const {user} = useAuth();
 	const navigate = useNavigate();
 	const currentPath = location.pathname.split('/').pop() || 'profile_settings';
-    let settingsData: SettingsModel[] = role === 'admin'? AdminSettingsData : SettingsData;
+    let settingsData: SettingsModel[] = user?.role === 'admin'? AdminSettingsData : SettingsData;
 
     const CurrentComponent = settingsComponents[currentPath] || ProfileSettings;
     
 	const handleSelect = (id: string) => {navigate(`/settings/${id}`)};
-    
+
     return (
         <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
-            <LoadingContext.Provider value={{setLoading}}>
                 <Container maxWidth={false} sx={{py: { xs: 1, sm: 2, md: 3 }, px: { xs: 1, sm: 2, md: 3 }}}>
-                    <Stack spacing={4} direction={{xs: "column", sm: "column", md: "row" }} sx={{height: '94.5vh'}}>
+                    <Stack spacing={4} direction={{xs: "column", sm: "column", md: "row" }} sx={{height: {md: '94.5vh' }}}>
                         <ListSettings onSelect={handleSelect} settingsData={settingsData}/>
 
-                        <Paper sx={{p: 3, borderRadius: 7, width: '100%', minHeight: { xs: "70vh", md: "94.5vh" }, bgcolor: theme.palette.background.default, border: `1px solid ${theme.custom.border.light}`, boxShadow: theme.custom.shadows.sm}}>
+                        <Paper sx={{p: 3, borderRadius: 7, width: '100%', overflow: 'auto', height: { xs: '85vh', md: '94.5vh' }, bgcolor: theme.palette.background.default, border: `1px solid ${theme.custom.border.light}`, boxShadow: theme.custom.shadows.sm}}>
                             <Stack direction="row" spacing={3} sx={{alignItems: "center", pt: { xs: 0, md: 1 },}}>
                                 {settingsData.map((item) => {
                                     const messenger = item.messenger?.find((m) => m.id === currentPath);
@@ -73,13 +73,14 @@ export default function Settings() {
                                 })}
                             </Stack>
 
-                            <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', pt: { xs: 4, sm: 8, md: 14 }, width: "100%"}}>
-                                <CurrentComponent/>
+                            <Box sx={{ pt: { xs: 4, sm: 8, md: 8, lg: 8 }, width: '100%', minWidth: 0 }}>
+                                <LoadingContext.Provider value={{setLoading}}>
+                                    <CurrentComponent/>
+                                </LoadingContext.Provider>
                             </Box>
                         </Paper>
                     </Stack>
                 </Container>
-            </LoadingContext.Provider>
             {loading && (
                 <Loader size={80} />
             )}

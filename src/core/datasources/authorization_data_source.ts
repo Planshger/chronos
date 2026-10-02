@@ -1,4 +1,4 @@
-import UserModel from "../../features/admin/models/user_model";
+import UserModel from "../ models/user_model";
 import { RegisterUserModel } from "../../features/registrarion/models/register_user_model";
 import { API_BASE_URL } from "../api/URL";
 
