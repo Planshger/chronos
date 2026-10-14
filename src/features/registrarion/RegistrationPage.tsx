@@ -4,7 +4,7 @@ import {Box, Typography, TextField, Button, Link, Paper} from '@mui/material';
 import {Person as UserIcon, Shield as ShieldIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1} from '@mui/icons-material';
 import theme from '../../core/theme/darkTheme';
 import { useAuth } from '../../providers/AuthProvider';
-import { auth, errorHandlerFromAPI, register } from '../../core/datasources/authorization_data_source';
+import { auth, register } from '../../core/datasources/authorization_data_source';
 import UserModel from '../../core/ models/user_model';
 import Loader from '../../core/components/Loader';
 import { RegisterUserModel } from './models/register_user_model';
@@ -20,15 +20,21 @@ export default function RegistrationPage() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-    // e.target.
+    
     if (isAdminLogin) {
-      await Loading(() => errorHandlerFromAPI<RegisterUserModel>(() => auth(input)).then((res) => {res.data.role === 'admin' ? setToken(res.token) : alert('Не админ')}), setLoading);
+      await Loading(() => auth(input, 'admin')
+        .then((res) => setToken(res.token))
+        .catch((err: Error) =>  alert(err.message)), setLoading)
+
       navigate('/admin', { replace: true });
       return;
     } 
 
     if (isLogin) {
-      await Loading(() => errorHandlerFromAPI<RegisterUserModel>(() => auth(input)).then((res) => {res.data.role === 'user' ? setToken(res.token) : alert('Не пользователь')}), setLoading);
+      await Loading(() => auth(input, 'user')
+        .then((res) => setToken(res.token))
+        .catch((err: Error) => alert(err.message)), setLoading);
+
       navigate('/schedule', { replace: true });
       return;
     }

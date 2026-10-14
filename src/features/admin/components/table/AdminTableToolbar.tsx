@@ -3,7 +3,6 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { alpha } from '@mui/material/styles';
 import theme from "../../../../core/theme/darkTheme";
-import { deleteUserData } from "../../data/datasources/admin_local_data_source";
 
 interface AdminTableToolbarProps {
   numSelected: number;

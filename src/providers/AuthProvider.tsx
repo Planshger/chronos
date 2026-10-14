@@ -4,14 +4,18 @@ import UserModel from "../core/ models/user_model";
 
 interface AuthContextType {
   token: string;
-  user: UserModel | null;
+  user: UserModel;
   isAuthChecked: boolean;
   setToken: (token: string) => void; 
   setUser: (user: UserModel) => void; 
   logout: () => void; 
 };
 
-const AuthContext = createContext<AuthContextType>({token: '', user: null, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false});
+const initialUser: UserModel = {
+  id: 0, name: '', email: '', plan: '', status: '', password: '', role: '',
+};
+
+const AuthContext = createContext<AuthContextType>({token: '', user: initialUser, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false});
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -19,7 +23,7 @@ interface AuthProviderProps {
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken_] = useState<string>(getToken() ?? '');
-  const [user, setUser] = useState<UserModel | null>(null);
+  const [user, setUser] = useState<UserModel>(initialUser);
   const [isAuthChecked, setIsAuthChecked] = useState<boolean>(!getToken());
 
   const setToken = useCallback((newToken: string) => {
@@ -30,7 +34,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const logout = useCallback(() => {
     setToken_("");
     setTokenInStorage(null);
-    setUser(null);
+    setUser(initialUser);
     setIsAuthChecked(true);   
   }, []);
 
@@ -42,7 +46,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     (async () => {
       try {
-        const user = await authMe(token);
+        const user = await authMe(token) ?? initialUser;
         if (cancelled) { 
           return; 
         } else {
@@ -51,7 +55,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
        
         } catch (e) {
           if (!cancelled) {
-            setUser(null);
+            setUser(initialUser);
           }
         } finally {
           if (!cancelled) setIsAuthChecked(true);
@@ -61,7 +65,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return () => { cancelled = true; };
   }, [token]);
 
-  const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser} as AuthContextType),[token, setToken, user, logout, isAuthChecked, setUser]);
+  const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser}),[token, setToken, user, logout, isAuthChecked, setUser]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

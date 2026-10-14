@@ -9,7 +9,7 @@ import { useCallback } from 'react';
 import { useAuth } from '../../../providers/AuthProvider';
 
 const LandingAppBar = () => {
-    const {token, role, logout} = useAuth();
+    const {token, logout, user} = useAuth();
     const navigate = useNavigate();
 
     const onClick = useCallback((url: string) => {
@@ -29,7 +29,7 @@ const LandingAppBar = () => {
                     {token ?
                        <Button onClick={logout} sx={{color: 'error.main'}}>Выход</Button>
                        :
-                       <Button onClick={() => onClick(role === 'admin' ? '/admin' : '/schedule')} sx={{color: theme.palette.text.primary}}>Вход</Button>
+                       <Button onClick={() => onClick(user.role === 'admin' ? '/admin' : '/schedule')} sx={{color: theme.palette.text.primary}}>Вход</Button>
                     }
                 </Toolbar>
             </AppBar>

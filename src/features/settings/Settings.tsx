@@ -15,11 +15,13 @@ import AnalyticsSettings from "./components/user/AnalyticsSettings";
 import TelegramSettings from "./components/user/TelegramSettings";
 import WhatsAppSettings from "./components/user/WhatsAppSettings";
 import ListSettings from "./components/ListSettings";
+import MapSettings from "./components/user/MapSettings";
 
 const settingsComponents: Record<string, React.ComponentType> = {
     'profile_settings': ProfileSettings,
     'manage_plans': ManagePlansSettings,
     'analytics': AnalyticsSettings,
+    'map_settings': MapSettings,
     'telegram': TelegramSettings,
     'whatsapp': WhatsAppSettings,
     'admin_profile_settings': ProfileSettings,
@@ -28,9 +30,10 @@ const settingsComponents: Record<string, React.ComponentType> = {
 
 interface LoadingContextProps {
     setLoading: (value: boolean) => void;
+    loading: boolean;
 }
 
-const LoadingContext = createContext<LoadingContextProps>({setLoading: () => {}})
+const LoadingContext = createContext<LoadingContextProps>({setLoading: () => {}, loading: false})
 
 export function useLoading() {
     return useContext(LoadingContext);
@@ -73,8 +76,8 @@ export default function Settings() {
                                 })}
                             </Stack>
 
-                            <Box sx={{ pt: { xs: 4, sm: 8, md: 8, lg: 8 }, width: '100%', minWidth: 0 }}>
-                                <LoadingContext.Provider value={{setLoading}}>
+                            <Box sx={{ pt: { xs: 4, sm: 8, md: 8, lg: 4 }, width: '100%', minWidth: 0 }}>
+                                <LoadingContext.Provider value={{setLoading, loading}}>
                                     <CurrentComponent/>
                                 </LoadingContext.Provider>
                             </Box>

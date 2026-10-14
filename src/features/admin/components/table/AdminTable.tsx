@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import theme from '../../../../core/theme/darkTheme';
 
-import { PaginationModel } from '../../../../core/ models/pagination_model';
+import { PaginationModel } from '../../../../core/ models/user_pagination_model';
 import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
 import AdminTableHead, { headCells } from './AdminTableHead';
@@ -62,18 +62,18 @@ export default function AdminTable() {
 
   const loadDataSortBy = React.useCallback((sortName: string, order?: 'asc' | 'desc') => {
     Loading(() => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then(res => setData(res)), setLoading);
-  }, [data]);
+  }, [data.meta.current_page, data.meta.per_page]);
 
   const loadDataWithDeleteUser = React.useCallback(async () => {
     await deleteUserData(selected); 
     setSelected([]);
     loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, [selected, data]);
+  }, [selected, data.meta.current_page, data.meta.per_page]);
 
   const loadDataWithEditUser = React.useCallback(async (user: UserModel) => {
     await updateUserData(user);
     loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, [data]);
+  }, [data.meta.current_page, data.meta.per_page]);
 
   const handleSelectAllClick = React.useCallback(({target}: React.ChangeEvent<HTMLInputElement>) => {
     if (target.checked) {
@@ -82,7 +82,7 @@ export default function AdminTable() {
       return;
     }
     setSelected([]);
-  }, [data]);
+  }, [data.items]);
 
   const handleInput = React.useCallback((value: string, id: string ) => {
     setInput({id: id, value: value});
@@ -91,15 +91,15 @@ export default function AdminTable() {
 
   const handleClick = React.useCallback((id: number) => {
     setSelected((prev) => {
-        const selectedIndex = prev.indexOf(id);
-        if (selectedIndex === -1) {return [...prev, id];}
-        return prev.filter((item) => item !== id);
+      const selectedIndex = prev.indexOf(id);
+      if (selectedIndex === -1) {return [...prev, id];}
+      return prev.filter((item) => item !== id);
     });
   }, []);
 
-  const searchWithEmail = (value: string) => {
+  const searchWithEmail =  React.useCallback((value: string) => {
     Loading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: 'email', value: value}]).then((res) => setData(res)), setLoading);
-  }
+  }, [data.meta.current_page, data.meta.per_page]);
 
   const debouncedSearch = React.useCallback((searchWithEmailValue: string) => {
     if (timeout.current) clearTimeout(timeout.current);
@@ -114,7 +114,7 @@ export default function AdminTable() {
     <Box sx={{ width: '100%', p: {xs: 1.5, lg: 10}, }}>
       <Box sx={{ pb: 2, display: 'flex', justifyContent: 'center' }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-          <AutocompleteList key={editDomain ? 'email' : 'name'} id={editDomain ? 'email' : 'name'} label="Поиск" disableClearable={false} options={data.items.map((i) => i.name)} onChange={handleInput} value={input.value} sx={{ width: '500px' }} />
+          <AutocompleteList key={editDomain ? 'email' : 'name'} id={editDomain ? 'email' : 'name'} label="Поиск" disableClearable={false} options={data.items.map((i) => i.name)} onChange={handleInput} value={input.value}/>
           
           <TextField value={domain} onChange={(e) => {setDomain(e.target.value); debouncedSearch(input.value+e.target.value);}} disabled={!editDomain} size="small" variant="standard" sx={{ width: 160, '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: theme.palette.text.secondary }}} />
               

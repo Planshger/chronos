@@ -1,4 +1,4 @@
-import UserModel from "../ models/user_model";
+import UserModel, { Role } from "../ models/user_model";
 import { RegisterUserModel } from "../../features/registrarion/models/register_user_model";
 import { API_BASE_URL } from "../api/URL";
 
@@ -28,8 +28,8 @@ export async function register(user: UserModel, role: string = 'user'):  Promise
   return res.json();
 } 
 
-export async function auth(user: UserModel): Promise<Response> {
-  return await fetch(`${API_BASE_URL}/auth`, { 
+export async function auth(user: UserModel, role: Role): Promise<RegisterUserModel> {
+  const res = await fetch(`${API_BASE_URL}/auth`, { 
     method: "POST", 
     headers: {...headers},
       body:JSON.stringify({
@@ -37,6 +37,18 @@ export async function auth(user: UserModel): Promise<Response> {
       password: user.password,
     })
   });
+
+  if (!res.ok) {
+    throw new Error('Нет такого пользователя');
+  }
+
+  const data: RegisterUserModel = await res.json();  
+
+  if ((data.data.role ?? '') !== role) {
+    throw new Error('Нет такого пользователя');
+  }
+
+  return data;
 }
 
 export async function authMe(token: string): Promise<UserModel | null> {
@@ -47,15 +59,5 @@ export async function authMe(token: string): Promise<UserModel | null> {
   return res.json();
 }
 
-export async function errorHandlerFromAPI<T>(fnc: () => Promise<Response>): Promise<T> {
-    const res = await fnc();
-    if(!res.ok) {
-      if(res.status === 401) {
-        alert('Пользователь не найден');
-      } else {
-        const dataError = await res.json();
-        alert(dataError.message);
-      }  
-    } 
-    return res.json();
-}
+
+

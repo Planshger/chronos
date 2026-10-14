@@ -3,15 +3,13 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import theme from "../../../core/theme/darkTheme";
 import { ru } from 'date-fns/locale';
 import { format } from "date-fns";
-import { TaskModel } from "../models/TaskModel";
 
-interface SchedulingProps {
-    selectedDate: Date | null;
-    tasks: TaskModel;
-    setActiveModal: Function;
-}
+import { useSchedule } from "../Schedule";
 
-export default function Scheduling({selectedDate, tasks, setActiveModal}: SchedulingProps) {
+
+export default function Scheduling() {
+    const {selectedDate, setActiveModal, tasks} = useSchedule();
+    
     return (
         <Box sx={{minHeight: '30%', minWidth: '20%'}}>
             {selectedDate ? (

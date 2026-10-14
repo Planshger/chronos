@@ -49,7 +49,7 @@ function AdminTableHead({ onSelectAllClick, numSelected, rowCount, onSort }: Adm
           </TableCell>
         ))}
         
-         <TableCell key='edit' align='left' padding='normal'/>
+        <TableCell key='edit' align='left' padding='normal'/>
       </TableRow>
     </TableHead>
   );

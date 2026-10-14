@@ -10,14 +10,14 @@ interface AutocompleteListProps {
     options: string[],
     value: string | undefined,
     variant?: 'standard' | 'outlined' | 'filled',
-    sx?: CSSObject,
     disableClearable: boolean;
 }
 
-function AutocompleteList({id, label, onChange, options, value, variant = 'standard', sx, disableClearable}: AutocompleteListProps) {
+function AutocompleteList({id, label, onChange, options, value, variant = 'standard', disableClearable}: AutocompleteListProps) {
     return (
         <Stack direction={'row'} spacing={1}>
             <Search sx={{pt: 0.3}}/>
+
             <Autocomplete id={`${id}-autocomplete`} sx={{width: {lg: '400px', xs:'300px'}}} autoComplete disableClearable={disableClearable} freeSolo options={options} value={value} onChange={(event, newValue) => {onChange(newValue ?? '', id);}}
                 slotProps={{paper: {sx: {bgcolor: theme.custom.background.glass, backdropFilter: 'blur(11px)', color: '#f1f5f9', borderBottom: '1px solid rgba(255,255,255,0.08)'}}}}
                 renderInput={(params) => (

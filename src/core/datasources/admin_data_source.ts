@@ -1,5 +1,5 @@
 import { FilterValuesProps } from "../../features/admin/components/table/AdminTableFilterMenu";
-import { PaginationModel } from "../ models/pagination_model";
+import { PaginationModel } from "../ models/user_pagination_model";
 import { API_BASE_URL } from "../api/URL";
 import UserModel from "../ models/user_model";
 

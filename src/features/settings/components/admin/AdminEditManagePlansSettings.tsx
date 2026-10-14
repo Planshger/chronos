@@ -1,9 +1,13 @@
 import { Close } from "@mui/icons-material";
 import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, Switch, TextField, Typography } from "@mui/material";
 import { memo, useCallback, useEffect, useState } from "react";
-import PlanModel from "../../../../core/ models/plan_model";
+import PlanModel, { initialPlan } from "../../../../core/ models/plan_model";
 import theme from "../../../../core/theme/darkTheme";
 import NumberField from "../../../../core/components/NumberField";
+import Loader from "../../../../core/components/Loader";
+import { useLoading } from "../../Settings";
+import { Loading } from "../../../../core/datasources/admin_data_source";
+import { deletePlans, getAllPlans } from "../../../../core/datasources/plans_data_source";
 
 const style = {
   position: 'absolute',
@@ -19,10 +23,13 @@ const style = {
 };
 
 interface AdminEditManagePlansSettingsProps {
-    onClick: (plan: PlanModel) => void;
+    updatePlan: (plan: PlanModel) => void;
+    setPlans: (plans: PlanModel[]) => void;
+    addPlan: (plan: PlanModel) => void;
     onClose: () => void;
     open: boolean;
     plan: PlanModel;
+    isCreate?: boolean;
 }
 
 function monthsToDisplay(days: number, isTrial?: boolean): number { 
@@ -52,8 +59,9 @@ function arraysEqual(a: string[] | undefined, b: string[] | undefined): boolean 
     return arrA.every((item, i) => item === arrB[i]);
 }
 
-function AdminEditManagePlansSettings({onClick, onClose, open, plan}: AdminEditManagePlansSettingsProps) {
-    const [editedPlan, setEditedPlan] = useState<PlanModel>(plan);
+function AdminEditManagePlansSettings({updatePlan, onClose, open, plan, setPlans, isCreate, addPlan}: AdminEditManagePlansSettingsProps) {
+    const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
+    const {setLoading, loading} = useLoading();
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -80,6 +88,16 @@ function AdminEditManagePlansSettings({onClick, onClose, open, plan}: AdminEditM
         setEditedPlan((prev) => ({...prev, popular: e.target.checked}));
     }, [editedPlan]);
 
+    const handleActiveChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditedPlan((prev) => ({...prev, active: e.target.checked}));
+    }, [editedPlan]);
+
+    const handleDeletePlan = useCallback( async (id: number) => {
+        await Loading(() => deletePlans(id), setLoading);
+        await Loading(() => getAllPlans().then(res => setPlans(res)), setLoading);
+        onClose();
+    }, [])
+
     const handleSave = useCallback(() => {
         const planToSend: PlanModel = {
             ...editedPlan,
@@ -96,21 +114,26 @@ function AdminEditManagePlansSettings({onClick, onClose, open, plan}: AdminEditM
             if (key === 'features') return !arraysEqual(planToSend.features, plan.features);
             return planToSend[key] !== plan[key];
         });
-
-        if (isChanged) onClick(planToSend);
+        if (isChanged) {
+            if (isCreate) {
+                addPlan(planToSend);
+            } else {
+                updatePlan(planToSend);
+            }   
+        } 
         onClose();
-    }, [plan, editedPlan, onClick, onClose]);
+    }, [plan, editedPlan, updatePlan, onClose]);
 
     useEffect(() => {setEditedPlan({...plan, durationOfActivity: monthsToDisplay(plan.durationOfActivity, plan.trial)})}, [plan]);
     
     return (
         <Modal open={open} onClose={(reason) => {if(reason !== 'backdropClick') return; onClose();}} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
             <Box sx={style}>
-                <IconButton aria-label="close" onClick={onClose} sx={{position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500]}}>
+                <IconButton aria-label="close" onClick={() => onClose()} sx={{position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500]}}>
                     <Close/>
                 </IconButton>
 
-                <Typography variant="h6" align="center" sx={{mt: 2, mb: 2}}>Редактировать тарифный план <span style={{color: theme.palette.primary.main, textDecoration: 'underline'}}>{editedPlan.name}</span></Typography>
+                <Typography variant="h6" align="center" sx={{mt: 2, mb: 2}}>{isCreate ? 'Создать тарифный план' : 'Редактировать тарифный план'} <span style={{color: theme.palette.primary.main, textDecoration: 'underline'}}>{editedPlan.name}</span></Typography>
 
                 <Stack spacing={2} sx={{mt: 3}}>
                     <TextField name="name" id="outlined-basic" label="Название" variant="standard" value={editedPlan.name} onChange={handleChange} sx={{'& input::-webkit-contacts-auto-fill-button': {visibility: 'hidden'}}}/>
@@ -125,7 +148,7 @@ function AdminEditManagePlansSettings({onClick, onClose, open, plan}: AdminEditM
 
                     <TextField name="features" id="features-textarea" label="Возможности (по одной на строку)" variant="filled" multiline minRows={4} value={featuresToText(editedPlan.features)} onChange={handleFeaturesChange} sx={{'& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' }}}/>
 
-                    <Stack direction={'row'} spacing={3}>
+                    <Stack direction={'row'} spacing={3} sx={{position: 'relative'}}>
                         <Stack direction={'row'}>
                             <Typography variant="h6" sx={{fontSize: '15px', pt: 0.8}}>Пробный</Typography>
 
@@ -137,18 +160,32 @@ function AdminEditManagePlansSettings({onClick, onClose, open, plan}: AdminEditM
 
                             <Switch  checked={editedPlan.popular ?? false} onChange={handlePopularChange} color="secondary"/>
                         </Stack>
+
+                        <Stack direction={'row'}>
+                            <Typography variant="h6" sx={{fontSize: '15px', pt: 0.8}}>Активный</Typography>
+
+                            <Switch checked={editedPlan.active ?? false} onChange={handleActiveChange} color="secondary"/>
+                        </Stack>
+
+                        {!isCreate && <Button variant="text" color="error" onClick={() => handleDeletePlan(editedPlan.id ?? 0)} sx={{position: 'absolute', right: 0}}>
+                            Удалить
+                        </Button>}
                     </Stack>
                 </Stack>
 
                 <Stack direction="row" spacing={2} sx={{mt: 3, justifyContent: 'center'}}>
                     <Button variant="contained" color="primary" onClick={handleSave} sx={{color: theme.palette.text.primary}}>
-                        Сохранить
+                        {isCreate ? 'Создать' : 'Сохранить'}
                     </Button>
 
                     <Button variant="outlined" color="secondary" onClick={onClose}>
                         Отмена
                     </Button>
                 </Stack>
+
+                {loading && (
+                    <Loader size={80} />
+                )}
             </Box>
         </Modal>
     );

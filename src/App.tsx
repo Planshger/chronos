@@ -15,6 +15,7 @@ import ManagePlansSettings from './features/settings/components/user/ManagePlans
 import AnalyticsSettings from './features/settings/components/user/AnalyticsSettings';
 import TelegramSettings from './features/settings/components/user/TelegramSettings';
 import WhatsAppSettings from './features/settings/components/user/WhatsAppSettings';
+import MapSettings from './features/settings/components/user/MapSettings';
 
 
 function App() {
@@ -25,8 +26,10 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/plans" element={<PlansPage />} />
+
+              <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/plans" element={<PlansPage />} />
+
 
             <Route element={<PrivateRoute roles={['user']} />}>
               <Route path="/schedule" element={<Schedule />} />
@@ -45,6 +48,7 @@ function App() {
                 <Route path="analytics" element={<AnalyticsSettings />} />
                 <Route path="telegram" element={<TelegramSettings />} />
                 <Route path="whatsapp" element={<WhatsAppSettings />} />
+                <Route path="map_settings" element={<MapSettings />} />
 
                 <Route element={<PrivateRoute roles={['admin']} />}>
                   <Route path="admin_profile_settings" element={<ProfileSettings />} />

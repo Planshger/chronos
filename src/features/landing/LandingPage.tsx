@@ -5,7 +5,7 @@ import { appName } from '../../core/constants/name';
 import LandingAppBar from './components/LandingAppBar';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/AuthProvider';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 const features = [
   {icon: <CalendarToday />,title: 'Умный календарь',desc: 'Организуйте дни с интуитивным и красивым календарем. Добавляйте задачи в один клик.',color: theme.palette.primary.main,bg: `${theme.palette.primary.main}15`},
@@ -28,7 +28,7 @@ export default function LandingPage() {
       navigator('/register');
     }
 
-    if (user?.plan === '' && user?.role !== 'admin') {
+    if (user?.plan === '' && user?.role === 'user') {
       navigator('/plans');
     }
   }, [navigator, token])

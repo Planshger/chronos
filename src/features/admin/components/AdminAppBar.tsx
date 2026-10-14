@@ -26,6 +26,7 @@ export default function AdminAppBar() {
                         <CreditCard sx={{mr: {lg: 1, xs: 0},}}/>
                         Тарифы
                     </Button>
+                    
                     <Button variant="outlined" onClick={() => logout()} sx={{fontSize: {xs: 0, lg: 15, md: 15}, color: 'error.main', bgcolor: `${theme.palette.primary.main}15`,'&:hover': {borderColor: 'error.main', bgcolor: `${theme.palette.primary.main}15`}}}>
                         <Logout sx={{mr: {lg: 1, xs: 0},}}/>
                         Выход 
