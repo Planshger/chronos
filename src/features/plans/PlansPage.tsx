@@ -61,7 +61,7 @@ export default function PlansPage() {
                                 <Stack direction="column" spacing={3} sx={{flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', pt: 4}}>
                                     <Stack direction="column" spacing={3}>
                                         {p.features.map((f) => (
-                                            <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                                            <Box key={f} sx={{display: 'flex', flexDirection: 'row'}}>
                                                 <Done sx={{width: 20, height: 20, color: 'grey'}}/>
                                                 <Typography variant="h3" sx={{fontSize: '15px', ml: 1}}>{f}</Typography>
                                             </Box>    

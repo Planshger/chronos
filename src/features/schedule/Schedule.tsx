@@ -22,7 +22,7 @@ interface LoadingContextProps {
 interface SheduleContextType {
   selectedDate: Date | null;
   activeModal: string | null;
-  tasks: Task;
+  tasks: Task | undefined;
   setActiveModal: (name: string | null) => void;
   handleEditTask: (task: TaskItem) => void;
   handleSaveTask: (task: TaskItem) => void;

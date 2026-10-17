@@ -18,7 +18,7 @@ export default function PrivateRoute({ roles }: PrivateRouteProps) {
     return <Navigate to="/register" state={{ from: location }} replace />;
   }
 
-  if (user?.plan === '' && user.role === 'user') {
+  if (user?.plan === '' && user.role === 'user' && user.status === 'Ожидание оплаты') {
     return <Navigate to="/plans" state={{ from: location }} replace />;
   }
 

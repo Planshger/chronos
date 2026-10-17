@@ -15,7 +15,7 @@ export default function RegistrationPage() {
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, seInput] = useState<UserModel>({name: '', email: '', plan: '', status: '', password: ''} as UserModel);
-  const {setToken} = useAuth();
+  const {setToken, setUser} = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -23,7 +23,7 @@ export default function RegistrationPage() {
     
     if (isAdminLogin) {
       await Loading(() => auth(input, 'admin')
-        .then((res) => setToken(res.token))
+        .then((res) => {setToken(res.token); setUser(res.data)})
         .catch((err: Error) =>  alert(err.message)), setLoading)
 
       navigate('/admin', { replace: true });
@@ -32,14 +32,14 @@ export default function RegistrationPage() {
 
     if (isLogin) {
       await Loading(() => auth(input, 'user')
-        .then((res) => setToken(res.token))
+        .then((res) => {setToken(res.token); setUser(res.data)})
         .catch((err: Error) => alert(err.message)), setLoading);
 
       navigate('/schedule', { replace: true });
       return;
     }
 
-    await Loading(() => register({...input, status: 'Ожидание оплаты'}).then(res => setToken(res.token)), setLoading);
+    await Loading(() => register({...input, status: 'Ожидание оплаты'}).then(res => {setToken(res.token); setUser(res.data)}), setLoading);
     navigate('/plans', { replace: true });
   };
 

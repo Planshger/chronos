@@ -46,7 +46,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     (async () => {
       try {
-        const user = await authMe(token) ?? initialUser;
+        // const user = await authMe(token) ?? initialUser;
+        if(user.status === 'Заблокирован') {
+          alert('Пользователь заблокирован');
+          logout(); return;
+        }
         if (cancelled) { 
           return; 
         } else {
@@ -63,7 +67,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       })();
 
       return () => { cancelled = true; };
-  }, [token]);
+  }, [token, user]);
 
   const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser}),[token, setToken, user, logout, isAuthChecked, setUser]);
 
