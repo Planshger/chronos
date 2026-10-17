@@ -13,7 +13,7 @@ export default function TelegramSettings() {
 
   if (!tgLinked) {
     return (
-      <PageWithQR setTgLink={setTgLinked} />
+      <PageWithQR />
     );
   }
 
