@@ -1,4 +1,4 @@
-import { SettingsModel } from "../models/SettingsModel";
+import { SettingsModel } from "../models/settings_model";
 
 export const SettingsData: SettingsModel[] = [
     {id: 'profile_settings', label: 'Настройки профиля'},

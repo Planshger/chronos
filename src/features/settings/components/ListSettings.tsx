@@ -2,7 +2,7 @@ import {Collapse, List, ListItemButton, ListItemIcon, ListItemText, SvgIcon, Svg
 import theme from "../../../core/theme/darkTheme";
 import { ArrowBack, ExpandLess, ExpandMore, Message, Settings, SvgIconComponent, TouchApp } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SettingsModel } from "../models/SettingsModel";
+import { SettingsModel } from "../models/settings_model";
 import { useEffect, useState } from "react";
 import { SettingIcons } from "../../../core/constants/SettingIcons";
 

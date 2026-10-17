@@ -7,5 +7,8 @@ export default interface UserModel {
     plan: string,
     status: string,
     password?: string 
+    tgLinked: boolean,
     role: Role,
 }
+
+export const initialUser: UserModel = {id: 0, name: '', email: '', plan: '', status: '', password: '', role: '', tgLinked: false};

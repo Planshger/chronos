@@ -13,7 +13,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import ProfileSettings from './features/settings/components/user/ProfileSettings';
 import ManagePlansSettings from './features/settings/components/user/ManagePlansSettings';
 import AnalyticsSettings from './features/settings/components/user/AnalyticsSettings';
-import TelegramSettings from './features/settings/components/user/TelegramSettings';
+import TelegramSettings from './features/settings/components/user/telegram/TelegramSettings';
 import WhatsAppSettings from './features/settings/components/user/WhatsAppSettings';
 import MapSettings from './features/settings/components/user/MapSettings';
 

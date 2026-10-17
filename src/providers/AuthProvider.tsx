@@ -1,21 +1,21 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { authMe, getToken, setTokenInStorage } from "../core/datasources/authorization_data_source";
-import UserModel from "../core/ models/user_model";
+import UserModel, { initialUser } from "../core/ models/user_model";
+import { API_BASE_URL } from "../core/api/URL";
 
 interface AuthContextType {
   token: string;
   user: UserModel;
   isAuthChecked: boolean;
+  refreshUser: () => Promise<void>;
   setToken: (token: string) => void; 
   setUser: (user: UserModel) => void; 
   logout: () => void; 
 };
 
-const initialUser: UserModel = {
-  id: 0, name: '', email: '', plan: '', status: '', password: '', role: '',
-};
 
-const AuthContext = createContext<AuthContextType>({token: '', user: initialUser, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false});
+
+const AuthContext = createContext<AuthContextType>({token: '', user: initialUser, setToken: () => {},  logout: () => {}, setUser: () => {}, isAuthChecked: false, refreshUser: () => Promise.resolve()});
 
 interface AuthProviderProps {
   children: React.ReactNode
@@ -38,6 +38,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsAuthChecked(true);   
   }, []);
 
+  const refreshUser = async () => {
+    if (!user?.id) return;
+    const res = await fetch(`${API_BASE_URL}/users/${user.id}`);
+    if (res.ok) {
+        setUser(await res.json());
+    }
+  };
+
   useEffect(() => {
     if (!token) {logout(); return;}
 
@@ -46,7 +54,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
     (async () => {
       try {
-        // const user = await authMe(token) ?? initialUser;
+        const user = await authMe(token) ?? initialUser;
         if(user.status === 'Заблокирован') {
           alert('Пользователь заблокирован');
           logout(); return;
@@ -67,9 +75,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       })();
 
       return () => { cancelled = true; };
-  }, [token, user]);
+  }, [token]);
 
-  const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser}),[token, setToken, user, logout, isAuthChecked, setUser]);
+  const contextValue = useMemo(() => ({token, setToken, user, logout, isAuthChecked, setUser, refreshUser}),[token, setToken, user, logout, isAuthChecked, setUser, refreshUser]);
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

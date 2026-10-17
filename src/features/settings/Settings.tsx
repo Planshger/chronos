@@ -1,7 +1,7 @@
 import { Box, Container, Paper, Stack, Typography } from "@mui/material";
 import theme from "../../core/theme/darkTheme";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SettingsModel } from "./models/SettingsModel";
+import { SettingsModel } from "./models/settings_model";
 import { SettingIcons } from "../../core/constants/SettingIcons";
 import { TouchApp } from "@mui/icons-material";
 import React, { createContext, useContext, useState } from "react";
@@ -12,7 +12,7 @@ import AdminManagePlansSettings from "./components/admin/AdminManagePlansSetting
 import ProfileSettings from "./components/user/ProfileSettings";
 import ManagePlansSettings from "./components/user/ManagePlansSettings";
 import AnalyticsSettings from "./components/user/AnalyticsSettings";
-import TelegramSettings from "./components/user/TelegramSettings";
+import TelegramSettings from "./components/user/telegram/TelegramSettings";
 import WhatsAppSettings from "./components/user/WhatsAppSettings";
 import ListSettings from "./components/ListSettings";
 import MapSettings from "./components/user/MapSettings";
