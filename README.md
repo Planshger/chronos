@@ -46,6 +46,7 @@ src/
     datasources/           HTTP-запросы авторизации, задач, тарифов и пользователей
     models/                модели данных
     theme/                 тема Material UI
+    utils/                 алгоритм загрузки
   features/                страницы и компоненты по разделам приложения
   providers/AuthProvider   состояние пользователя и авторизации
   routes/PrivateRoute      проверка доступа к защищённым маршрутам
