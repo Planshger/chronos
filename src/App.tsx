@@ -47,7 +47,6 @@ function App() {
                 <Route path="manage_plans" element={<ManagePlansSettings />} />
                 <Route path="analytics" element={<AnalyticsSettings />} />
                 <Route path="telegram" element={<TelegramSettings />} />
-                <Route path="whatsapp" element={<WhatsAppSettings />} />
                 <Route path="map_settings" element={<MapSettings />} />
 
                 <Route element={<PrivateRoute roles={['admin']} />}>

@@ -23,7 +23,6 @@ const settingsComponents: Record<string, React.ComponentType> = {
     'analytics': AnalyticsSettings,
     'map_settings': MapSettings,
     'telegram': TelegramSettings,
-    'whatsapp': WhatsAppSettings,
     'admin_profile_settings': ProfileSettings,
     'admin_manage_plans': AdminManagePlansSettings,
 };

@@ -19,7 +19,6 @@ export function PageWithChat() {
     const [error, setError] = useState<string | null>(null);
   
     const bottomRef = useRef<HTMLDivElement | null>(null);
-  
     
     const loadMessages = async () => {
       if (!user?.id) return;
@@ -36,35 +35,36 @@ export function PageWithChat() {
       }
     };
   
-     const handleSend = async () => {
-      const text = input.trim();
-      if (!text || !user?.id || sending) return;
+    const handleSend = async () => {
+        const text = input.trim();
+        if (!text || !user?.id || sending) return;
   
-      setSending(true);
-      try {
-        await sendMessage({
-          text: text,
-          source: 'web',
-          userId: String(user.id),
-          telegramId: null,
-          createdAt: new Date().toISOString(),
-          processed: false,
-        } as MessageModel); 
-        setInput('');
-        await loadMessages();
-      } catch (err) {
-        console.error(err);
-        setError('Не удалось отправить сообщение');
-      } finally {
-        setSending(false);
-      }
+        setSending(true);
+
+        try {
+            await sendMessage({
+                text: text,
+                source: 'web',
+                userId: String(user.id),
+                telegramId: null,
+                createdAt: new Date().toISOString(),
+                processed: false,
+            } as MessageModel); 
+            setInput('');
+            await loadMessages();
+        } catch (err) {
+            console.error(err);
+            setError('Не удалось отправить сообщение');
+        } finally {
+            setSending(false);
+        }
     };
   
     const handleKeyDown: ComponentProps<typeof TextField>['onKeyDown'] = (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
           e.preventDefault();
           handleSend();
-      }
+        }
     };
   
     useEffect(() => {

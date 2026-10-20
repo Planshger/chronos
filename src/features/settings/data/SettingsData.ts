@@ -7,7 +7,6 @@ export const SettingsData: SettingsModel[] = [
     {id: 'map_settings', label: 'Карты для такси'},
     {id: 'messengers', label: 'Мессенджеры', messenger: [
         {id: 'telegram', label: 'Telegram'},
-        {id: 'whatsapp', label: 'WhatsApp'},
     ]}
 ];
 

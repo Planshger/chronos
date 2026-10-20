@@ -13,8 +13,8 @@ export function PageWithQR() {
             <Typography variant="h5" sx={{fontWeight: 600}} gutterBottom>Связать с Telegram</Typography>
 
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Отсканируйте QR-код или перейдите по ссылке, чтобы получать и отправлять
-            задачи через Telegram.
+                Отсканируйте QR-код или перейдите по ссылке, чтобы получать и отправлять
+                задачи через Telegram.
             </Typography>
 
             <Paper elevation={0}sx={{display: 'inline-block', p: 2, borderRadius: 3, bgcolor: 'background.paper', border: '1px solid', borderColor: 'divider'}}>
@@ -26,7 +26,6 @@ export function PageWithQR() {
                     Открыть в Telegram
                 </Button>
             </Box>
-
         </Box>
     );
 }
