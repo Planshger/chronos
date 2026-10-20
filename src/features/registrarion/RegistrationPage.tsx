@@ -7,22 +7,21 @@ import { useAuth } from '../../providers/AuthProvider';
 import { auth, register } from '../../core/datasources/authorization_data_source';
 import UserModel, { initialUser } from '../../core/ models/user_model';
 import Loader from '../../core/components/Loader';
-import { RegisterUserModel } from './models/register_user_model';
-import { Loading } from '../../core/datasources/admin_data_source';
+import { withLoading } from '../../core/utils/withLoading';
 
 export default function RegistrationPage() {
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, seInput] = useState<UserModel>(initialUser);
-  const {setToken, setUser} = useAuth();
+  const {setToken} = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     
     if (isAdminLogin) {
-      await Loading(() => auth(input, 'admin')
+      await withLoading(() => auth(input, 'admin')
         .then((res) => setToken(res.token))
         .catch((err: Error) =>  alert(err.message)), setLoading)
 
@@ -31,7 +30,7 @@ export default function RegistrationPage() {
     } 
 
     if (isLogin) {
-      await Loading(() => auth(input, 'user')
+      await withLoading(() => auth(input, 'user')
         .then((res) => setToken(res.token))
         .catch((err: Error) => alert(err.message)), setLoading);
 
@@ -39,7 +38,7 @@ export default function RegistrationPage() {
       return;
     }
 
-    await Loading(() => register({...input, status: 'Ожидание оплаты'}).then(res => setToken(res.token)), setLoading);
+    await withLoading(() => register({...input, status: 'Ожидание оплаты'}).then(res => setToken(res.token)), setLoading);
     navigate('/plans', { replace: true });
   };
 

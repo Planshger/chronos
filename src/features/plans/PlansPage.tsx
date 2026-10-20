@@ -4,10 +4,11 @@ import theme from "../../core/theme/darkTheme";
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from "../../providers/AuthProvider";
 import { useCallback, useEffect, useState } from "react";
-import { Loading, updateUserData } from "../../core/datasources/admin_data_source";
+import { updateUserData } from "../../core/datasources/admin_data_source";
 import Loader from "../../core/components/Loader";
 import PlanModel from "../../core/ models/plan_model";
 import { getAllPlans } from "../../core/datasources/plans_data_source";
+import { withLoading } from "../../core/utils/withLoading";
 
 export default function PlansPage() {
     const navigate = useNavigate();
@@ -17,14 +18,14 @@ export default function PlansPage() {
 
     const savePlanFromUser = useCallback(async (namePlan: string) => {
         if (user?.role === 'user') {
-            await Loading(() => updateUserData({...user, plan: namePlan, status: 'Активен'}).then(res => setUser(res)), setLoading);
+            await withLoading(() => updateUserData({...user, plan: namePlan, status: 'Активен'}).then(res => setUser(res)), setLoading);
             navigate('/schedule');
         } else {
             navigate('/register');
         }
     }, [user, token])
 
-    useEffect( () => {Loading(() => getAllPlans().then(res => setPlans(res)), setLoading)}, []);
+    useEffect( () => {withLoading(() => getAllPlans().then(res => setPlans(res)), setLoading)}, []);
 
     return (
         <Paper sx={{height: '100vh', display: 'flex', flexDirection: 'column', bgcolor: theme.palette.background.paper,  position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, overflowY: 'auto'}}>

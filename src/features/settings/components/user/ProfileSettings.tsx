@@ -3,8 +3,9 @@ import { ChangeEvent, useCallback, useState } from "react";
 import UserModel from "../../../../core/ models/user_model";
 import { useLoading } from "../../Settings";
 import { useAuth } from "../../../../providers/AuthProvider";
-import { Loading, updateUserData } from "../../../../core/datasources/admin_data_source";
+import { updateUserData } from "../../../../core/datasources/admin_data_source";
 import theme from "../../../../core/theme/darkTheme";
+import { withLoading } from "../../../../core/utils/withLoading";
 
 
 export default function ProfileSettings() {
@@ -20,7 +21,7 @@ export default function ProfileSettings() {
 	const onClick = useCallback(() => {
 		if (user?.email !== editUser.email || user?.name !== editUser.name) {
 			try {
-				Loading(() => updateUserData(editUser), setLoading);
+				withLoading(() => updateUserData(editUser), setLoading);
 			} finally {
 				setUser(editUser)
 			}

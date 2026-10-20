@@ -3,10 +3,10 @@ import { Box, Button, Card, CardContent, Stack, Typography } from "@mui/material
 import theme from "../../../../core/theme/darkTheme";
 import { useCallback, useEffect, useRef, useState } from "react";
 import PlanModel, { initialPlan } from "../../../../core/ models/plan_model";
-import { Loading } from "../../../../core/datasources/admin_data_source";
 import { addPlan, getAllPlans, updatePlanData } from "../../../../core/datasources/plans_data_source";
 import { useLoading } from "../../Settings";
 import AdminEditManagePlansSettings from "./AdminEditManagePlansSettings";
+import { withLoading } from "../../../../core/utils/withLoading";
 
 export default function AdminManagePlansSettings() {
     const {setLoading} = useLoading();
@@ -15,7 +15,7 @@ export default function AdminManagePlansSettings() {
     
 
     const loadData = useCallback(() => {
-        Loading(() => getAllPlans().then(res => setPlans(res)), setLoading);
+        withLoading(() => getAllPlans().then(res => setPlans(res)), setLoading);
     }, []);
 
     const loadAddPlan = useCallback(async (plan: PlanModel) => {

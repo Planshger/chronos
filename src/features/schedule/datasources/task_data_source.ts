@@ -1,5 +1,5 @@
-import { API_BASE_URL } from "../api/URL";
-import { Task, TaskItem, TaskModel } from "../../features/schedule/models/task_model";
+import { API_BASE_URL } from "../../../core/api/URL";
+import { Task, TaskItem, TaskModel } from "../models/task_model";
 
 
 export function emptyDays(tasks: Task): Task {

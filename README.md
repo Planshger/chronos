@@ -1,46 +1,95 @@
-# Getting Started with Create React App
+# Chronos
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Chronos — клиентское веб-приложение для планирования дел. В приложении есть календарь задач, регистрация и вход, тарифы, пользовательские настройки, связь с Telegram и административный раздел для работы с пользователями и тарифами. Существует роли User и Admin;
 
-## Available Scripts
+## Требования
 
-In the project directory, you can run:
+- Node.js (рекомендуется актуальная LTS-версия)
+- npm
 
-### `npm start`
+## Установка и запуск
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Из корня проекта выполните:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+npm ci
+npm start
+```
 
-### `npm test`
+Приложение откроется по адресу [http://localhost:3000](http://localhost:3000). Сервер разработки обновляет страницу при изменении исходников.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## Что делает приложение
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Главная (`/`)** — описание продукта и переходы к регистрации, тарифам или рабочему разделу.
+- **Регистрация и вход (`/register`)** — создание пользовательского аккаунта, вход пользователя или администратора.
+- **Тарифы (`/plans`)** — просмотр активных тарифов и выбор тарифа для пользователя.
+- **Расписание (`/schedule`)** — календарь, создание, изменение и удаление задач по датам. Страница доступена пользователям.
+- **Настройки (`/settings`)** — профиль и тариф пользователя; Telegram-настройки; дополнительные страницы аналитики и карты. В текущей реализации аналитика содержит демонстрационные данные, а карта обозначена как «В разработке».
+- **Админ-панель (`/admin`)** — таблица пользователей с пагинацией, поиском, сортировкой, фильтрами и редактированием.
+- **Настройки администратора** — управление тарифами и пользовательскими данными.
+- **Telegram** — экран настроек показывает ссылку/QR-код для привязки. После привязки доступен чат с загрузкой и отправкой сообщений.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+В интерфейсе также показаны ИИ-ассистент, продление подписки и функции бронирования, но сейчас они не подключены к API: окно ИИ — демонстрационный интерфейс, настройки карты не реализованы.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Архитектура
 
-### `npm run eject`
+Проект создан на React, TypeScript и Create React App. `src/index.tsx` монтирует приложение, а `src/App.tsx` задаёт тему Material UI, маршруты и ограничения доступа.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Основные каталоги:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```text
+src/
+  App.tsx                  маршруты и корневые провайдеры
+  core/
+    api/                   адрес API
+    datasources/           HTTP-запросы авторизации, задач, тарифов и пользователей
+    models/                модели данных
+    theme/                 тема Material UI
+  features/                страницы и компоненты по разделам приложения
+  providers/AuthProvider   состояние пользователя и авторизации
+  routes/PrivateRoute      проверка доступа к защищённым маршрутам
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Страницы сгруппированы по функциональности в `src/features` (например, `schedule`, `plans`, `settings`, `admin`). Запросы к серверу вынесены из компонентов в datasource-файлы каталога `src/core/datasources`; запросы чата находятся в `src/features/settings/data/datasources`. Распределение datasources-файлов в подкаталог `/core` осуществлялось по принцыпу глобального использования, например запросы чата используются только в рамках страницы Telegram, если datasources используется у себя на страницы и где-то ещё то он вынесен в `/core/datasources`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Защищённые маршруты используют роль пользователя: расписание — `user`, админ-панель — `admin`, общие настройки доступны обеим ролям. Токен сохраняется в `localStorage` под ключом `token`. При наличии токена `AuthProvider` проверяет текущего пользователя через API и предоставляет пользователя и состояние авторизации компонентам приложения.
 
-## Learn More
+## Сервер и сетевые запросы
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Базовый адрес API задан непосредственно в `src/core/api/URL.js`:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```text
+https://278465bc4840a875.mokky.dev
+```
+
+Отдельные `.env`-переменные для адреса API в текущем проекте не настроены. Браузер отправляет запросы непосредственно к этому серверу; поэтому сервер должен разрешать запросы с домена приложения (CORS).
+
+### Какие запросы отправляются
+
+| Действие | Запрос | Когда и сколько |
+|---|---|---|
+| Регистрация | `POST /register` | Один запрос при отправке формы регистрации. |
+| Вход пользователя или администратора | `POST /auth` | Один запрос при отправке формы входа. |
+| Проверка сохранённой сессии | `GET /auth_me` | Один запрос при инициализации `AuthProvider`, если в `localStorage` есть токен; повторно — при смене токена. |
+| Открытие тарифов | `GET /plans` | Один запрос при загрузке страницы тарифов. |
+| Выбор тарифа | `PATCH /users/{id}` | Один запрос после выбора тарифа авторизованным пользователем. |
+| Загрузка расписания | `GET /tasks?userId={id}` | Один запрос при открытии расписания. |
+| Создание задачи | `POST /tasks` или `PATCH /tasks/{id}` | Один запрос: `POST`, если у пользователя ещё нет записи задач; иначе `PATCH` существующей записи. |
+| Изменение или удаление задачи | `PATCH /tasks/{id}` | Один запрос на каждое сохранение изменения/удаления. Задачи хранятся вместе в записи расписания пользователя. |
+| Загрузка пользователей в админке | `GET /users?page={page}&limit={limit}` | Один запрос при открытии таблицы и повторный после смены страницы или обновления данных. Начальный размер страницы — 5 пользователей. |
+| Поиск, фильтрация и сортировка пользователей | `GET /users` с параметрами | Один запрос на действие/изменение фильтра. Поиск по домену email отправляется с задержкой 800 мс после ввода. |
+| Изменение пользователя | `PATCH /users/{id}` | Один запрос при сохранении пользователя, профиля или тарифа. |
+| Удаление пользователей | `DELETE /users/{id}` | По одному запросу на каждого выбранного пользователя; затем один `GET` для обновления таблицы. |
+| Управление тарифами | `GET /plans`, `POST /plans`, `PATCH /plans/{id}`, `DELETE /plans/{id}` | `GET` при открытии страницы тарифов/управления тарифами и после удаления или сохранения изменений; `POST`, `PATCH` и `DELETE` — по одному на соответствующее действие. |
+| Статус Telegram-привязки | `GET /auth_me` | Один дополнительный запрос при открытии настроек Telegram. Он не нужен для построения QR-кода на экране непривязанного аккаунта, но выполняется для определения статуса привязки. |
+| Чат Telegram | `GET /messages?userId={id}&sortBy=-createdAt` | Сразу при открытии чата и затем каждые 3 секунды, пока он открыт: до 20 запросов в минуту. Ответ отображает последние 10 сообщений. |
+| Отправка сообщения в чате | `POST /messages` | Один запрос на каждое отправленное сообщение; после успешной отправки выполняется дополнительный `GET` для обновления чата. Периодический опрос при этом также продолжается. |
+
+Это число запросов приложения, без учёта браузерных запросов к статическим файлам и повторов/ошибок сети. У приложения нет единого постоянного числа запросов: оно зависит от открытых страниц и действий пользователя. Например, вход с последующим открытием страницы Telegram может дать `POST /auth`, проверку сессии `GET /auth_me` и ещё один `GET /auth_me` для статуса Telegram. Открытый Telegram-чат делает до 20 запросов на сообщения в минуту независимо от отправки сообщений; при отправке добавляются `POST` и немедленный `GET`.
+
+В текущем коде запросы используют стандартный `fetch`. Автоматические повторы запросов, общий кэш и глобальный интервал опроса не настроены.
+
+### Доступ к аккаунтам
+Пользователи: user@gmail.com, user2@gmail.com, user3@gmail.com. Пароль: 123456
+Админ: egor@gmail.com. Пароль: 123456.

@@ -3,8 +3,9 @@ import { Avatar, Button, Grid, Stack, Typography } from "@mui/material";
 import theme from "../../../../core/theme/darkTheme";
 import { useAuth } from "../../../../providers/AuthProvider";
 import { useNavigate } from "react-router-dom";
-import { Loading, updateUserData } from "../../../../core/datasources/admin_data_source";
+import { updateUserData } from "../../../../core/datasources/admin_data_source";
 import { useLoading } from "../../Settings";
+import { withLoading } from "../../../../core/utils/withLoading";
 
 
 export default function ManagePlansSettings() {
@@ -13,7 +14,7 @@ export default function ManagePlansSettings() {
     const navigate = useNavigate();
 
     const cancelPlan = async () => {
-        await Loading(() => updateUserData({...user, plan: '', status: 'Ожидание оплаты'}).then(res => setUser(res)), setLoading)
+        await withLoading(() => updateUserData({...user, plan: '', status: 'Ожидание оплаты'}).then(res => setUser(res)), setLoading)
     }
     return (
         <Stack spacing={3} sx={{alignItems: "center"}}>

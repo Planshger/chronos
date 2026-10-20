@@ -6,8 +6,8 @@ import theme from "../../../../core/theme/darkTheme";
 import NumberField from "../../../../core/components/NumberField";
 import Loader from "../../../../core/components/Loader";
 import { useLoading } from "../../Settings";
-import { Loading } from "../../../../core/datasources/admin_data_source";
 import { deletePlans, getAllPlans } from "../../../../core/datasources/plans_data_source";
+import { withLoading } from "../../../../core/utils/withLoading";
 
 const style = {
   position: 'absolute',
@@ -93,8 +93,8 @@ function AdminEditManagePlansSettings({updatePlan, onClose, open, plan, setPlans
     }, [editedPlan]);
 
     const handleDeletePlan = useCallback( async (id: number) => {
-        await Loading(() => deletePlans(id), setLoading);
-        await Loading(() => getAllPlans().then(res => setPlans(res)), setLoading);
+        await withLoading(() => deletePlans(id), setLoading);
+        await withLoading(() => getAllPlans().then(res => setPlans(res)), setLoading);
         onClose();
     }, [])
 

@@ -3,16 +3,6 @@ import { PaginationModel } from "../ models/user_pagination_model";
 import { API_BASE_URL } from "../api/URL";
 import UserModel from "../ models/user_model";
 
-
-export const Loading = async (fn: () => Promise<unknown> | unknown, onLoading: (value: boolean) => void) => {
-    onLoading(true);
-    try {
-        await fn();
-    } finally {
-        onLoading(false);
-    }
-}
-
 export function getAllUsers(): Promise<UserModel[]> {
     return fetch(`${API_BASE_URL}/users`, {method: 'GET'}).then(res => res.json());;
 }

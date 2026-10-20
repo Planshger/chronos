@@ -9,9 +9,9 @@ import Scheduling from './components/Scheduling';
 import AiDialog from './components/AiDialog';
 import OptionsDialog from './components/OptionsDialog';
 import { useAuth } from '../../providers/AuthProvider';
-import { Loading } from '../../core/datasources/admin_data_source';
 import Loader from '../../core/components/Loader';
-import { getUserTasksByUserId, updateTasksData, addTask, editTask } from '../../core/datasources/task_data_source';
+import { getUserTasksByUserId, updateTasksData, addTask, editTask } from './datasources/task_data_source';
+import { withLoading } from '../../core/utils/withLoading';
 
 
 interface LoadingContextProps {
@@ -60,7 +60,7 @@ export default  function Schedule() {
 
     const dateKey = format(selectedDate, 'yyyy-MM-dd');
     
-    await Loading(() => addTask(dateKey, {...task, id: crypto.randomUUID()}, tasks, user.id).then(res => setTasks(res)), setLoading);
+    await withLoading(() => addTask(dateKey, {...task, id: crypto.randomUUID()}, tasks, user.id).then(res => setTasks(res)), setLoading);
 
     setActiveModal('tasks_list');
   }, [user, selectedDate, activeModal, tasks]);
@@ -70,7 +70,7 @@ export default  function Schedule() {
 
     const dateKey = format(selectedDate, 'yyyy-MM-dd');
     
-    await Loading(() => editTask(dateKey, {...task}, tasks).then(res => setTasks(res)), setLoading);
+    await withLoading(() => editTask(dateKey, {...task}, tasks).then(res => setTasks(res)), setLoading);
 
     setActiveModal('tasks_list');
   }, [user, selectedDate, activeModal, tasks]);
@@ -81,7 +81,7 @@ export default  function Schedule() {
     const dateKey = format(selectedDate, 'yyyy-MM-dd');
     const dayTasks = (tasks.tasks[dateKey]).filter(t => !ids.includes(t.id));
 
-    Loading(() => updateTasksData({...tasks, tasks: {...tasks.tasks, [dateKey]: dayTasks}}).then(res => setTasks(res)), setLoading);
+    await withLoading(() => updateTasksData({...tasks, tasks: {...tasks.tasks, [dateKey]: dayTasks}}).then(res => setTasks(res)), setLoading);
     
     setActiveModal(null);
   }, [user, selectedDate, tasks]);
@@ -96,7 +96,7 @@ export default  function Schedule() {
 
   const sheduleContextValue = useMemo(() => ({selectedDate, activeModal, setActiveModal, handleSaveTask, onDeleteTasks, handleEditTask, tasks: tasks.tasks ?? {}}), [selectedDate, activeModal, setActiveModal, handleSaveTask, onDeleteTasks, handleEditTask, tasks]);
 
-  useEffect(() => {Loading(() => getUserTasksByUserId(user.id).then(res => setTasks(res ?? initialTaskModel)), setLoading)}, []);
+  useEffect(() => {withLoading(() => getUserTasksByUserId(user.id).then(res => setTasks(res ?? initialTaskModel)), setLoading)}, []);
 
   return (
     <Box sx={{minHeight: '100vh', bgcolor: theme.palette.background.paper}}>

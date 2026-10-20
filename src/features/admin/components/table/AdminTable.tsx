@@ -18,9 +18,10 @@ import Loader from '../../../../core/components/Loader';
 import { Edit } from '@mui/icons-material';
 import { IconButton, Stack, Switch, TextField } from '@mui/material';
 import AdminTableEditMenu from './AdminTableEditMenu';
-import UserModel from '../../../../core/ models/user_model';
+import UserModel, { initialUser } from '../../../../core/ models/user_model';
 import AutocompleteList from '../AutocompleteList';
-import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination, Loading, updateUserData } from '../../../../core/datasources/admin_data_source';
+import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination, updateUserData } from '../../../../core/datasources/admin_data_source';
+import { withLoading } from '../../../../core/utils/withLoading';
 
 const initialUsersProps: PaginationModel = {items: [], meta: {  total_items: 0, total_pages: 0, current_page: 1, per_page: 5, remaining_count: 0}};
 
@@ -31,7 +32,7 @@ export default function AdminTable() {
   const [loading, setLoading] = React.useState(false);
   const [editDomain, setEditDomain] = React.useState(false);
   const [domain, setDomain] = React.useState('@example.com');
-  const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: {id: 0, name: '', email: '', plan: '', status: '', role: ''}});
+  const [openEdit, setOpenEdit] = React.useState<{open: boolean, user: UserModel}>({open: false, user: initialUser});
   const [input, setInput] = React.useState<FilterValuesProps>({id: 'name', value: ''} as FilterValuesProps);
   const timeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -57,11 +58,11 @@ export default function AdminTable() {
   }, [input.value, domain])
   
   const loadDataWithPagination = React.useCallback((page: number, limit: number) => {
-    Loading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading);
+    withLoading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading);
   }, []);
 
   const loadDataSortBy = React.useCallback((sortName: string, order?: 'asc' | 'desc') => {
-    Loading(() => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then(res => setData(res)), setLoading);
+    withLoading(() => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then(res => setData(res)), setLoading);
   }, [data.meta.current_page, data.meta.per_page]);
 
   const loadDataWithDeleteUser = React.useCallback(async () => {
@@ -86,7 +87,7 @@ export default function AdminTable() {
 
   const handleInput = React.useCallback((value: string, id: string ) => {
     setInput({id: id, value: value});
-    Loading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: id, value: value}]).then((res) => setData(res)), setLoading);
+    withLoading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: id, value: value}]).then((res) => setData(res)), setLoading);
   }, [data]);
 
   const handleClick = React.useCallback((id: number) => {
@@ -98,7 +99,7 @@ export default function AdminTable() {
   }, []);
 
   const searchWithEmail =  React.useCallback((value: string) => {
-    Loading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: 'email', value: value}]).then((res) => setData(res)), setLoading);
+    withLoading(() => getFilterData(data.meta.current_page, data.meta.per_page, [{id: 'email', value: value}]).then((res) => setData(res)), setLoading);
   }, [data.meta.current_page, data.meta.per_page]);
 
   const debouncedSearch = React.useCallback((searchWithEmailValue: string) => {
