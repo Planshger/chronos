@@ -53,7 +53,8 @@ const theme = createTheme({
     },
   },
   typography: {
-   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     h1: {
       fontSize: '3rem',
       fontWeight: 800,
@@ -114,21 +115,24 @@ const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: 'rgba(15, 23, 42, 0.8)', backdropFilter: 'blur(12px)', color: '#f1f5f9', borderBottom: '1px solid rgba(255,255,255,0.08)',
+          backgroundColor: 'rgba(15, 23, 42, 0.8)',
+          backdropFilter: 'blur(12px)',
+          color: '#f1f5f9',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          backgroundImage: 'none', 
+          backgroundImage: 'none',
         },
       },
     },
     MuiTableCell: {
       styleOverrides: {
         root: {
-          borderBottom: '2px solid rgba(255,255,255,0.08)', 
+          borderBottom: '2px solid rgba(255,255,255,0.08)',
         },
       },
     },

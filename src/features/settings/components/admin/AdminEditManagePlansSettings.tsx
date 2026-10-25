@@ -1,20 +1,30 @@
-import { Close } from "@mui/icons-material";
-import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, Switch, TextField, Typography } from "@mui/material";
-import { memo, useCallback, useEffect, useState } from "react";
-import PlanModel, { initialPlan } from "../../../../core/ models/plan_model";
-import theme from "../../../../core/theme/darkTheme";
-import NumberField from "../../../../core/components/NumberField";
-import Loader from "../../../../core/components/Loader";
-import { useLoading } from "../../Settings";
-import { deletePlans, getAllPlans } from "../../../../core/datasources/plans_data_source";
-import { withLoading } from "../../../../core/utils/withLoading";
+import { Close } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  IconButton,
+  Modal,
+  SelectChangeEvent,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { memo, useCallback, useEffect, useState } from 'react';
+import PlanModel, { initialPlan } from '../../../../core/ models/plan_model';
+import theme from '../../../../core/theme/darkTheme';
+import NumberField from '../../../../core/components/NumberField';
+import Loader from '../../../../core/components/Loader';
+import { useLoading } from '../../Settings';
+import { deletePlans, getAllPlans } from '../../../../core/datasources/plans_data_source';
+import { withLoading } from '../../../../core/utils/withLoading';
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: {lg: '50%', xs: '95%'},
+  width: { lg: '50%', xs: '95%' },
   bgcolor: 'background.paper',
   border: '1px solid rgba(255,255,255,0.2)',
   boxShadow: 24,
@@ -23,172 +33,291 @@ const style = {
 };
 
 interface AdminEditManagePlansSettingsProps {
-    updatePlan: (plan: PlanModel) => void;
-    setPlans: (plans: PlanModel[]) => void;
-    addPlan: (plan: PlanModel) => void;
-    onClose: () => void;
-    open: boolean;
-    plan: PlanModel;
-    isCreate?: boolean;
+  updatePlan: (plan: PlanModel) => void;
+  setPlans: (plans: PlanModel[]) => void;
+  addPlan: (plan: PlanModel) => void;
+  onClose: () => void;
+  open: boolean;
+  plan: PlanModel;
+  isCreate?: boolean;
 }
 
-function monthsToDisplay(days: number, isTrial?: boolean): number { 
-    return isTrial ? days : Math.round(days / 30)
-};
+function monthsToDisplay(days: number, isTrial?: boolean): number {
+  return isTrial ? days : Math.round(days / 30);
+}
 
-function daysToBackend(value: number, isTrial?: boolean): number { 
-   return isTrial ? value : Math.round(value * 30);
+function daysToBackend(value: number, isTrial?: boolean): number {
+  return isTrial ? value : Math.round(value * 30);
 }
 
 function textToFeatures(text: string): string[] {
-    return text
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
+  return text
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
 }
 
 function featuresToText(features: string[] | undefined | null): string {
-    if (!features) return '';
-    return features.join('\n');
+  if (!features) return '';
+  return features.join('\n');
 }
 
 function arraysEqual(a: string[] | undefined, b: string[] | undefined): boolean {
-    const arrA = a ?? [];
-    const arrB = b ?? [];
-    if (arrA.length !== arrB.length) return false;
-    return arrA.every((item, i) => item === arrB[i]);
+  const arrA = a ?? [];
+  const arrB = b ?? [];
+  if (arrA.length !== arrB.length) return false;
+  return arrA.every((item, i) => item === arrB[i]);
 }
 
-function AdminEditManagePlansSettings({updatePlan, onClose, open, plan, setPlans, isCreate, addPlan}: AdminEditManagePlansSettingsProps) {
-    const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
-    const {setLoading, loading} = useLoading();
+function AdminEditManagePlansSettings({
+  updatePlan,
+  onClose,
+  open,
+  plan,
+  setPlans,
+  isCreate,
+  addPlan,
+}: AdminEditManagePlansSettingsProps) {
+  const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
+  const { setLoading, loading } = useLoading();
 
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = e.target;
-        setEditedPlan((prev) => { return {...prev, [name]: value}});
-    }, [editedPlan]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setEditedPlan((prev) => {
+        return { ...prev, [name]: value };
+      });
+    },
+    [editedPlan],
+  );
 
-    const handleFeaturesChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPlan((prev) => ({...prev, features: textToFeatures(e.target.value)}));
-    }, [editedPlan]);
+  const handleFeaturesChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedPlan((prev) => ({ ...prev, features: textToFeatures(e.target.value) }));
+    },
+    [editedPlan],
+  );
 
-    const handleValueChange = useCallback((name: keyof PlanModel, value: number | null) => {
-        setEditedPlan((prev) => ({ ...prev, [name]: value ?? plan[name] }));
-    }, [editedPlan]);
+  const handleValueChange = useCallback(
+    (name: keyof PlanModel, value: number | null) => {
+      setEditedPlan((prev) => ({ ...prev, [name]: value ?? plan[name] }));
+    },
+    [editedPlan],
+  );
 
-    const handleTrialChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPlan((prev) => ({
-            ...prev,
-            trial: e.target.checked,
-            durationOfActivity: e.target.checked ? daysToBackend(prev.durationOfActivity, false)  : monthsToDisplay(prev.durationOfActivity, false),   
-        }));
-    }, [editedPlan]);
+  const handleTrialChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedPlan((prev) => ({
+        ...prev,
+        trial: e.target.checked,
+        durationOfActivity: e.target.checked
+          ? daysToBackend(prev.durationOfActivity, false)
+          : monthsToDisplay(prev.durationOfActivity, false),
+      }));
+    },
+    [editedPlan],
+  );
 
-    const handlePopularChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPlan((prev) => ({...prev, popular: e.target.checked}));
-    }, [editedPlan]);
+  const handlePopularChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedPlan((prev) => ({ ...prev, popular: e.target.checked }));
+    },
+    [editedPlan],
+  );
 
-    const handleActiveChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setEditedPlan((prev) => ({...prev, active: e.target.checked}));
-    }, [editedPlan]);
+  const handleActiveChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEditedPlan((prev) => ({ ...prev, active: e.target.checked }));
+    },
+    [editedPlan],
+  );
 
-    const handleDeletePlan = useCallback( async (id: number) => {
-        await withLoading(() => deletePlans(id), setLoading);
-        await withLoading(() => getAllPlans().then(res => setPlans(res)), setLoading);
+  const handleDeletePlan = useCallback(async (id: number) => {
+    await withLoading(() => deletePlans(id), setLoading);
+    await withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
+    onClose();
+  }, []);
+
+  const handleSave = useCallback(() => {
+    const planToSend: PlanModel = {
+      ...editedPlan,
+      durationOfActivity: daysToBackend(editedPlan.durationOfActivity, editedPlan.trial),
+      features: editedPlan.features ?? [],
+    };
+
+    const allKeys = new Set<keyof PlanModel>([
+      ...(Object.keys(plan) as (keyof PlanModel)[]),
+      ...(Object.keys(planToSend) as (keyof PlanModel)[]),
+    ]);
+
+    const isChanged = [...allKeys].some((key) => {
+      if (key === 'features') return !arraysEqual(planToSend.features, plan.features);
+      return planToSend[key] !== plan[key];
+    });
+    if (isChanged) {
+      if (isCreate) {
+        addPlan(planToSend);
+      } else {
+        updatePlan(planToSend);
+      }
+    }
+    onClose();
+  }, [plan, editedPlan, updatePlan, onClose]);
+
+  useEffect(() => {
+    setEditedPlan({
+      ...plan,
+      durationOfActivity: monthsToDisplay(plan.durationOfActivity, plan.trial),
+    });
+  }, [plan]);
+
+  return (
+    <Modal
+      open={open}
+      onClose={(reason) => {
+        if (reason !== 'backdropClick') return;
         onClose();
-    }, [])
+      }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <IconButton
+          aria-label="close"
+          onClick={() => onClose()}
+          sx={{ position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500] }}
+        >
+          <Close />
+        </IconButton>
 
-    const handleSave = useCallback(() => {
-        const planToSend: PlanModel = {
-            ...editedPlan,
-            durationOfActivity: daysToBackend(editedPlan.durationOfActivity, editedPlan.trial),
-            features: editedPlan.features ?? [],
-        };
+        <Typography variant="h6" align="center" sx={{ mt: 2, mb: 2 }}>
+          {isCreate ? 'Создать тарифный план' : 'Редактировать тарифный план'}{' '}
+          <span style={{ color: theme.palette.primary.main, textDecoration: 'underline' }}>
+            {editedPlan.name}
+          </span>
+        </Typography>
 
-        const allKeys = new Set<keyof PlanModel>([
-            ...(Object.keys(plan) as (keyof PlanModel)[]),
-            ...(Object.keys(planToSend) as (keyof PlanModel)[]),
-        ]);
+        <Stack spacing={2} sx={{ mt: 3 }}>
+          <TextField
+            name="name"
+            id="outlined-basic"
+            label="Название"
+            variant="standard"
+            value={editedPlan.name}
+            onChange={handleChange}
+            sx={{ '& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' } }}
+          />
 
-        const isChanged = [...allKeys].some((key) => {
-            if (key === 'features') return !arraysEqual(planToSend.features, plan.features);
-            return planToSend[key] !== plan[key];
-        });
-        if (isChanged) {
-            if (isCreate) {
-                addPlan(planToSend);
-            } else {
-                updatePlan(planToSend);
-            }   
-        } 
-        onClose();
-    }, [plan, editedPlan, updatePlan, onClose]);
+          <TextField
+            name="description"
+            id="filled-textarea"
+            label="Описание"
+            variant="filled"
+            multiline
+            value={editedPlan.description}
+            onChange={handleChange}
+            sx={{ '& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' } }}
+          />
 
-    useEffect(() => {setEditedPlan({...plan, durationOfActivity: monthsToDisplay(plan.durationOfActivity, plan.trial)})}, [plan]);
-    
-    return (
-        <Modal open={open} onClose={(reason) => {if(reason !== 'backdropClick') return; onClose();}} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-            <Box sx={style}>
-                <IconButton aria-label="close" onClick={() => onClose()} sx={{position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500]}}>
-                    <Close/>
-                </IconButton>
+          <Stack direction={'row'} spacing={3}>
+            <NumberField
+              name="price"
+              label="Прайс(RUB)"
+              size="small"
+              value={editedPlan.price}
+              onValueChange={(value) => handleValueChange('price', value)}
+            />
 
-                <Typography variant="h6" align="center" sx={{mt: 2, mb: 2}}>{isCreate ? 'Создать тарифный план' : 'Редактировать тарифный план'} <span style={{color: theme.palette.primary.main, textDecoration: 'underline'}}>{editedPlan.name}</span></Typography>
+            <NumberField
+              name="durationOfActivity"
+              label={`Длительность(${editedPlan.trial ? 'дней' : 'месяц'})`}
+              size="small"
+              value={editedPlan.durationOfActivity}
+              onValueChange={(value) => handleValueChange('durationOfActivity', value)}
+            />
+          </Stack>
 
-                <Stack spacing={2} sx={{mt: 3}}>
-                    <TextField name="name" id="outlined-basic" label="Название" variant="standard" value={editedPlan.name} onChange={handleChange} sx={{'& input::-webkit-contacts-auto-fill-button': {visibility: 'hidden'}}}/>
+          <TextField
+            name="features"
+            id="features-textarea"
+            label="Возможности (по одной на строку)"
+            variant="filled"
+            multiline
+            minRows={4}
+            value={featuresToText(editedPlan.features)}
+            onChange={handleFeaturesChange}
+            sx={{ '& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' } }}
+          />
 
-                    <TextField name="description" id="filled-textarea" label="Описание" variant="filled" multiline value={editedPlan.description} onChange={handleChange} sx={{'& input::-webkit-contacts-auto-fill-button': {visibility: 'hidden'}}}/>
+          <Stack direction={'row'} spacing={3} sx={{ position: 'relative' }}>
+            <Stack direction={'row'}>
+              <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
+                Пробный
+              </Typography>
 
-                    <Stack direction={'row'} spacing={3}>
-                        <NumberField name='price' label="Прайс(RUB)" size="small" value={editedPlan.price} onValueChange={(value) => handleValueChange('price', value)}/>
+              <Switch
+                checked={editedPlan.trial ?? false}
+                onChange={handleTrialChange}
+                color="secondary"
+              />
+            </Stack>
 
-                        <NumberField name='durationOfActivity' label={`Длительность(${editedPlan.trial ? 'дней' : 'месяц'})`} size="small" value={editedPlan.durationOfActivity} onValueChange={(value) => handleValueChange('durationOfActivity', value)}/>
-                    </Stack>
+            <Stack direction={'row'}>
+              <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
+                Популярный
+              </Typography>
 
-                    <TextField name="features" id="features-textarea" label="Возможности (по одной на строку)" variant="filled" multiline minRows={4} value={featuresToText(editedPlan.features)} onChange={handleFeaturesChange} sx={{'& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' }}}/>
+              <Switch
+                checked={editedPlan.popular ?? false}
+                onChange={handlePopularChange}
+                color="secondary"
+              />
+            </Stack>
 
-                    <Stack direction={'row'} spacing={3} sx={{position: 'relative'}}>
-                        <Stack direction={'row'}>
-                            <Typography variant="h6" sx={{fontSize: '15px', pt: 0.8}}>Пробный</Typography>
+            <Stack direction={'row'}>
+              <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
+                Активный
+              </Typography>
 
-                            <Switch  checked={editedPlan.trial ?? false} onChange={handleTrialChange} color="secondary"/>
-                        </Stack>
+              <Switch
+                checked={editedPlan.active ?? false}
+                onChange={handleActiveChange}
+                color="secondary"
+              />
+            </Stack>
 
-                        <Stack direction={'row'}>
-                            <Typography variant="h6" sx={{fontSize: '15px', pt: 0.8}}>Популярный</Typography>
+            {!isCreate && (
+              <Button
+                variant="text"
+                color="error"
+                onClick={() => handleDeletePlan(editedPlan.id ?? 0)}
+                sx={{ position: 'absolute', right: 0 }}
+              >
+                Удалить
+              </Button>
+            )}
+          </Stack>
+        </Stack>
 
-                            <Switch  checked={editedPlan.popular ?? false} onChange={handlePopularChange} color="secondary"/>
-                        </Stack>
+        <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            sx={{ color: theme.palette.text.primary }}
+          >
+            {isCreate ? 'Создать' : 'Сохранить'}
+          </Button>
 
-                        <Stack direction={'row'}>
-                            <Typography variant="h6" sx={{fontSize: '15px', pt: 0.8}}>Активный</Typography>
+          <Button variant="outlined" color="secondary" onClick={onClose}>
+            Отмена
+          </Button>
+        </Stack>
 
-                            <Switch checked={editedPlan.active ?? false} onChange={handleActiveChange} color="secondary"/>
-                        </Stack>
-
-                        {!isCreate && <Button variant="text" color="error" onClick={() => handleDeletePlan(editedPlan.id ?? 0)} sx={{position: 'absolute', right: 0}}>
-                            Удалить
-                        </Button>}
-                    </Stack>
-                </Stack>
-
-                <Stack direction="row" spacing={2} sx={{mt: 3, justifyContent: 'center'}}>
-                    <Button variant="contained" color="primary" onClick={handleSave} sx={{color: theme.palette.text.primary}}>
-                        {isCreate ? 'Создать' : 'Сохранить'}
-                    </Button>
-
-                    <Button variant="outlined" color="secondary" onClick={onClose}>
-                        Отмена
-                    </Button>
-                </Stack>
-
-                {loading && (
-                    <Loader size={80} />
-                )}
-            </Box>
-        </Modal>
-    );
+        {loading && <Loader size={80} />}
+      </Box>
+    </Modal>
+  );
 }
 
-export default memo(AdminEditManagePlansSettings); 
+export default memo(AdminEditManagePlansSettings);

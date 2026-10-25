@@ -1,13 +1,13 @@
 export default interface PlanModel {
-    id?: number,
-    name: string,
-    price: number,
-    features: string[],
-    description: string,
-    durationOfActivity: number,  
-    popular: boolean,
-    trial: boolean,
-    active: boolean
+  id?: number;
+  name: string;
+  price: number;
+  features: string[];
+  description: string;
+  durationOfActivity: number;
+  popular: boolean;
+  trial: boolean;
+  active: boolean;
 }
 
 export const initialPlan: PlanModel = {
@@ -21,4 +21,3 @@ export const initialPlan: PlanModel = {
   trial: false,
   active: false,
 };
-

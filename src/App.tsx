@@ -17,7 +17,6 @@ import TelegramSettings from './features/settings/components/user/telegram/Teleg
 import WhatsAppSettings from './features/settings/components/user/WhatsAppSettings';
 import MapSettings from './features/settings/components/user/MapSettings';
 
-
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -27,9 +26,8 @@ function App() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
 
-              <Route path="/register" element={<RegistrationPage />} />
-              <Route path="/plans" element={<PlansPage />} />
-
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/plans" element={<PlansPage />} />
 
             <Route element={<PrivateRoute roles={['user']} />}>
               <Route path="/schedule" element={<Schedule />} />
@@ -41,8 +39,8 @@ function App() {
 
             <Route element={<PrivateRoute roles={['user', 'admin']} />}>
               <Route path="/settings" element={<Settings />}>
-                <Route index element={<Navigate to={'profile_settings'} replace/>} />
-                
+                <Route index element={<Navigate to={'profile_settings'} replace />} />
+
                 <Route path="profile_settings" element={<ProfileSettings />} />
                 <Route path="manage_plans" element={<ManagePlansSettings />} />
                 <Route path="analytics" element={<AnalyticsSettings />} />
@@ -61,6 +59,5 @@ function App() {
     </ThemeProvider>
   );
 }
-
 
 export default App;

@@ -89,19 +89,13 @@ export default function NumberField({
                 <BaseNumberField.Increment
                   render={<IconButton size={size} aria-label="Increase" />}
                 >
-                  <KeyboardArrowUpIcon
-                    fontSize={size}
-                    sx={{ transform: 'translateY(2px)' }}
-                  />
+                  <KeyboardArrowUpIcon fontSize={size} sx={{ transform: 'translateY(2px)' }} />
                 </BaseNumberField.Increment>
 
                 <BaseNumberField.Decrement
                   render={<IconButton size={size} aria-label="Decrease" />}
                 >
-                  <KeyboardArrowDownIcon
-                    fontSize={size}
-                    sx={{ transform: 'translateY(-2px)' }}
-                  />
+                  <KeyboardArrowDownIcon fontSize={size} sx={{ transform: 'translateY(-2px)' }} />
                 </BaseNumberField.Decrement>
               </InputAdornment>
             }
@@ -110,7 +104,7 @@ export default function NumberField({
         )}
       />
       <FormHelperText id={`${id}-helper-text`} sx={{ ml: 0, '&:empty': { mt: 0 } }}>
-       {description}
+        {description}
       </FormHelperText>
     </BaseNumberField.Root>
   );

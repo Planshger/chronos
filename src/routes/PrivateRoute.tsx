@@ -1,6 +1,6 @@
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "../providers/AuthProvider";
-import { Role } from "../core/ models/user_model";
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../providers/AuthProvider';
+import { Role } from '../core/ models/user_model';
 
 interface PrivateRouteProps {
   roles?: Role[];
@@ -10,8 +10,8 @@ export default function PrivateRoute({ roles }: PrivateRouteProps) {
   const { token, user, isAuthChecked } = useAuth();
   const location = useLocation();
 
-   if (!isAuthChecked) {
-    return null; 
+  if (!isAuthChecked) {
+    return null;
   }
 
   if (token === '') {

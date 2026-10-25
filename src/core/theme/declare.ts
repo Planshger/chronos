@@ -17,7 +17,7 @@ declare module '@mui/material/styles' {
         pink: string;
         green: string;
         amber: string;
-        blue: string,
+        blue: string;
       };
       border: {
         light: string;

@@ -1,6 +1,6 @@
-import UserModel from "../../../core/ models/user_model";
+import UserModel from '../../../core/ models/user_model';
 
 export interface RegisterUserModel {
-    token: string,
-    data: UserModel,
+  token: string;
+  data: UserModel;
 }

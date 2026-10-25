@@ -1,12 +1,12 @@
-import { TaskModel } from "../../features/schedule/models/task_model"
+import { TaskModel } from '../../features/schedule/models/task_model';
 
 export interface TaskPaginationModel {
-    meta: {
-        total_items: number,
-        total_pages: number,
-        current_page: number,
-        per_page: number,
-        remaining_count: number
-    },
-    items: TaskModel[]        
+  meta: {
+    total_items: number;
+    total_pages: number;
+    current_page: number;
+    per_page: number;
+    remaining_count: number;
+  };
+  items: TaskModel[];
 }

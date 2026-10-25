@@ -1,7 +1,7 @@
 export default function WhatsAppSettings() {
-    return (
-        <div>
-            <p>В разработке</p>
-        </div>
-    );
+  return (
+    <div>
+      <p>В разработке</p>
+    </div>
+  );
 }
