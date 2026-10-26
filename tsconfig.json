@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/features/settings/components/user/telegram/.tsx"]
+  "include": ["src", "src/modules/settings/components/user/telegram/.tsx"]
 }

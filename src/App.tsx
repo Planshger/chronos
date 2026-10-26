@@ -1,21 +1,20 @@
 import { ThemeProvider } from '@mui/material/styles';
-import LandingPage from './features/landing/LandingPage';
+import LandingPage from './pages/landing/LandingPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import RegistrationPage from './features/registrarion/RegistrationPage';
+import RegistrationPage from './pages/registration/RegistrationPage';
 import CssBaseline from '@mui/material/CssBaseline';
-import PlansPage from './features/plans/PlansPage';
-import Schedule from './features/schedule/Schedule';
-import Settings from './features/settings/Settings';
-import theme from './core/theme/darkTheme';
-import Admin from './features/admin/Admin';
-import AuthProvider from './providers/AuthProvider';
-import PrivateRoute from './routes/PrivateRoute';
-import ProfileSettings from './features/settings/components/user/ProfileSettings';
-import ManagePlansSettings from './features/settings/components/user/ManagePlansSettings';
-import AnalyticsSettings from './features/settings/components/user/AnalyticsSettings';
-import TelegramSettings from './features/settings/components/user/telegram/TelegramSettings';
-import WhatsAppSettings from './features/settings/components/user/WhatsAppSettings';
-import MapSettings from './features/settings/components/user/MapSettings';
+import PlansPage from './pages/plans/PlansPage';
+import Schedule from './pages/schedule/Schedule';
+import Settings from './pages/settings/Settings';
+import theme from './shared/ui/theme/darkTheme';
+import Admin from './pages/admin/Admin';
+import AuthProvider from './modules/auth/AuthProvider';
+import PrivateRoute from './app/routes/PrivateRoute';
+import ProfileSettings from './pages/settings/ProfileSettings';
+import ManagePlansSettings from './pages/settings/ManagePlansSettings';
+import AnalyticsSettings from './pages/settings/AnalyticsSettings';
+import TelegramSettings from './pages/settings/TelegramSettings';
+import MapSettings from './pages/settings/MapSettings';
 
 function App() {
   return (
