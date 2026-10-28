@@ -49,7 +49,7 @@ export default function LandingPage() {
     if (user?.plan === '' && user?.role === 'user') {
       navigator('/plans');
     }
-  }, [navigator, token]);
+  }, [navigator, token, user?.plan, user?.role]);
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.default }}>

@@ -108,7 +108,9 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
             {dayTasks.length > 0 && (
               <FormControlLabel
                 label={
-                  allSelected ? 'Снять выделение' : someSelected ? 'Снять выделение' : 'Выбрать все'
+                  allSelected || someSelected
+                    ? 'Снять выделение'
+                    : 'Выбрать все'
                 }
                 control={
                   <Checkbox

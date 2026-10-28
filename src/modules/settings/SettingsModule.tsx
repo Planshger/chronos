@@ -13,7 +13,6 @@ import ProfileSettings from './components/user/ProfileSettings';
 import ManagePlansSettings from './components/user/ManagePlansSettings';
 import AnalyticsSettings from './components/user/AnalyticsSettings';
 import TelegramSettings from './components/user/telegram/TelegramSettings';
-import WhatsAppSettings from './components/user/WhatsAppSettings';
 import ListSettings from './components/ListSettings';
 import MapSettings from './components/user/MapSettings';
 

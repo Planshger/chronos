@@ -21,6 +21,19 @@ export default function RegistrationPage() {
   const [input, seInput] = useState<UserModel>(initialUser);
   const { setToken } = useAuth();
   const navigate = useNavigate();
+  let pageTitle = 'Создать аккаунт';
+  let pageDescription = 'Введите данные для создания аккаунта и выбора тарифа.';
+  let submitLabel = 'Продолжить';
+
+  if (isAdminLogin) {
+    pageTitle = 'Доступ Администратора';
+    pageDescription = 'Введите данные для входа в панель управления.';
+    submitLabel = 'Войти в админ-панель';
+  } else if (isLogin) {
+    pageTitle = 'Вход в аккаунт';
+    pageDescription = 'Введите данные для входа в аккаунта.';
+    submitLabel = 'Войти';
+  }
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -101,18 +114,10 @@ export default function RegistrationPage() {
         >
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h5" color={theme.palette.text.primary}>
-              {isAdminLogin
-                ? 'Доступ Администратора'
-                : isLogin
-                  ? 'Вход в аккаунт'
-                  : 'Создать аккаунт'}
+              {pageTitle}
             </Typography>
             <Typography variant="body2" color={theme.palette.text.secondary} sx={{ mt: 1 }}>
-              {isAdminLogin
-                ? 'Введите данные для входа в панель управления.'
-                : isLogin
-                  ? 'Введите данные для входа в аккаунта.'
-                  : 'Введите данные для создания аккаунта и выбора тарифа.'}
+              {pageDescription}
             </Typography>
           </Box>
 
@@ -130,21 +135,19 @@ export default function RegistrationPage() {
               required
             />
 
-            {!isAdminLogin ? (
-              !isLogin ? (
-                <TextField
-                  name="name"
-                  label={isAdminLogin ? 'Логин Администратора' : 'Имя пользователя'}
-                  placeholder="Логин"
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                  value={input.name}
-                  onChange={onChange}
-                  required
-                />
-              ) : null
-            ) : null}
+            {!isAdminLogin && !isLogin && (
+              <TextField
+                name="name"
+                label="Имя пользователя"
+                placeholder="Логин"
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                value={input.name}
+                onChange={onChange}
+                required
+              />
+            )}
 
             <TextField
               name="password"
@@ -172,7 +175,7 @@ export default function RegistrationPage() {
                 color: theme.palette.text.primary,
               }}
             >
-              {isAdminLogin ? 'Войти в админ-панель' : isLogin ? 'Войти' : 'Продолжить'}
+              {submitLabel}
             </Button>
           </form>
 

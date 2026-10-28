@@ -1,16 +1,9 @@
 import {
   Autocomplete,
-  Box,
-  CSSObject,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   Stack,
   TextField,
 } from '@mui/material';
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import theme from '../../../shared/ui/theme/darkTheme';
 import { Search } from '@mui/icons-material';
 

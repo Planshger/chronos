@@ -2,7 +2,6 @@ import { Close } from '@mui/icons-material';
 import {
   Box,
   Button,
-  FormControl,
   IconButton,
   Modal,
   SelectChangeEvent,
@@ -12,9 +11,10 @@ import {
 } from '@mui/material';
 import { memo, useCallback } from 'react';
 import theme from '../../../../shared/ui/theme/darkTheme';
-import UserModel from '../../../shared/models/user_model';
+
 import React from 'react';
 import DropdownList from '../DropdownList';
+import UserModel from '../../../../shared/models/user_model';
 
 const style = {
   position: 'absolute',
@@ -64,7 +64,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
       onClick(editedUser);
     }
     onClose();
-  }, [user, editedUser]);
+  }, [user, editedUser, onClick, onClose]);
 
   React.useEffect(() => {
     setEditedUser(user);

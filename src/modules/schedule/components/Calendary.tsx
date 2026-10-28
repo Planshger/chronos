@@ -20,7 +20,6 @@ import {
 } from '@mui/material';
 import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { ru } from 'date-fns/locale';
-import { Task } from '../models/task_model';
 import { useSchedule } from '../ScheduleModule';
 
 interface CalendaryProps {

@@ -1,4 +1,4 @@
-import { Task, TaskItem } from '../models/task_model';
+import { TaskItem } from '../models/task_model';
 import { format } from 'date-fns/format';
 import TaskDialogContent from './task/TaskDialogContent';
 import { useSchedule } from '../ScheduleModule';

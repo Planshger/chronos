@@ -1,22 +1,6 @@
-import {
-  Collapse,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  SvgIcon,
-  SvgIconProps,
-} from '@mui/material';
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import theme from '../../../shared/ui/theme/darkTheme';
-import {
-  ArrowBack,
-  ExpandLess,
-  ExpandMore,
-  Message,
-  Settings,
-  SvgIconComponent,
-  TouchApp,
-} from '@mui/icons-material';
+import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingsModel } from '../models/settings_model';
 import { useEffect, useState } from 'react';
@@ -31,6 +15,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
   const navigate = useNavigate();
   const location = useLocation();
   const backPath = location.pathname.startsWith('/settings/admin_') ? '/admin' : '/schedule';
+  const initialOpen = location.state?.open;
   const [open, setOpen] = useState(false);
 
   function handleSelect(id: string) {
@@ -42,8 +27,8 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
   }
 
   useEffect(() => {
-    setOpen(location.state?.open);
-  }, []);
+    setOpen(Boolean(initialOpen));
+  }, [initialOpen]);
 
   return (
     <List
@@ -87,7 +72,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
 
             <ListItemText primary={item.label} sx={{ display: { xs: 'none', md: 'block' } }} />
 
-            {item.id === 'messengers' ? open ? <ExpandLess /> : <ExpandMore /> : null}
+            {item.id === 'messengers' && (open ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
         );
       })}

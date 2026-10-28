@@ -97,11 +97,11 @@ const theme = createTheme({
             outline: '2px solid #818cf8',
             outlineOffset: '2px',
           },
-        },
-        containedPrimary: {
-          background: '#818cf8',
-          color: '#0f172a',
-          '&:hover': { background: '#6366f1' },
+          '&.MuiButton-containedPrimary': {
+            background: '#818cf8',
+            color: '#0f172a',
+            '&:hover': { background: '#6366f1' },
+          },
         },
         outlined: {
           borderColor: 'rgba(255,255,255,0.2)',

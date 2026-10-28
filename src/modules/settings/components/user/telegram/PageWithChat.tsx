@@ -1,7 +1,6 @@
 import {
   Alert,
   Box,
-  Button,
   CircularProgress,
   Divider,
   IconButton,
@@ -12,7 +11,7 @@ import {
 } from '@mui/material';
 import TelegramIcon from '../TelegramIcon';
 import SendIcon from '@mui/icons-material/Send';
-import { ComponentProps, useEffect, useRef, useState } from 'react';
+import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 import { MessageModel } from '../../../models/message_model';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { useAuth } from '../../../../auth/AuthProvider';
@@ -31,20 +30,19 @@ export function PageWithChat() {
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
-  const loadMessages = async () => {
+  const loadMessages = useCallback(async () => {
     if (!user?.id) return;
     try {
-      getMessages(user.id).then((data) => {
-        const last10 = data.slice(0, MAX_MESSAGES).reverse();
-        setMessages(last10);
-        setError(null);
-      });
+      const data = await getMessages(user.id);
+      const last10 = data.slice(0, MAX_MESSAGES).reverse();
+      setMessages(last10);
+      setError(null);
     } catch (err) {
       setError('Не удалось загрузить сообщения');
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -83,7 +81,7 @@ export function PageWithChat() {
     loadMessages();
     const id = setInterval(loadMessages, POLL_INTERVAL);
     return () => clearInterval(id);
-  }, [user?.id]);
+  }, [user?.id, loadMessages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

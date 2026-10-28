@@ -75,7 +75,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => {
       cancelled = true;
     };
-  }, [token]);
+  }, [token, logout]);
 
   const contextValue = useMemo(
     () => ({ token, setToken, user, logout, isAuthChecked, setUser }),

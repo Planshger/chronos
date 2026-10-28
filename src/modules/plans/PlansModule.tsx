@@ -24,7 +24,7 @@ export default function PlansPage() {
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { user, token, setUser } = useAuth();
+  const { user, setUser } = useAuth();
 
   const savePlanFromUser = useCallback(
     async (namePlan: string) => {
@@ -41,7 +41,7 @@ export default function PlansPage() {
         navigate('/register');
       }
     },
-    [user, token],
+    [user, navigate, setLoading, setUser],
   );
 
   useEffect(() => {

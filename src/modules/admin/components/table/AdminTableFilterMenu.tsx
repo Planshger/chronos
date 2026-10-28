@@ -76,7 +76,7 @@ function AdminTableFilterMenu({
   const loadDataFromFilter = useCallback(() => {
     getFilterData(currentPage, perPage, filterValues).then((res) => setData(res));
     onClose();
-  }, [filterValues, currentPage, perPage, onClose]);
+  }, [filterValues, currentPage, perPage, onClose, setData]);
 
   useEffect(() => {
     setFilterValues((prev) => [...prev, { id: 'name', value: searchProp }]);
@@ -114,11 +114,12 @@ function AdminTableFilterMenu({
                 label={item.label}
                 menuItems={menuItems.get(item.id) ?? []}
                 onChange={handleChange}
-                value={filterValues.find((i) => i.id == item.id)?.value}
+                value={filterValues.find((i) => i.id === item.id)?.value}
                 sx={{ p: 1 }}
               />
             );
           }
+          return null;
         })}
 
         <Stack direction={'row'} spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>

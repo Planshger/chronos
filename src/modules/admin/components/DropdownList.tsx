@@ -41,9 +41,13 @@ function DropdownList({
           onChange={(event) => onChange(event, id)}
           sx={{ '& .MuiSelect-icon': { color: 'grey.500' } }}
         >
-          {menuItems.length != 0
+          {menuItems.length !== 0
             ? menuItems.map((item) => {
-                return <MenuItem value={item}>{item}</MenuItem>;
+                return (
+                  <MenuItem key={item} value={item}>
+                    {item}
+                  </MenuItem>
+                );
               })
             : null}
         </Select>

@@ -30,7 +30,7 @@ export default function ProfileSettings() {
         setUser(editUser);
       }
     }
-  }, [editUser, user]);
+  }, [editUser, user, setLoading, setUser]);
 
   return (
     <Stack

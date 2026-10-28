@@ -8,7 +8,6 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import theme from '../../../../shared/ui/theme/darkTheme';
-
 import { PaginationModel } from '../../models/user_pagination_model';
 import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
@@ -58,9 +57,36 @@ export default function AdminTable() {
   const switchEditMenu = React.useCallback((user?: UserModel) => {
     setOpenEdit((prev) => {
       if (user) return { open: !prev.open, user };
-      else return { open: !prev.open, user: prev.user };
+      return { open: !prev.open, user: prev.user };
     });
   }, []);
+
+  const handleInput = React.useCallback(
+    (value: string, id: string) => {
+      setInput({ id: id, value: value });
+      withLoading(
+        () =>
+          getFilterData(data.meta.current_page, data.meta.per_page, [
+            { id: id, value: value },
+          ]).then((res) => setData(res)),
+        setLoading,
+      );
+    },
+    [data],
+  );
+
+  const searchWithEmail = React.useCallback(
+    (value: string) => {
+      withLoading(
+        () =>
+          getFilterData(data.meta.current_page, data.meta.per_page, [
+            { id: 'email', value: value },
+          ]).then((res) => setData(res)),
+        setLoading,
+      );
+    },
+    [data.meta.current_page, data.meta.per_page],
+  );
 
   const switchSearchWithDomain = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement, Element>) => {
@@ -74,7 +100,7 @@ export default function AdminTable() {
         }
       }
     },
-    [input.value, domain],
+    [input.value, domain, handleInput, searchWithEmail],
   );
 
   const loadDataWithPagination = React.useCallback((page: number, limit: number) => {
@@ -98,14 +124,14 @@ export default function AdminTable() {
     await deleteUserData(selected);
     setSelected([]);
     loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, [selected, data.meta.current_page, data.meta.per_page]);
+  }, [selected, data.meta.current_page, data.meta.per_page, loadDataWithPagination]);
 
   const loadDataWithEditUser = React.useCallback(
     async (user: UserModel) => {
       await updateUserData(user);
       loadDataWithPagination(data.meta.current_page, data.meta.per_page);
     },
-    [data.meta.current_page, data.meta.per_page],
+    [data.meta.current_page, data.meta.per_page, loadDataWithPagination],
   );
 
   const handleSelectAllClick = React.useCallback(
@@ -120,20 +146,6 @@ export default function AdminTable() {
     [data.items],
   );
 
-  const handleInput = React.useCallback(
-    (value: string, id: string) => {
-      setInput({ id: id, value: value });
-      withLoading(
-        () =>
-          getFilterData(data.meta.current_page, data.meta.per_page, [
-            { id: id, value: value },
-          ]).then((res) => setData(res)),
-        setLoading,
-      );
-    },
-    [data],
-  );
-
   const handleClick = React.useCallback((id: number) => {
     setSelected((prev) => {
       const selectedIndex = prev.indexOf(id);
@@ -144,29 +156,16 @@ export default function AdminTable() {
     });
   }, []);
 
-  const searchWithEmail = React.useCallback(
-    (value: string) => {
-      withLoading(
-        () =>
-          getFilterData(data.meta.current_page, data.meta.per_page, [
-            { id: 'email', value: value },
-          ]).then((res) => setData(res)),
-        setLoading,
-      );
-    },
-    [data.meta.current_page, data.meta.per_page],
-  );
-
   const debouncedSearch = React.useCallback((searchWithEmailValue: string) => {
     if (timeout.current) clearTimeout(timeout.current);
     timeout.current = setTimeout(() => {
       searchWithEmail(searchWithEmailValue);
     }, 800);
-  }, []);
+  }, [searchWithEmail]);
 
   React.useEffect(() => {
-    loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, []);
+    loadDataWithPagination(initialUsersProps.meta.current_page, initialUsersProps.meta.per_page);
+  }, [loadDataWithPagination]);
 
   return (
     <Box sx={{ width: '100%', p: { xs: 1.5, lg: 10 } }}>

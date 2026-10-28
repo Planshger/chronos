@@ -1,7 +1,7 @@
 import { Add, Done } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
 import theme from '../../../../shared/ui/theme/darkTheme';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
 import {
   addPlan,
@@ -23,12 +23,12 @@ export default function AdminManagePlansSettings() {
 
   const loadData = useCallback(() => {
     withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
-  }, []);
+  }, [setLoading]);
 
   const loadAddPlan = useCallback(async (plan: PlanModel) => {
     await addPlan(plan);
     loadData();
-  }, []);
+  }, [loadData]);
 
   const switchEditMenu = useCallback(
     (plan?: PlanModel) => {
@@ -45,11 +45,11 @@ export default function AdminManagePlansSettings() {
   const loadDataWithEditPlan = useCallback(async (plan: PlanModel) => {
     await updatePlanData(plan);
     loadData();
-  }, []);
+  }, [loadData]);
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
 
   return (
     <Box

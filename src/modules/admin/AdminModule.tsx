@@ -1,4 +1,4 @@
-import { Box, Input, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import theme from '../../shared/ui/theme/darkTheme';
 import AdminAppBar from './components/AdminAppBar';
 import AdminTable from './components/table/AdminTable';

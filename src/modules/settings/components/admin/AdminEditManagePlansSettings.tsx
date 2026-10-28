@@ -4,7 +4,6 @@ import {
   Button,
   IconButton,
   Modal,
-  SelectChangeEvent,
   Stack,
   Switch,
   TextField,
@@ -88,21 +87,21 @@ function AdminEditManagePlansSettings({
         return { ...prev, [name]: value };
       });
     },
-    [editedPlan],
+    [],
   );
 
   const handleFeaturesChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEditedPlan((prev) => ({ ...prev, features: textToFeatures(e.target.value) }));
     },
-    [editedPlan],
+    [],
   );
 
   const handleValueChange = useCallback(
     (name: keyof PlanModel, value: number | null) => {
       setEditedPlan((prev) => ({ ...prev, [name]: value ?? plan[name] }));
     },
-    [editedPlan],
+    [plan],
   );
 
   const handleTrialChange = useCallback(
@@ -115,28 +114,28 @@ function AdminEditManagePlansSettings({
           : monthsToDisplay(prev.durationOfActivity, false),
       }));
     },
-    [editedPlan],
+    [],
   );
 
   const handlePopularChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEditedPlan((prev) => ({ ...prev, popular: e.target.checked }));
     },
-    [editedPlan],
+    [],
   );
 
   const handleActiveChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEditedPlan((prev) => ({ ...prev, active: e.target.checked }));
     },
-    [editedPlan],
+    [],
   );
 
   const handleDeletePlan = useCallback(async (id: number) => {
     await withLoading(() => deletePlans(id), setLoading);
     await withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
     onClose();
-  }, []);
+  }, [setLoading, setPlans, onClose]);
 
   const handleSave = useCallback(() => {
     const planToSend: PlanModel = {
@@ -162,7 +161,7 @@ function AdminEditManagePlansSettings({
       }
     }
     onClose();
-  }, [plan, editedPlan, updatePlan, onClose]);
+  }, [plan, editedPlan, updatePlan, onClose, addPlan, isCreate]);
 
   useEffect(() => {
     setEditedPlan({

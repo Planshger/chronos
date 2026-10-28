@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Container, Dialog, Modal, Stack, useMediaQuery } from '@mui/material';
-import { format, addMonths, subMonths, set } from 'date-fns';
+import { Box, Container, Dialog, Stack, useMediaQuery } from '@mui/material';
+import { format, addMonths, subMonths } from 'date-fns';
 import theme from '../../shared/ui/theme/darkTheme';
 import Calendary from './components/Calendary';
 import { initialTaskModel, Task, TaskItem, TaskModel } from './models/task_model';
@@ -155,7 +155,7 @@ export default function Schedule() {
       () => getUserTasksByUserId(user.id).then((res) => setTasks(res ?? initialTaskModel)),
       setLoading,
     );
-  }, []);
+  }, [user.id]);
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
