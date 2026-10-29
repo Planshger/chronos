@@ -3,17 +3,15 @@ import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material
 import theme from '../../../../shared/ui/theme/darkTheme';
 import { useCallback, useEffect, useState } from 'react';
 import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
-import {
-  addPlan,
-  getAllPlans,
-  updatePlanData,
-} from '../../../plans/datasources/plans_data_source';
+import { addPlan, getAllPlans, updatePlanData } from '../../../plans/datasources/plans_data_source';
 import { useLoading } from '../../SettingsModule';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
 import { withLoading } from '../../../../shared/utils/withLoading';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 export default function AdminManagePlansSettings() {
   const { setLoading } = useLoading();
+  const { showError } = useApiError();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [changePlans, setchangePlans] = useState<{
     openEdit: boolean;
@@ -22,13 +20,16 @@ export default function AdminManagePlansSettings() {
   }>({ openEdit: false, openCreate: false, plan: {} as PlanModel });
 
   const loadData = useCallback(() => {
-    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
-  }, [setLoading]);
+    void withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
+  }, [setLoading, showError]);
 
-  const loadAddPlan = useCallback(async (plan: PlanModel) => {
-    await addPlan(plan);
-    loadData();
-  }, [loadData]);
+  const loadAddPlan = useCallback(
+    async (plan: PlanModel) => {
+      await addPlan(plan);
+      loadData();
+    },
+    [loadData],
+  );
 
   const switchEditMenu = useCallback(
     (plan?: PlanModel) => {
@@ -42,10 +43,13 @@ export default function AdminManagePlansSettings() {
     [changePlans.openCreate],
   );
 
-  const loadDataWithEditPlan = useCallback(async (plan: PlanModel) => {
-    await updatePlanData(plan);
-    loadData();
-  }, [loadData]);
+  const loadDataWithEditPlan = useCallback(
+    async (plan: PlanModel) => {
+      await updatePlanData(plan);
+      loadData();
+    },
+    [loadData],
+  );
 
   useEffect(() => {
     loadData();

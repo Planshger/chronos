@@ -15,46 +15,49 @@ import ManagePlansSettings from './pages/settings/ManagePlansSettings';
 import AnalyticsSettings from './pages/settings/AnalyticsSettings';
 import TelegramSettings from './pages/settings/TelegramSettings';
 import MapSettings from './pages/settings/MapSettings';
+import { ApiErrorProvider } from './shared/errors/ApiErrorProvider';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
+      <ApiErrorProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
 
-            <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/plans" element={<PlansPage />} />
+              <Route path="/register" element={<RegistrationPage />} />
+              <Route path="/plans" element={<PlansPage />} />
 
-            <Route element={<PrivateRoute roles={['user']} />}>
-              <Route path="/schedule" element={<Schedule />} />
-            </Route>
+              <Route element={<PrivateRoute roles={['user']} />}>
+                <Route path="/schedule" element={<Schedule />} />
+              </Route>
 
-            <Route element={<PrivateRoute roles={['admin']} />}>
-              <Route path="/admin" element={<Admin />} />
-            </Route>
+              <Route element={<PrivateRoute roles={['admin']} />}>
+                <Route path="/admin" element={<Admin />} />
+              </Route>
 
-            <Route element={<PrivateRoute roles={['user', 'admin']} />}>
-              <Route path="/settings" element={<Settings />}>
-                <Route index element={<Navigate to={'profile_settings'} replace />} />
+              <Route element={<PrivateRoute roles={['user', 'admin']} />}>
+                <Route path="/settings" element={<Settings />}>
+                  <Route index element={<Navigate to={'profile_settings'} replace />} />
 
-                <Route path="profile_settings" element={<ProfileSettings />} />
-                <Route path="manage_plans" element={<ManagePlansSettings />} />
-                <Route path="analytics" element={<AnalyticsSettings />} />
-                <Route path="telegram" element={<TelegramSettings />} />
-                <Route path="map_settings" element={<MapSettings />} />
+                  <Route path="profile_settings" element={<ProfileSettings />} />
+                  <Route path="manage_plans" element={<ManagePlansSettings />} />
+                  <Route path="analytics" element={<AnalyticsSettings />} />
+                  <Route path="telegram" element={<TelegramSettings />} />
+                  <Route path="map_settings" element={<MapSettings />} />
 
-                <Route element={<PrivateRoute roles={['admin']} />}>
-                  <Route path="admin_profile_settings" element={<ProfileSettings />} />
-                  <Route path="admin_manage_plans" element={<ManagePlansSettings />} />
+                  <Route element={<PrivateRoute roles={['admin']} />}>
+                    <Route path="admin_profile_settings" element={<ProfileSettings />} />
+                    <Route path="admin_manage_plans" element={<ManagePlansSettings />} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </ApiErrorProvider>
     </ThemeProvider>
   );
 }

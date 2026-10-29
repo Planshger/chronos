@@ -1,5 +1,5 @@
 import { apiRequest } from '../../../shared/api/apiRequest';
-import { Task, TaskItem, TaskModel } from '../models/task_model';
+import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
 
 export function emptyDays(tasks: Task): Task {
   return Object.fromEntries(
@@ -7,10 +7,10 @@ export function emptyDays(tasks: Task): Task {
   );
 }
 
-export async function getUserTasksByUserId(userId: number): Promise<TaskModel | undefined> {
+export async function getUserTasksByUserId(userId: number): Promise<TaskModel> {
   const params = new URLSearchParams({ userId: String(userId) });
   const data = await apiRequest<TaskModel[]>(`/tasks?${params.toString()}`);
-  return data[0];
+  return data[0] ?? { ...initialTaskModel, userId };
 }
 
 export async function addTask(

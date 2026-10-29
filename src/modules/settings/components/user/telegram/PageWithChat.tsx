@@ -1,5 +1,4 @@
 import {
-  Alert,
   Box,
   CircularProgress,
   Divider,
@@ -16,6 +15,7 @@ import { MessageModel } from '../../../models/message_model';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { useAuth } from '../../../../auth/AuthProvider';
 import theme from '../../../../../shared/ui/theme/darkTheme';
+import { useApiError } from '../../../../../shared/errors/ApiErrorProvider';
 
 const POLL_INTERVAL = 3000;
 const MAX_MESSAGES = 10;
@@ -26,9 +26,10 @@ export function PageWithChat() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const loadFailureReported = useRef(false);
+  const { showError } = useApiError();
 
   const loadMessages = useCallback(async () => {
     if (!user?.id) return;
@@ -36,13 +37,16 @@ export function PageWithChat() {
       const data = await getMessages(user.id);
       const last10 = data.slice(0, MAX_MESSAGES).reverse();
       setMessages(last10);
-      setError(null);
+      loadFailureReported.current = false;
     } catch (err) {
-      setError('Не удалось загрузить сообщения');
+      if (!loadFailureReported.current) {
+        showError(err);
+        loadFailureReported.current = true;
+      }
     } finally {
       setLoading(false);
     }
-  }, [user?.id]);
+  }, [user?.id, showError]);
 
   const handleSend = async () => {
     const text = input.trim();
@@ -62,8 +66,7 @@ export function PageWithChat() {
       setInput('');
       await loadMessages();
     } catch (err) {
-      console.error(err);
-      setError('Не удалось отправить сообщение');
+      showError(err);
     } finally {
       setSending(false);
     }
@@ -200,12 +203,6 @@ export function PageWithChat() {
           </Stack>
         </Box>
       </Paper>
-
-      {error && (
-        <Alert severity="error" sx={{ mt: 2 }}>
-          {error}
-        </Alert>
-      )}
     </Box>
   );
 }

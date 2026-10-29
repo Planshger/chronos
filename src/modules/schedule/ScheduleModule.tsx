@@ -17,6 +17,7 @@ import {
   editTask,
 } from './datasources/task_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
+import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 interface LoadingContextProps {
   loading: boolean;
@@ -26,7 +27,7 @@ interface LoadingContextProps {
 interface SheduleContextType {
   selectedDate: Date | null;
   activeModal: string | null;
-  tasks: Task | undefined;
+  tasks: Task;
   setActiveModal: (name: string | null) => void;
   handleEditTask: (task: TaskItem) => void;
   handleSaveTask: (task: TaskItem) => void;
@@ -55,6 +56,7 @@ export function useSchedule() {
 
 export default function Schedule() {
   const { user } = useAuth();
+  const { showError } = useApiError();
   const [loading, setLoading] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -72,17 +74,20 @@ export default function Schedule() {
 
       const dateKey = format(selectedDate, 'yyyy-MM-dd');
 
-      await withLoading(
-        () =>
-          addTask(dateKey, { ...task, id: crypto.randomUUID() }, tasks, user.id).then((res) =>
-            setTasks(res),
-          ),
-        setLoading,
-      );
-
-      setActiveModal('tasks_list');
+      try {
+        await withLoading(
+          () =>
+            addTask(dateKey, { ...task, id: crypto.randomUUID() }, tasks, user.id).then((res) =>
+              setTasks(res),
+            ),
+          setLoading,
+        );
+        setActiveModal('tasks_list');
+      } catch (error) {
+        showError(error);
+      }
     },
-    [user, selectedDate, activeModal, tasks],
+    [user, selectedDate, activeModal, tasks, showError],
   );
 
   const handleEditTask = useCallback(
@@ -91,14 +96,17 @@ export default function Schedule() {
 
       const dateKey = format(selectedDate, 'yyyy-MM-dd');
 
-      await withLoading(
-        () => editTask(dateKey, { ...task }, tasks).then((res) => setTasks(res)),
-        setLoading,
-      );
-
-      setActiveModal('tasks_list');
+      try {
+        await withLoading(
+          () => editTask(dateKey, { ...task }, tasks).then((res) => setTasks(res)),
+          setLoading,
+        );
+        setActiveModal('tasks_list');
+      } catch (error) {
+        showError(error);
+      }
     },
-    [user, selectedDate, activeModal, tasks],
+    [user, selectedDate, activeModal, tasks, showError],
   );
 
   const onDeleteTasks = useCallback(
@@ -108,17 +116,20 @@ export default function Schedule() {
       const dateKey = format(selectedDate, 'yyyy-MM-dd');
       const dayTasks = tasks.tasks[dateKey].filter((t) => !ids.includes(t.id));
 
-      await withLoading(
-        () =>
-          updateTasksData({ ...tasks, tasks: { ...tasks.tasks, [dateKey]: dayTasks } }).then(
-            (res) => setTasks(res),
-          ),
-        setLoading,
-      );
-
-      setActiveModal(null);
+      try {
+        await withLoading(
+          () =>
+            updateTasksData({ ...tasks, tasks: { ...tasks.tasks, [dateKey]: dayTasks } }).then(
+              (res) => setTasks(res),
+            ),
+          setLoading,
+        );
+        setActiveModal(null);
+      } catch (error) {
+        showError(error);
+      }
     },
-    [user, selectedDate, tasks],
+    [user, selectedDate, tasks, showError],
   );
 
   const handleSelectDate = (date: Date | null) => {
@@ -151,11 +162,10 @@ export default function Schedule() {
   );
 
   useEffect(() => {
-    withLoading(
-      () => getUserTasksByUserId(user.id).then((res) => setTasks(res ?? initialTaskModel)),
-      setLoading,
+    void withLoading(() => getUserTasksByUserId(user.id).then(setTasks), setLoading).catch(
+      showError,
     );
-  }, [user.id]);
+  }, [user.id, showError]);
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>

@@ -19,34 +19,40 @@ import Loader from '../../shared/ui/Loader';
 import PlanModel from './models/plan_model';
 import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
+import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 export default function PlansPage() {
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const { user, setUser } = useAuth();
+  const { showError } = useApiError();
 
   const savePlanFromUser = useCallback(
     async (namePlan: string) => {
       if (user?.role === 'user') {
-        await withLoading(
-          () =>
-            updateUserData({ ...user, plan: namePlan, status: 'Активен' }).then((res) =>
-              setUser(res),
-            ),
-          setLoading,
-        );
-        navigate('/schedule');
+        try {
+          await withLoading(
+            () =>
+              updateUserData({ ...user, plan: namePlan, status: 'Активен' }).then((res) =>
+                setUser(res),
+              ),
+            setLoading,
+          );
+          navigate('/schedule');
+        } catch (error) {
+          showError(error);
+        }
       } else {
         navigate('/register');
       }
     },
-    [user, navigate, setLoading, setUser],
+    [user, navigate, setLoading, setUser, showError],
   );
 
   useEffect(() => {
-    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
-  }, []);
+    void withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
+  }, [showError]);
 
   return (
     <Paper

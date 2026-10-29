@@ -27,6 +27,7 @@ import {
   updateUserData,
 } from '../../datasources/admin_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 const initialUsersProps: PaginationModel = {
   items: [],
@@ -38,6 +39,7 @@ export default function AdminTable() {
   const [selected, setSelected] = React.useState<number[]>([]);
   const [openFilter, setOpenFilter] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState(false);
+  const { showError } = useApiError();
   const [editDomain, setEditDomain] = React.useState(false);
   const [domain, setDomain] = React.useState('@example.com');
   const [openEdit, setOpenEdit] = React.useState<{ open: boolean; user: UserModel }>({
@@ -70,9 +72,9 @@ export default function AdminTable() {
             { id: id, value: value },
           ]).then((res) => setData(res)),
         setLoading,
-      );
+      ).catch(showError);
     },
-    [data],
+    [data, showError],
   );
 
   const searchWithEmail = React.useCallback(
@@ -83,9 +85,9 @@ export default function AdminTable() {
             { id: 'email', value: value },
           ]).then((res) => setData(res)),
         setLoading,
-      );
+      ).catch(showError);
     },
-    [data.meta.current_page, data.meta.per_page],
+    [data.meta.current_page, data.meta.per_page, showError],
   );
 
   const switchSearchWithDomain = React.useCallback(
@@ -103,9 +105,15 @@ export default function AdminTable() {
     [input.value, domain, handleInput, searchWithEmail],
   );
 
-  const loadDataWithPagination = React.useCallback((page: number, limit: number) => {
-    withLoading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading);
-  }, []);
+  const loadDataWithPagination = React.useCallback(
+    (page: number, limit: number) => {
+      withLoading(
+        () => getUsersWithPagination(page, limit).then((res) => setData(res)),
+        setLoading,
+      ).catch(showError);
+    },
+    [showError],
+  );
 
   const loadDataSortBy = React.useCallback(
     (sortName: string, order?: 'asc' | 'desc') => {
@@ -115,23 +123,31 @@ export default function AdminTable() {
             setData(res),
           ),
         setLoading,
-      );
+      ).catch(showError);
     },
-    [data.meta.current_page, data.meta.per_page],
+    [data.meta.current_page, data.meta.per_page, showError],
   );
 
   const loadDataWithDeleteUser = React.useCallback(async () => {
-    await deleteUserData(selected);
-    setSelected([]);
-    loadDataWithPagination(data.meta.current_page, data.meta.per_page);
-  }, [selected, data.meta.current_page, data.meta.per_page, loadDataWithPagination]);
+    try {
+      await deleteUserData(selected);
+      setSelected([]);
+      loadDataWithPagination(data.meta.current_page, data.meta.per_page);
+    } catch (error) {
+      showError(error);
+    }
+  }, [selected, data.meta.current_page, data.meta.per_page, loadDataWithPagination, showError]);
 
   const loadDataWithEditUser = React.useCallback(
     async (user: UserModel) => {
-      await updateUserData(user);
-      loadDataWithPagination(data.meta.current_page, data.meta.per_page);
+      try {
+        await updateUserData(user);
+        loadDataWithPagination(data.meta.current_page, data.meta.per_page);
+      } catch (error) {
+        showError(error);
+      }
     },
-    [data.meta.current_page, data.meta.per_page, loadDataWithPagination],
+    [data.meta.current_page, data.meta.per_page, loadDataWithPagination, showError],
   );
 
   const handleSelectAllClick = React.useCallback(
@@ -156,12 +172,15 @@ export default function AdminTable() {
     });
   }, []);
 
-  const debouncedSearch = React.useCallback((searchWithEmailValue: string) => {
-    if (timeout.current) clearTimeout(timeout.current);
-    timeout.current = setTimeout(() => {
-      searchWithEmail(searchWithEmailValue);
-    }, 800);
-  }, [searchWithEmail]);
+  const debouncedSearch = React.useCallback(
+    (searchWithEmailValue: string) => {
+      if (timeout.current) clearTimeout(timeout.current);
+      timeout.current = setTimeout(() => {
+        searchWithEmail(searchWithEmailValue);
+      }, 800);
+    },
+    [searchWithEmail],
+  );
 
   React.useEffect(() => {
     loadDataWithPagination(initialUsersProps.meta.current_page, initialUsersProps.meta.per_page);

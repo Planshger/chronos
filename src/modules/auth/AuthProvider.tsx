@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { authMe, getToken, setTokenInStorage } from './datasources/authorization_data_source';
 import UserModel, { initialUser } from '../../shared/models/user_model';
+import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 interface AuthContextType {
   token: string;
@@ -25,6 +26,7 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
+  const { showError } = useApiError();
   const [token, setToken_] = useState<string>(getToken() ?? '');
   const [user, setUser] = useState<UserModel>(initialUser);
   const [isAuthChecked, setIsAuthChecked] = useState<boolean>(!getToken());
@@ -63,9 +65,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         } else {
           setUser(user);
         }
-      } catch (e) {
+      } catch (error) {
         if (!cancelled) {
+          showError(error);
           setUser(initialUser);
+          setToken_('');
+          setTokenInStorage(null);
         }
       } finally {
         if (!cancelled) setIsAuthChecked(true);
@@ -75,7 +80,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => {
       cancelled = true;
     };
-  }, [token, logout]);
+  }, [token, logout, showError]);
 
   const contextValue = useMemo(
     () => ({ token, setToken, user, logout, isAuthChecked, setUser }),

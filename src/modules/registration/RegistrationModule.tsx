@@ -13,6 +13,7 @@ import { auth, register } from '../auth/datasources/authorization_data_source';
 import UserModel, { initialUser } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';
+import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 export default function RegistrationPage() {
   const [isAdminLogin, setIsAdminLogin] = useState(false);
@@ -20,6 +21,7 @@ export default function RegistrationPage() {
   const [loading, setLoading] = useState(false);
   const [input, seInput] = useState<UserModel>(initialUser);
   const { setToken } = useAuth();
+  const { showError } = useApiError();
   const navigate = useNavigate();
   let pageTitle = 'Создать аккаунт';
   let pageDescription = 'Введите данные для создания аккаунта и выбора тарифа.';
@@ -71,8 +73,8 @@ export default function RegistrationPage() {
           }),
         setLoading,
       );
-    } catch (error: Error | any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      showError(error);
     }
   }
 
@@ -164,7 +166,7 @@ export default function RegistrationPage() {
             />
 
             <Button
-              type="sumbit"
+              type="submit"
               variant="contained"
               fullWidth
               sx={{

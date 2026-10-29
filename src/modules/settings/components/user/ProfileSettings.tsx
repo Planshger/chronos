@@ -6,10 +6,12 @@ import { useAuth } from '../../../auth/AuthProvider';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import theme from '../../../../shared/ui/theme/darkTheme';
 import { withLoading } from '../../../../shared/utils/withLoading';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 export default function ProfileSettings() {
   const { setLoading } = useLoading();
   const { user, setUser } = useAuth();
+  const { showError } = useApiError();
   const [editUser, setEditUser] = useState<UserModel>(
     user ?? ({ name: 'name', email: 'email' } as UserModel),
   );
@@ -22,15 +24,18 @@ export default function ProfileSettings() {
     [],
   );
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback(async () => {
     if (user?.email !== editUser.email || user?.name !== editUser.name) {
       try {
-        withLoading(() => updateUserData(editUser), setLoading);
-      } finally {
-        setUser(editUser);
+        await withLoading(
+          () => updateUserData(editUser).then((updatedUser) => setUser(updatedUser)),
+          setLoading,
+        );
+      } catch (error) {
+        showError(error);
       }
     }
-  }, [editUser, user, setLoading, setUser]);
+  }, [editUser, user, setLoading, setUser, showError]);
 
   return (
     <Stack

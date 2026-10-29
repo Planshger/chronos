@@ -17,6 +17,7 @@ import Loader from '../../../../shared/ui/Loader';
 import { useLoading } from '../../SettingsModule';
 import { deletePlans, getAllPlans } from '../../../plans/datasources/plans_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 const style = {
   position: 'absolute',
@@ -32,9 +33,9 @@ const style = {
 };
 
 interface AdminEditManagePlansSettingsProps {
-  updatePlan: (plan: PlanModel) => void;
+  updatePlan: (plan: PlanModel) => Promise<void>;
   setPlans: (plans: PlanModel[]) => void;
-  addPlan: (plan: PlanModel) => void;
+  addPlan: (plan: PlanModel) => Promise<void>;
   onClose: () => void;
   open: boolean;
   plan: PlanModel;
@@ -79,23 +80,18 @@ function AdminEditManagePlansSettings({
 }: AdminEditManagePlansSettingsProps) {
   const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
   const { setLoading, loading } = useLoading();
+  const { showError } = useApiError();
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setEditedPlan((prev) => {
-        return { ...prev, [name]: value };
-      });
-    },
-    [],
-  );
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setEditedPlan((prev) => {
+      return { ...prev, [name]: value };
+    });
+  }, []);
 
-  const handleFeaturesChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEditedPlan((prev) => ({ ...prev, features: textToFeatures(e.target.value) }));
-    },
-    [],
-  );
+  const handleFeaturesChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedPlan((prev) => ({ ...prev, features: textToFeatures(e.target.value) }));
+  }, []);
 
   const handleValueChange = useCallback(
     (name: keyof PlanModel, value: number | null) => {
@@ -104,40 +100,38 @@ function AdminEditManagePlansSettings({
     [plan],
   );
 
-  const handleTrialChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEditedPlan((prev) => ({
-        ...prev,
-        trial: e.target.checked,
-        durationOfActivity: e.target.checked
-          ? daysToBackend(prev.durationOfActivity, false)
-          : monthsToDisplay(prev.durationOfActivity, false),
-      }));
+  const handleTrialChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedPlan((prev) => ({
+      ...prev,
+      trial: e.target.checked,
+      durationOfActivity: e.target.checked
+        ? daysToBackend(prev.durationOfActivity, false)
+        : monthsToDisplay(prev.durationOfActivity, false),
+    }));
+  }, []);
+
+  const handlePopularChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedPlan((prev) => ({ ...prev, popular: e.target.checked }));
+  }, []);
+
+  const handleActiveChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditedPlan((prev) => ({ ...prev, active: e.target.checked }));
+  }, []);
+
+  const handleDeletePlan = useCallback(
+    async (id: number) => {
+      try {
+        await withLoading(() => deletePlans(id), setLoading);
+        await withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
+        onClose();
+      } catch (error) {
+        showError(error);
+      }
     },
-    [],
+    [setLoading, setPlans, onClose, showError],
   );
 
-  const handlePopularChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEditedPlan((prev) => ({ ...prev, popular: e.target.checked }));
-    },
-    [],
-  );
-
-  const handleActiveChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setEditedPlan((prev) => ({ ...prev, active: e.target.checked }));
-    },
-    [],
-  );
-
-  const handleDeletePlan = useCallback(async (id: number) => {
-    await withLoading(() => deletePlans(id), setLoading);
-    await withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
-    onClose();
-  }, [setLoading, setPlans, onClose]);
-
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     const planToSend: PlanModel = {
       ...editedPlan,
       durationOfActivity: daysToBackend(editedPlan.durationOfActivity, editedPlan.trial),
@@ -153,15 +147,22 @@ function AdminEditManagePlansSettings({
       if (key === 'features') return !arraysEqual(planToSend.features, plan.features);
       return planToSend[key] !== plan[key];
     });
-    if (isChanged) {
-      if (isCreate) {
-        addPlan(planToSend);
-      } else {
-        updatePlan(planToSend);
-      }
+    if (!isChanged) {
+      onClose();
+      return;
     }
-    onClose();
-  }, [plan, editedPlan, updatePlan, onClose, addPlan, isCreate]);
+
+    try {
+      if (isCreate) {
+        await addPlan(planToSend);
+      } else {
+        await updatePlan(planToSend);
+      }
+      onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }, [plan, editedPlan, updatePlan, onClose, addPlan, isCreate, showError]);
 
   useEffect(() => {
     setEditedPlan({

@@ -6,20 +6,26 @@ import { useNavigate } from 'react-router-dom';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import { useLoading } from '../../SettingsModule';
 import { withLoading } from '../../../../shared/utils/withLoading';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 export default function ManagePlansSettings() {
   const { user, setUser } = useAuth();
   const { setLoading } = useLoading();
+  const { showError } = useApiError();
   const navigate = useNavigate();
 
   const cancelPlan = async () => {
-    await withLoading(
-      () =>
-        updateUserData({ ...user, plan: '', status: 'Ожидание оплаты' }).then((res) =>
-          setUser(res),
-        ),
-      setLoading,
-    );
+    try {
+      await withLoading(
+        () =>
+          updateUserData({ ...user, plan: '', status: 'Ожидание оплаты' }).then((res) =>
+            setUser(res),
+          ),
+        setLoading,
+      );
+    } catch (error) {
+      showError(error);
+    }
   };
   return (
     <Stack spacing={3} sx={{ alignItems: 'center' }}>

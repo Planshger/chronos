@@ -1,6 +1,7 @@
 import UserModel, { Role } from '../../../shared/models/user_model';
 import { RegisterUserModel } from '../models/register_user_model';
-import { ApiRequestError, apiRequest } from '../../../shared/api/apiRequest';
+import { apiRequest } from '../../../shared/api/apiRequest';
+import { HttpError, InvalidCredentialsError } from '../../../shared/errors/AppError';
 
 const TOKEN_KEY = 'token';
 
@@ -34,14 +35,14 @@ export async function auth(user: UserModel, role: Role): Promise<RegisterUserMod
       }),
     });
   } catch (error) {
-    if (error instanceof ApiRequestError) {
-      throw new Error('Нет такого пользователя');
+    if (error instanceof HttpError && error.status === 401) {
+      throw new InvalidCredentialsError();
     }
     throw error;
   }
 
   if ((data.data.role ?? '') !== role) {
-    throw new Error('Нет такого пользователя');
+    throw new InvalidCredentialsError();
   }
 
   return data;

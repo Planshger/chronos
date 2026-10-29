@@ -13,6 +13,7 @@ import { Close } from '@mui/icons-material';
 import theme from '../../../../shared/ui/theme/darkTheme';
 import { headCells } from './AdminTableHead';
 import { getFilterData } from '../../datasources/admin_data_source';
+import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 const style = {
   position: 'absolute',
@@ -63,6 +64,7 @@ function AdminTableFilterMenu({
   searchProp,
 }: AdminTableFilterMenuProps) {
   const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);
+  const { showError } = useApiError();
 
   const handleChange = useCallback((e: SelectChangeEvent<string>, id: string) => {
     setFilterValues((prev) =>
@@ -73,10 +75,15 @@ function AdminTableFilterMenu({
     );
   }, []);
 
-  const loadDataFromFilter = useCallback(() => {
-    getFilterData(currentPage, perPage, filterValues).then((res) => setData(res));
-    onClose();
-  }, [filterValues, currentPage, perPage, onClose, setData]);
+  const loadDataFromFilter = useCallback(async () => {
+    try {
+      const data = await getFilterData(currentPage, perPage, filterValues);
+      setData(data);
+      onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }, [filterValues, currentPage, perPage, onClose, setData, showError]);
 
   useEffect(() => {
     setFilterValues((prev) => [...prev, { id: 'name', value: searchProp }]);
