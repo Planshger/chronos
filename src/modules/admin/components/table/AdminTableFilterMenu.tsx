@@ -6,27 +6,14 @@ import {
   SelectChangeEvent,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
 import DropdownList from '../DropdownList';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { headCells } from './AdminTableHead';
 import { getFilterData } from '../../datasources/admin_data_source';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { lg: 400, xs: 370 },
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(255,255,255,0.2)',
-  boxShadow: 24,
-  borderRadius: '20px',
-  p: 5,
-};
 
 export interface FilterValuesProps {
   id: string;
@@ -65,6 +52,7 @@ function AdminTableFilterMenu({
 }: AdminTableFilterMenuProps) {
   const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);
   const { showError } = useApiError();
+  const theme = useTheme();
 
   const handleChange = useCallback((e: SelectChangeEvent<string>, id: string) => {
     setFilterValues((prev) =>
@@ -99,7 +87,23 @@ function AdminTableFilterMenu({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(400px, calc(100vw - 32px))',
+          maxHeight: 'calc(100dvh - 32px)',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          bgcolor: 'background.paper',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: 24,
+          borderRadius: '20px',
+          p: { xs: 3, sm: 5 },
+        }}
+      >
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -129,7 +133,11 @@ function AdminTableFilterMenu({
           return null;
         })}
 
-        <Stack direction={'row'} spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+        <Stack
+          direction={{ xs: 'column-reverse', sm: 'row' }}
+          spacing={2}
+          sx={{ mt: 3, justifyContent: 'center' }}
+        >
           <Button
             variant="contained"
             onClick={loadDataFromFilter}

@@ -1,14 +1,14 @@
-import { Box, Stack, Typography } from '@mui/material';
-import theme from '../../shared/ui/theme/darkTheme';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import AdminAppBar from './components/AdminAppBar';
 import AdminTable from './components/table/AdminTable';
 
 export default function Admin() {
+  const theme = useTheme();
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
       <AdminAppBar />
 
-      <Stack sx={{ display: 'flex', alignItems: 'left', px: 4, py: 4 }}>
+      <Stack sx={{ alignItems: 'flex-start', px: { xs: 2, sm: 4 }, py: 4 }}>
         <Typography variant="h2" sx={{ fontSize: '30px' }}>
           Пользователи
         </Typography>

@@ -1,10 +1,10 @@
-import { AppBar, Button, Stack, Toolbar, Typography } from '@mui/material';
-import theme from '../../../shared/ui/theme/darkTheme';
+import { AppBar, Button, Stack, Toolbar, Typography, useTheme } from '@mui/material';
 import { CreditCard, GppGood, Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthProvider';
 
 export default function AdminAppBar() {
+  const theme = useTheme();
   const navigate = useNavigate();
   const { logout } = useAuth();
 
@@ -24,7 +24,7 @@ export default function AdminAppBar() {
           Админ панель
         </Typography>
 
-        <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
           <Button
             variant="outlined"
             onClick={() => navigate(`/settings/admin_profile_settings`)}

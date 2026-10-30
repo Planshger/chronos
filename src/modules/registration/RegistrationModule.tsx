@@ -1,13 +1,12 @@
 import { useCallback, useState } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { Box, Typography, TextField, Button, Link, Paper } from '@mui/material';
+import { Box, Typography, TextField, Button, Link, Paper, useTheme } from '@mui/material';
 import {
   Person as UserIcon,
   Shield as ShieldIcon,
   ArrowBack as ArrowBackIcon,
   PersonAddAlt1,
 } from '@mui/icons-material';
-import theme from '../../shared/ui/theme/darkTheme';
 import { useAuth } from '../auth/AuthProvider';
 import { auth, register } from '../auth/datasources/authorization_data_source';
 import UserModel, { initialUser } from '../../shared/models/user_model';
@@ -16,6 +15,7 @@ import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 export default function RegistrationPage() {
+  const theme = useTheme();
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -109,6 +109,7 @@ export default function RegistrationPage() {
           elevation={3}
           sx={{
             maxWidth: 450,
+            width: 'calc(100% - 32px)',
             p: 4,
             borderRadius: 3,
             border: `1px solid ${theme.custom.border.light}`,

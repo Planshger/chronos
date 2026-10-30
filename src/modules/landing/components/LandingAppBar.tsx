@@ -4,7 +4,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import theme from '../../../shared/ui/theme/darkTheme';
 import { useCallback } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
 
@@ -38,7 +37,7 @@ const LandingAppBar = () => {
           ) : (
             <Button
               onClick={() => onClick(user.role === 'admin' ? '/admin' : '/schedule')}
-              sx={{ color: theme.palette.text.primary }}
+              sx={{ color: 'text.primary' }}
             >
               Вход
             </Button>

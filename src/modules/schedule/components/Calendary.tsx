@@ -7,16 +7,15 @@ import {
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
-import theme from '../../../shared/ui/theme/darkTheme';
 import {
   Box,
   Chip,
-  Grid,
   IconButton,
   Paper,
   Stack,
   Typography,
   useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { ru } from 'date-fns/locale';
@@ -43,11 +42,15 @@ export default function Calendary({
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Paper
       sx={{
+        width: '100%',
+        flex: '1 1 0',
+        minWidth: 0,
         p: 3,
         borderRadius: 7,
         bgcolor: theme.palette.background.default,
@@ -72,7 +75,7 @@ export default function Calendary({
           Расписание
         </Typography>
 
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={{ xs: 0, sm: 1 }} sx={{ alignItems: 'center' }}>
           <IconButton onClick={prevMonth} size="small">
             <ChevronLeft sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
@@ -90,27 +93,41 @@ export default function Calendary({
         </Stack>
       </Stack>
 
-      <Stack direction={'column'} spacing={3}>
-        <Grid container spacing={isMobile ? 6.2 : 17} sx={{ pl: isMobile ? 2.1 : 6 }}>
+      <Stack spacing={{ xs: 1, sm: 2 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+            gap: { xs: 0.5, sm: 1 },
+          }}
+        >
           {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
             <Typography
               key={day}
               variant="caption"
               sx={{
+                minWidth: 0,
                 textTransform: 'uppercase',
-                letterSpacing: 0.5,
+                letterSpacing: { xs: 0, sm: 0.5 },
                 py: 0.5,
                 fontWeight: 'bold',
                 color: theme.palette.text.secondary,
+                textAlign: 'center',
               }}
             >
               {day}
             </Typography>
           ))}
-        </Grid>
+        </Box>
 
-        <Grid container spacing={2} columns={7}>
-          {days.map((date, i) => {
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, minmax(0, 1fr))',
+            gap: { xs: 0.5, sm: 1 },
+          }}
+        >
+          {days.map((date) => {
             const dateKey = format(date, 'yyyy-MM-dd');
             const isToday = dateKey === format(today, 'yyyy-MM-dd');
             const isSelected = selectedDate && dateKey === format(selectedDate, 'yyyy-MM-dd');
@@ -118,87 +135,98 @@ export default function Calendary({
             const isCurrentMonth = isSameMonth(date, monthStart);
 
             return (
-              <Grid key={i} size={1}>
-                <Box
-                  onClick={() => handleSelectDate(date)}
+              <Box
+                key={dateKey}
+                onClick={() => handleSelectDate(date)}
+                sx={{
+                  minWidth: 0,
+                  minHeight: { xs: 68, sm: 92, md: 105 },
+                  p: { xs: 0.5, sm: 1 },
+                  borderRadius: { xs: 1.5, sm: 3 },
+                  cursor: 'pointer',
+                  border: '1px solid transparent',
+                  bgcolor: isSelected ? theme.custom.accent.amber : 'transparent',
+                  color: isSelected ? 'primary.contrastText' : 'text.primary',
+                  opacity: isCurrentMonth ? 1 : 0.4,
+                  filter: isCurrentMonth ? 'none' : 'grayscale(0.5)',
+                  '&:hover': {
+                    bgcolor: isSelected ? theme.custom.accent.amber : theme.palette.action.hover,
+                  },
+                }}
+              >
+                <Typography
+                  variant="body1"
                   sx={{
-                    minHeight: 105,
-                    minWidth: isMobile ? 50 : 100,
-                    pb: 3,
-                    pl: isMobile ? 1 : 1.5,
-                    pr: 3,
-                    borderRadius: 3,
-                    cursor: 'pointer',
-                    border: '1px solid transparent',
-                    bgcolor: isSelected ? theme.custom.accent.amber : 'transparent',
-                    color: isSelected ? 'primary.contrastText' : 'text.primary',
-                    opacity: isCurrentMonth ? 1 : 0.4,
-                    filter: isCurrentMonth ? 'none' : 'grayscale(0.5)',
-                    '&:hover': {
-                      bgcolor: isSelected ? theme.custom.accent.amber : theme.palette.action.hover,
-                    },
+                    fontWeight: 600,
+                    borderRadius: '50%',
+                    bgcolor: isToday && !isSelected ? 'primary.main' : 'transparent',
+                    color: isToday && !isSelected ? 'primary.contrastText' : 'inherit',
+                    width: 32,
+                    height: 32,
+                    textAlign: 'center',
+                    lineHeight: '32px',
+                    mx: 'auto',
                   }}
                 >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: 600,
-                      borderRadius: '50%',
-                      bgcolor: isToday && !isSelected ? 'primary.main' : 'transparent',
-                      color: isToday && !isSelected ? 'primary.contrastText' : 'inherit',
-                      width: 32,
-                      height: 32,
-                      textAlign: 'center',
-                      lineHeight: '32px',
-                    }}
-                  >
-                    {format(date, 'd')}
-                  </Typography>
+                  {format(date, 'd')}
+                </Typography>
 
-                  <Box sx={{ mt: 1, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
-                    {dayTasks.slice(0, 2).map((task) =>
-                      isMobile ? (
-                        <Chip
-                          key={task.id}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
-                            height: 20,
-                            width: 20,
-                          }}
-                        />
-                      ) : (
-                        <Chip
-                          key={task.id}
-                          label={task.title}
-                          size="small"
-                          variant="outlined"
-                          sx={{
-                            fontSize: '0.6rem',
-                            height: 20,
-                            bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
-                            color:
-                              task.type === 'встреча'
-                                ? 'secondary.contrastText'
-                                : 'primary.contrastText',
-                            border: 'none',
-                            '& .MuiChip-label': { px: 1, fontWeight: 500 },
-                          }}
-                        />
-                      ),
-                    )}
-                    {dayTasks.length > 2 && (
-                      <Typography variant="caption" color="text.secondary">
-                        +{dayTasks.length - 2} ещё
-                      </Typography>
-                    )}
-                  </Box>
+                <Box
+                  sx={{
+                    mt: { xs: 0.25, sm: 1 },
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 0.5,
+                  }}
+                >
+                  {dayTasks.slice(0, 2).map((task) =>
+                    isMobile ? (
+                      <Chip
+                        key={task.id}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
+                          height: 20,
+                          width: 20,
+                        }}
+                      />
+                    ) : (
+                      <Chip
+                        key={task.id}
+                        label={task.title}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          fontSize: '0.6rem',
+                          height: 20,
+                          maxWidth: '100%',
+                          bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
+                          color:
+                            task.type === 'встреча'
+                              ? 'secondary.contrastText'
+                              : 'primary.contrastText',
+                          border: 'none',
+                          '& .MuiChip-label': {
+                            px: 1,
+                            fontWeight: 500,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          },
+                        }}
+                      />
+                    ),
+                  )}
+                  {dayTasks.length > 2 && (
+                    <Typography variant="caption" color="text.secondary">
+                      +{dayTasks.length - 2} ещё
+                    </Typography>
+                  )}
                 </Box>
-              </Grid>
+              </Box>
             );
           })}
-        </Grid>
+        </Box>
       </Stack>
     </Paper>
   );

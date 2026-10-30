@@ -1,5 +1,11 @@
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import theme from '../../../shared/ui/theme/darkTheme';
+import {
+  Collapse,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  useTheme,
+} from '@mui/material';
 import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingsModel } from '../models/settings_model';
@@ -13,6 +19,7 @@ interface ListSettingsProps {
 
 export default function ListSettings({ onSelect, settingsData }: ListSettingsProps) {
   const navigate = useNavigate();
+  const theme = useTheme();
   const location = useLocation();
   const backPath = location.pathname.startsWith('/settings/admin_') ? '/admin' : '/schedule';
   const initialOpen = location.state?.open;
@@ -43,7 +50,9 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
         key="back"
         onClick={() => navigate(backPath)}
         sx={{
-          '&:hover': { transform: 'translateY(-4px)', background: theme.palette.background.paper },
+          '&:hover': { transform: 'translateY(-4px)' },
+          backgroundColor: 'transparent',
+          backgroundImage: 'none',
         }}
       >
         <ListItemIcon>
@@ -60,6 +69,8 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
             key={item.id}
             onClick={() => handleSelect(item.id)}
             sx={{
+              position: 'relative',
+              zIndex: 1,
               '&:hover': {
                 transform: 'translateY(-4px)',
                 background: theme.palette.background.paper,

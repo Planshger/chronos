@@ -7,7 +7,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { PaginationModel } from '../../models/user_pagination_model';
 import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import AdminTableToolbar from './AdminTableToolbar';
@@ -15,7 +14,7 @@ import AdminTableHead from './AdminTableHead';
 import AdminTablePagination from './AdminTablePagination';
 import Loader from '../../../../shared/ui/Loader';
 import { Edit } from '@mui/icons-material';
-import { IconButton, Stack, Switch, TextField } from '@mui/material';
+import { IconButton, Stack, Switch, TextField, useTheme } from '@mui/material';
 import AdminTableEditMenu from './AdminTableEditMenu';
 import UserModel, { initialUser } from '../../../../shared/models/user_model';
 import AutocompleteList from '../AutocompleteList';
@@ -35,6 +34,7 @@ const initialUsersProps: PaginationModel = {
 };
 
 export default function AdminTable() {
+  const theme = useTheme();
   const [data, setData] = React.useState<PaginationModel>(initialUsersProps);
   const [selected, setSelected] = React.useState<number[]>([]);
   const [openFilter, setOpenFilter] = React.useState<boolean>(false);

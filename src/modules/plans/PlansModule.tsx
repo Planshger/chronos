@@ -3,14 +3,13 @@ import {
   Button,
   Card,
   CardContent,
-  Grid,
   Paper,
   Stack,
   Typography,
   Link,
+  useTheme,
 } from '@mui/material';
 import { ArrowBack, Done } from '@mui/icons-material';
-import theme from '../../shared/ui/theme/darkTheme';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../auth/AuthProvider';
 import { useCallback, useEffect, useState } from 'react';
@@ -22,6 +21,7 @@ import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
 export default function PlansPage() {
+  const theme = useTheme();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,20 +57,23 @@ export default function PlansPage() {
   return (
     <Paper
       sx={{
-        height: '100vh',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: theme.palette.background.paper,
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        overflowY: 'auto',
       }}
     >
-      <Box sx={{ pt: 5, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-        <Box sx={{ p: 3, position: 'absolute', left: 0 }}>
+      <Box
+        sx={{
+          pt: { xs: 10, sm: 8 },
+          px: 2,
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          position: 'relative',
+        }}
+      >
+        <Box sx={{ p: 3, position: 'absolute', top: 0, left: 0 }}>
           <Link
             component={RouterLink}
             to="/"
@@ -89,7 +92,10 @@ export default function PlansPage() {
             На главную
           </Link>
         </Box>
-        <Typography variant="h3" sx={{ fontSize: '35px', mb: 3 }}>
+        <Typography
+          variant="h3"
+          sx={{ fontSize: { xs: '1.75rem', sm: '2.2rem' }, mb: 3, textAlign: 'center' }}
+        >
           Выберите ваш тариф
         </Typography>
 
@@ -110,26 +116,38 @@ export default function PlansPage() {
         </Typography>
       </Box>
 
-      <Grid container spacing={8} sx={{ justifyContent: 'center', ml: 2, mr: 2, mt: 3 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: {
+            xs: 'minmax(0, 1fr)',
+            sm: 'repeat(2, minmax(0, 1fr))',
+            md: 'repeat(3, minmax(0, 1fr))',
+            lg: 'repeat(4, minmax(0, 1fr))',
+          },
+          gap: { xs: 2, md: 3 },
+          width: '100%',
+          maxWidth: 1280,
+          mx: 'auto',
+          px: { xs: 2, sm: 3 },
+          pb: 4,
+        }}
+      >
         {plans
           .filter((p) => p.active === true)
-          .map((p, i) => (
-            <Grid
-              key={p.name}
-              sx={{ display: 'flex', justifyContent: 'center', pb: i === plans.length - 1 ? 2 : 0 }}
-              size={{ xs: 10.5, sm: 6, md: 4, lg: 3 }}
-            >
+          .map((p) => (
+            <Box key={p.name} sx={{ minWidth: 0, display: 'flex' }}>
               <Card
                 sx={{
                   height: '100%',
                   width: '100%',
+                  minWidth: 0,
                   bgcolor: theme.palette.background.default,
                   borderRadius: 4,
                   border: p.popular
                     ? `2px solid ${theme.palette.text.primary}`
                     : `1px solid ${theme.custom.border.light}`,
                   boxShadow: theme.custom.shadows.sm,
-                  transform: p.popular ? 'scale(1.1)' : '',
                 }}
               >
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -215,9 +233,9 @@ export default function PlansPage() {
                   </Stack>
                 </CardContent>
               </Card>
-            </Grid>
+            </Box>
           ))}
-      </Grid>
+      </Box>
       {loading && <Loader size={80} />}
     </Paper>
   );

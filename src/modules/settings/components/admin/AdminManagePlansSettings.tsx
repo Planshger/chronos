@@ -1,6 +1,5 @@
 import { Add, Done } from '@mui/icons-material';
-import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
+import { Box, Button, Card, CardContent, Stack, Typography, useTheme } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
 import { addPlan, getAllPlans, updatePlanData } from '../../../plans/datasources/plans_data_source';
@@ -10,6 +9,7 @@ import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
 export default function AdminManagePlansSettings() {
+  const theme = useTheme();
   const { setLoading } = useLoading();
   const { showError } = useApiError();
   const [plans, setPlans] = useState<PlanModel[]>([]);
@@ -67,7 +67,7 @@ export default function AdminManagePlansSettings() {
         '&::-webkit-scrollbar-thumb': { bgcolor: theme.custom.border.light, borderRadius: 4 },
       }}
     >
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Button
           variant="text"
           size="small"
@@ -77,7 +77,7 @@ export default function AdminManagePlansSettings() {
         >
           Создать
         </Button>
-      </div>
+      </Box>
 
       <Box
         sx={{

@@ -11,8 +11,8 @@ import {
   Paper,
   Stack,
   Typography,
+  useTheme,
 } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
 import TaskCreateDialogContent from './TaskCreateDialogContent';
 import { initialTaskItem, TaskItem } from '../../models/task_model';
@@ -26,6 +26,7 @@ interface TaskDialogContentProps {
 }
 
 export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) {
+  const theme = useTheme();
   const { activeModal, setActiveModal, onDeleteTasks } = useSchedule();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expandedTaskId, setExpandedTaskId] = useState<string>();
@@ -107,11 +108,7 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
           <Stack spacing={2}>
             {dayTasks.length > 0 && (
               <FormControlLabel
-                label={
-                  allSelected || someSelected
-                    ? 'Снять выделение'
-                    : 'Выбрать все'
-                }
+                label={allSelected || someSelected ? 'Снять выделение' : 'Выбрать все'}
                 control={
                   <Checkbox
                     size="small"

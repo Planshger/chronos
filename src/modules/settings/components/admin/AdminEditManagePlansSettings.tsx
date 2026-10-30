@@ -8,29 +8,16 @@ import {
   Switch,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { memo, useCallback, useEffect, useState } from 'react';
 import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import NumberField from '../../../../shared/ui/NumberField';
 import Loader from '../../../../shared/ui/Loader';
 import { useLoading } from '../../SettingsModule';
 import { deletePlans, getAllPlans } from '../../../plans/datasources/plans_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { lg: '50%', xs: '95%' },
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(255,255,255,0.2)',
-  boxShadow: 24,
-  borderRadius: '20px',
-  p: 5,
-};
 
 interface AdminEditManagePlansSettingsProps {
   updatePlan: (plan: PlanModel) => Promise<void>;
@@ -81,6 +68,7 @@ function AdminEditManagePlansSettings({
   const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
   const { setLoading, loading } = useLoading();
   const { showError } = useApiError();
+  const theme = useTheme();
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -181,7 +169,23 @@ function AdminEditManagePlansSettings({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(640px, calc(100vw - 32px))',
+          maxHeight: 'calc(100dvh - 32px)',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          bgcolor: 'background.paper',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: 24,
+          borderRadius: '20px',
+          p: { xs: 3, sm: 5 },
+        }}
+      >
         <IconButton
           aria-label="close"
           onClick={() => onClose()}
@@ -192,9 +196,9 @@ function AdminEditManagePlansSettings({
 
         <Typography variant="h6" align="center" sx={{ mt: 2, mb: 2 }}>
           {isCreate ? 'Создать тарифный план' : 'Редактировать тарифный план'}{' '}
-          <span style={{ color: theme.palette.primary.main, textDecoration: 'underline' }}>
+          <Box component="span" sx={{ color: 'primary.main', textDecoration: 'underline' }}>
             {editedPlan.name}
-          </span>
+          </Box>
         </Typography>
 
         <Stack spacing={2} sx={{ mt: 3 }}>
@@ -219,7 +223,7 @@ function AdminEditManagePlansSettings({
             sx={{ '& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' } }}
           />
 
-          <Stack direction={'row'} spacing={3}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
             <NumberField
               name="price"
               label="Прайс(RUB)"
@@ -249,8 +253,8 @@ function AdminEditManagePlansSettings({
             sx={{ '& input::-webkit-contacts-auto-fill-button': { visibility: 'hidden' } }}
           />
 
-          <Stack direction={'row'} spacing={3} sx={{ position: 'relative' }}>
-            <Stack direction={'row'}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ position: 'relative' }}>
+            <Stack direction="row">
               <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
                 Пробный
               </Typography>
@@ -262,7 +266,7 @@ function AdminEditManagePlansSettings({
               />
             </Stack>
 
-            <Stack direction={'row'}>
+            <Stack direction="row">
               <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
                 Популярный
               </Typography>
@@ -274,7 +278,7 @@ function AdminEditManagePlansSettings({
               />
             </Stack>
 
-            <Stack direction={'row'}>
+            <Stack direction="row">
               <Typography variant="h6" sx={{ fontSize: '15px', pt: 0.8 }}>
                 Активный
               </Typography>
@@ -291,7 +295,7 @@ function AdminEditManagePlansSettings({
                 variant="text"
                 color="error"
                 onClick={() => handleDeletePlan(editedPlan.id ?? 0)}
-                sx={{ position: 'absolute', right: 0 }}
+                sx={{ alignSelf: { xs: 'flex-start', sm: 'center' }, ml: { sm: 'auto' } }}
               >
                 Удалить
               </Button>
@@ -299,7 +303,11 @@ function AdminEditManagePlansSettings({
           </Stack>
         </Stack>
 
-        <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+        <Stack
+          direction={{ xs: 'column-reverse', sm: 'row' }}
+          spacing={2}
+          sx={{ mt: 3, justifyContent: 'center' }}
+        >
           <Button
             variant="contained"
             color="primary"

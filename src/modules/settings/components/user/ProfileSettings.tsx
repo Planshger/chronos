@@ -4,7 +4,6 @@ import UserModel from '../../../../shared/models/user_model';
 import { useLoading } from '../../SettingsModule';
 import { useAuth } from '../../../auth/AuthProvider';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 
@@ -49,7 +48,7 @@ export default function ProfileSettings() {
         onChange={(e) => onChange(e)}
         fullWidth
         size="medium"
-        sx={{ '& fieldset': { borderColor: theme.palette.background.paper } }}
+        sx={{ '& fieldset': { borderColor: 'background.paper' } }}
       />
 
       <TextField
@@ -59,14 +58,14 @@ export default function ProfileSettings() {
         onChange={(e) => onChange(e)}
         fullWidth
         size="medium"
-        sx={{ '& fieldset': { borderColor: theme.palette.background.paper } }}
+        sx={{ '& fieldset': { borderColor: 'background.paper' } }}
       />
 
       <Button
         variant="contained"
         fullWidth
         onClick={onClick}
-        sx={{ borderRadius: 3, color: theme.palette.text.primary }}
+        sx={{ borderRadius: 3, color: 'text.primary' }}
       >
         Сохранить изменения
       </Button>

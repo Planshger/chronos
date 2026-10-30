@@ -8,26 +8,13 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import { memo, useCallback } from 'react';
-import theme from '../../../../shared/ui/theme/darkTheme';
 
 import React from 'react';
 import DropdownList from '../DropdownList';
 import UserModel from '../../../../shared/models/user_model';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: { lg: 400, xs: 370 },
-  bgcolor: 'background.paper',
-  border: '1px solid rgba(255,255,255,0.2)',
-  boxShadow: 24,
-  borderRadius: '20px',
-  p: 5,
-};
 
 interface AdminTableEditMenuProps {
   onClick: (user: UserModel) => void;
@@ -38,6 +25,7 @@ interface AdminTableEditMenuProps {
 
 function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenuProps) {
   const [editedUser, setEditedUser] = React.useState<UserModel>(user);
+  const theme = useTheme();
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -80,7 +68,23 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 'min(400px, calc(100vw - 32px))',
+          maxHeight: 'calc(100dvh - 32px)',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          bgcolor: 'background.paper',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: 24,
+          borderRadius: '20px',
+          p: { xs: 3, sm: 5 },
+        }}
+      >
         <IconButton
           aria-label="close"
           onClick={onClose}
@@ -133,7 +137,11 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
           />
         </Stack>
 
-        <Stack direction="row" spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+        <Stack
+          direction={{ xs: 'column-reverse', sm: 'row' }}
+          spacing={2}
+          sx={{ mt: 3, justifyContent: 'center' }}
+        >
           <Button
             variant="contained"
             color="primary"

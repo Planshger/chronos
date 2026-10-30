@@ -1,8 +1,7 @@
-import { IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import { IconButton, Toolbar, Tooltip, Typography, useTheme } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { alpha } from '@mui/material/styles';
-import theme from '../../../../shared/ui/theme/darkTheme';
 
 interface AdminTableToolbarProps {
   numSelected: number;
@@ -15,6 +14,8 @@ export default function AdminTableToolbar({
   openFilterMenu,
   deleteUserData,
 }: AdminTableToolbarProps) {
+  const theme = useTheme();
+
   return (
     <Toolbar
       sx={[

@@ -7,6 +7,7 @@ import {
   Stack,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import TelegramIcon from '../TelegramIcon';
 import SendIcon from '@mui/icons-material/Send';
@@ -14,13 +15,13 @@ import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react'
 import { MessageModel } from '../../../models/message_model';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { useAuth } from '../../../../auth/AuthProvider';
-import theme from '../../../../../shared/ui/theme/darkTheme';
 import { useApiError } from '../../../../../shared/errors/ApiErrorProvider';
 
 const POLL_INTERVAL = 3000;
 const MAX_MESSAGES = 10;
 
 export function PageWithChat() {
+  const theme = useTheme();
   const { user } = useAuth();
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [input, setInput] = useState('');

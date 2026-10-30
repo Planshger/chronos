@@ -1,7 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { Box, Container, Dialog, Stack, useMediaQuery } from '@mui/material';
+import { Box, Container, Dialog, Stack, useMediaQuery, useTheme } from '@mui/material';
 import { format, addMonths, subMonths } from 'date-fns';
-import theme from '../../shared/ui/theme/darkTheme';
 import Calendary from './components/Calendary';
 import { initialTaskModel, Task, TaskItem, TaskModel } from './models/task_model';
 import ScheduleAppBar from './components/ScheduleAppBar';
@@ -66,6 +65,7 @@ export default function Schedule() {
 
   const [tasks, setTasks] = useState<TaskModel>(initialTaskModel);
 
+  const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleSaveTask = useCallback(
@@ -173,8 +173,12 @@ export default function Schedule() {
         <ScheduleContext.Provider value={sheduleContextValue}>
           <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen} />
 
-          <Container sx={{ py: 3, ml: 0, minWidth: '100%', mt: isMobile ? '30%' : 0 }}>
-            <Stack spacing={4} direction={'row'}>
+          <Container maxWidth={false} sx={{ py: { xs: 2, md: 3 }, px: { xs: 1.5, sm: 3 } }}>
+            <Stack
+              spacing={{ xs: 2, md: 3 }}
+              direction={{ xs: 'column', md: 'row' }}
+              sx={{ alignItems: 'stretch', minWidth: 0 }}
+            >
               <Calendary
                 currentMonth={currentMonth}
                 nextMonth={nextMonth}
@@ -189,7 +193,17 @@ export default function Schedule() {
             <Dialog
               open={isSchedulingOpen}
               onClose={() => setIsSchedulingOpen(false)}
-              slotProps={{ paper: { sx: { borderRadius: 4 } } }}
+              fullWidth
+              maxWidth="sm"
+              slotProps={{
+                paper: {
+                  sx: {
+                    width: 'calc(100% - 32px)',
+                    maxHeight: 'calc(100dvh - 32px)',
+                    borderRadius: 4,
+                  },
+                },
+              }}
             >
               <Scheduling />
             </Dialog>

@@ -8,8 +8,8 @@ import {
   Menu,
   MenuItem,
   Typography,
+  useTheme,
 } from '@mui/material';
-import theme from '../../../shared/ui/theme/darkTheme';
 import { useNavigate } from 'react-router-dom';
 import { SettingsData } from '../../settings/data/SettingsData';
 import { SettingIcons } from '../../settings/constants/SettingIcons';
@@ -21,6 +21,7 @@ interface ScheduleMenuUserProps {
 }
 
 export default function ScheduleMenuUser({ openMenu, closeUserMenu }: ScheduleMenuUserProps) {
+  const theme = useTheme();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { logout } = useAuth();

@@ -1,6 +1,15 @@
 import { AccessTime, Chat, Person } from '@mui/icons-material';
-import { AppBar, Avatar, Button, IconButton, Stack, Toolbar, Typography } from '@mui/material';
-import theme from '../../../shared/ui/theme/darkTheme';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Toolbar,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { appName } from '../../../shared/constants/name';
 import { useState } from 'react';
 import ScheduleMenuUser from './ScheduleMenuUser';
@@ -12,6 +21,7 @@ interface MainAppBarProps {
 
 export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProps) {
   const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
+  const theme = useTheme();
 
   function openUserMenu(event: React.MouseEvent<HTMLElement>) {
     setOpenMenu(event.currentTarget);
@@ -23,17 +33,28 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
   return (
     <AppBar position="sticky">
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <AccessTime sx={{ fontSize: 38, color: theme.palette.primary.main }} />
+        <Typography
+          variant="h6"
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            fontSize: { xs: '1rem', sm: '1.25rem' },
+          }}
+        >
+          <AccessTime sx={{ fontSize: { xs: 28, sm: 38 }, color: theme.palette.primary.main }} />
           {appName}
         </Typography>
 
-        <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
+        <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
           <Button
             variant="outlined"
             startIcon={<Chat />}
             onClick={() => setIsAiOpen(!isAiOpen)}
             sx={{
+              minWidth: { xs: 40, sm: 'auto' },
+              px: { xs: 0, sm: 2 },
+              pl: { xs: 1.5, sm: 2 },
               color: theme.palette.primary.main,
               bgcolor: `${theme.palette.primary.main}15`,
               '&:hover': {
@@ -42,7 +63,9 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
               },
             }}
           >
-            ИИ-ассистент
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              ИИ-ассистент
+            </Box>
           </Button>
 
           <IconButton

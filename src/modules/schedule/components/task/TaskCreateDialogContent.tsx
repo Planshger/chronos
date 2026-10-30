@@ -1,10 +1,10 @@
-import { Button, Stack, TextField } from '@mui/material';
+import { Button, Stack, TextField, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { initialTaskItem, TaskItem } from '../../models/task_model';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { useSchedule } from '../../ScheduleModule';
 
 export default function TaskCreateDialogContent() {
+  const theme = useTheme();
   const { handleSaveTask } = useSchedule();
   const [newTask, setNewTask] = useState<TaskItem>(initialTaskItem);
 

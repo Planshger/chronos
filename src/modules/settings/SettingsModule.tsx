@@ -1,5 +1,4 @@
-import { Box, Container, Paper, Stack, Typography } from '@mui/material';
-import theme from '../../shared/ui/theme/darkTheme';
+import { Box, Container, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingsModel } from './models/settings_model';
 import { SettingIcons } from './constants/SettingIcons';
@@ -39,6 +38,7 @@ export function useLoading() {
 
 export default function Settings() {
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
   const location = useLocation();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -57,23 +57,27 @@ export default function Settings() {
         <Stack
           spacing={4}
           direction={{ xs: 'column', sm: 'column', md: 'row' }}
-          sx={{ height: { md: '94.5vh' } }}
+          sx={{ alignItems: 'stretch', minWidth: 0 }}
         >
           <ListSettings onSelect={handleSelect} settingsData={settingsData} />
 
           <Paper
             sx={{
-              p: 3,
+              p: { xs: 2, sm: 3 },
               borderRadius: 7,
-              width: '100%',
-              overflow: 'auto',
-              height: { xs: '85vh', md: '94.5vh' },
+              flex: '1 1 0',
+              minWidth: 0,
+              minHeight: { xs: '60vh', md: 'calc(100dvh - 48px)' },
               bgcolor: theme.palette.background.default,
               border: `1px solid ${theme.custom.border.light}`,
               boxShadow: theme.custom.shadows.sm,
             }}
           >
-            <Stack direction="row" spacing={3} sx={{ alignItems: 'center', pt: { xs: 0, md: 1 } }}>
+            <Stack
+              direction="row"
+              spacing={3}
+              sx={{ alignItems: 'center', minWidth: 0, pt: { xs: 0, md: 1 } }}
+            >
               {settingsData.map((item) => {
                 const messenger = item.messenger?.find((m) => m.id === currentPath);
                 const IconComponent = SettingIcons.get(item.id) ?? TouchApp;
@@ -99,7 +103,7 @@ export default function Settings() {
               })}
             </Stack>
 
-            <Box sx={{ pt: { xs: 4, sm: 8, md: 8, lg: 4 }, width: '100%', minWidth: 0 }}>
+            <Box sx={{ pt: { xs: 3, sm: 6, md: 4 }, width: '100%', minWidth: 0 }}>
               <LoadingContext.Provider value={{ setLoading, loading }}>
                 <CurrentComponent />
               </LoadingContext.Provider>

@@ -1,6 +1,15 @@
-import { Box, Container, Typography, Button, Grid, Card, CardContent, Stack } from '@mui/material';
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  Stack,
+  useTheme,
+} from '@mui/material';
 import { CalendarToday, Chat, LocationOn, CheckCircle, FlashOn } from '@mui/icons-material';
-import theme from '../../shared/ui/theme/darkTheme';
 import { appName } from '../../shared/constants/name';
 import LandingAppBar from './components/LandingAppBar';
 import { useNavigate } from 'react-router-dom';
@@ -12,26 +21,24 @@ const features = [
     icon: <CalendarToday />,
     title: 'Умный календарь',
     desc: 'Организуйте дни с интуитивным и красивым календарем. Добавляйте задачи в один клик.',
-    color: theme.palette.primary.main,
-    bg: `${theme.palette.primary.main}15`,
+    accent: 'primary',
   },
   {
     icon: <Chat />,
     title: 'ИИ-ассистент',
     desc: 'Ваш личный ИИ всегда готов помочь проанализировать расписание или найти лучшее время для встречи.',
-    color: theme.palette.secondary.main,
-    bg: `${theme.palette.secondary.main}15`,
+    accent: 'secondary',
   },
   {
     icon: <LocationOn />,
     title: 'Мгновенное бронирование',
     desc: 'Нужна машина или столик? Заказывайте такси, отели и рестораны прямо из событий календаря.',
-    color: theme.custom.accent.pink,
-    bg: `${theme.custom.accent.pink}15`,
+    accent: 'pink',
   },
 ];
 
 export default function LandingPage() {
+  const theme = useTheme();
   const { token, user } = useAuth();
   const navigator = useNavigate();
 
@@ -69,8 +76,8 @@ export default function LandingPage() {
             pointerEvents: 'none',
           }}
         >
-          <div
-            style={{
+          <Box
+            sx={{
               position: 'absolute',
               inset: 0,
               background: theme.custom.gradients.hero,
@@ -105,15 +112,16 @@ export default function LandingPage() {
             sx={{ fontSize: { lg: '4.5rem', xs: '2.5rem' }, lineHeight: 1.2, mb: 3 }}
           >
             Управляйте временем с{' '}
-            <span
-              style={{
+            <Box
+              component="span"
+              sx={{
                 background: theme.custom.gradients.primary,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
             >
               ИИ-ассистентом.
-            </span>
+            </Box>
           </Typography>
 
           <Typography
@@ -130,7 +138,11 @@ export default function LandingPage() {
             сервисов в одном интерфейсе.
           </Typography>
 
-          <Stack direction="row" spacing={2} sx={{ mb: 4, justifyContent: 'center' }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            sx={{ mb: 4, justifyContent: 'center', alignItems: 'center' }}
+          >
             <Button
               variant="contained"
               onClick={() => onClick()}
@@ -186,7 +198,7 @@ export default function LandingPage() {
 
           <Grid container spacing={4}>
             {features.map((f) => (
-              <Grid key={f.title} size={10}>
+              <Grid key={f.title} size={{ xs: 12, sm: 6, md: 4 }}>
                 <Card
                   sx={{
                     height: '100%',
@@ -207,13 +219,19 @@ export default function LandingPage() {
                         width: 56,
                         height: 56,
                         borderRadius: 2,
-                        bgcolor: f.bg,
+                        bgcolor:
+                          f.accent === 'pink'
+                            ? `${theme.custom.accent.pink}15`
+                            : `${theme.palette[f.accent].main}15`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         mb: 3,
                         transition: 'transform 0.2s',
-                        color: f.color,
+                        color:
+                          f.accent === 'pink'
+                            ? theme.custom.accent.pink
+                            : theme.palette[f.accent].main,
                       }}
                     >
                       {f.icon}
@@ -244,7 +262,11 @@ export default function LandingPage() {
             Присоединяйтесь к тысячам пользователей, которые планируют умнее с {appName}.
           </Typography>
 
-          <Stack direction="row" spacing={3} sx={{ mb: 6, justifyContent: 'center' }}>
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={3}
+            sx={{ mb: 6, justifyContent: 'center', alignItems: 'center' }}
+          >
             {['7 дней бесплатно', 'Отмена в любой момент'].map((text, i) => (
               <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <CheckCircle sx={{ color: theme.custom.accent.green }} />

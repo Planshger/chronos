@@ -1,10 +1,5 @@
-import {
-  Autocomplete,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Autocomplete, Stack, TextField, useTheme } from '@mui/material';
 import { memo } from 'react';
-import theme from '../../../shared/ui/theme/darkTheme';
 import { Search } from '@mui/icons-material';
 
 interface AutocompleteListProps {
@@ -26,6 +21,8 @@ function AutocompleteList({
   variant = 'standard',
   disableClearable,
 }: AutocompleteListProps) {
+  const theme = useTheme();
+
   return (
     <Stack direction={'row'} spacing={1}>
       <Search sx={{ pt: 0.3 }} />

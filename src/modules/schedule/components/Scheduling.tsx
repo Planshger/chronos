@@ -1,6 +1,5 @@
 import { Add, CalendarToday, DirectionsCar, Hotel, ListAlt, Restaurant } from '@mui/icons-material';
-import { Box, Button, Paper, Stack, Typography } from '@mui/material';
-import theme from '../../../shared/ui/theme/darkTheme';
+import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
 
@@ -8,9 +7,10 @@ import { useSchedule } from '../ScheduleModule';
 
 export default function Scheduling() {
   const { selectedDate, setActiveModal, tasks } = useSchedule();
+  const theme = useTheme();
 
   return (
-    <Box sx={{ minHeight: '30%', minWidth: '20%' }}>
+    <Box sx={{ width: { xs: '100%', md: 'min(320px, 30%)' }, minWidth: 0, flexShrink: 0 }}>
       {selectedDate ? (
         <Paper
           sx={{
@@ -66,6 +66,7 @@ export default function Scheduling() {
               <Button
                 key={action.id}
                 variant="outlined"
+                fullWidth
                 onClick={() => setActiveModal(action.id)}
                 sx={{
                   justifyContent: 'flex-start',
@@ -77,7 +78,7 @@ export default function Scheduling() {
                   '&:hover': { bgcolor: theme.palette.action.hover },
                 }}
               >
-                <Stack spacing={1.7} direction={'row'}>
+                <Stack spacing={1.7} direction="row" sx={{ alignItems: 'center', minWidth: 0 }}>
                   <Box
                     sx={{
                       width: 35,
@@ -93,7 +94,7 @@ export default function Scheduling() {
                     {<action.icon sx={{ width: 21, height: 21 }} />}
                   </Box>
 
-                  <div>{action.label}</div>
+                  <Typography sx={{ textAlign: 'left' }}>{action.label}</Typography>
                 </Stack>
               </Button>
             ))}

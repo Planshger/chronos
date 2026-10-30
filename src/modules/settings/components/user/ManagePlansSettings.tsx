@@ -1,6 +1,5 @@
 import { AutoAwesome } from '@mui/icons-material';
 import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { useAuth } from '../../../auth/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
@@ -47,11 +46,7 @@ export default function ManagePlansSettings() {
       </Typography>
 
       <Grid container spacing={2}>
-        <Button
-          variant="outlined"
-          fullWidth
-          sx={{ borderRadius: 3, color: theme.palette.text.primary }}
-        >
+        <Button variant="outlined" fullWidth sx={{ borderRadius: 3, color: 'text.primary' }}>
           Продлить подписку
         </Button>
 
@@ -59,7 +54,7 @@ export default function ManagePlansSettings() {
           variant="outlined"
           onClick={() => navigate('/plans')}
           fullWidth
-          sx={{ borderRadius: 3, color: theme.palette.text.primary }}
+          sx={{ borderRadius: 3, color: 'text.primary' }}
         >
           Сменить тарифный план
         </Button>

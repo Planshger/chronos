@@ -1,6 +1,5 @@
 import { memo } from 'react';
-import theme from '../../../../shared/ui/theme/darkTheme';
-import { TablePagination } from '@mui/material';
+import { TablePagination, useTheme } from '@mui/material';
 import { PaginationModel } from '../../models/user_pagination_model';
 
 interface AdminTablePaginationProps {
@@ -9,6 +8,7 @@ interface AdminTablePaginationProps {
 }
 
 function AdminTablePagination({ loadDataWithPagination, meta }: AdminTablePaginationProps) {
+  const theme = useTheme();
   const page = meta.meta.current_page > 0 ? meta.meta.current_page - 1 : 0;
   const rowsPerPage = meta.meta.per_page || 5;
 

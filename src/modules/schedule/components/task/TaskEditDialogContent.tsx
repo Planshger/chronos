@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TaskItem } from '../../models/task_model';
 import { Button, Stack, TextField } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
 import { useSchedule } from '../../ScheduleModule';
 
 interface TaskEditDialogContentProps {
