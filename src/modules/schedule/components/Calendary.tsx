@@ -19,31 +19,25 @@ import {
 } from '@mui/material';
 import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { ru } from 'date-fns/locale';
-import { useSchedule } from '../ScheduleModule';
+import ScheduleStore from '../stores/ScheduleStore';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface CalendaryProps {
-  currentMonth: Date;
-  prevMonth: () => void;
-  nextMonth: () => void;
-  handleSelectDate: (date: Date | null) => void;
+  scheduleStore: ScheduleStore;
 }
 
-export default function Calendary({
-  currentMonth,
-  prevMonth,
-  nextMonth,
-  handleSelectDate,
-}: CalendaryProps) {
-  const { selectedDate, tasks } = useSchedule();
+function Calendary({ scheduleStore }: CalendaryProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { currentMonth, selectedDate, tasks } = scheduleStore;
   const today = new Date();
+  const todayKey = format(today, 'yyyy-MM-dd');
+  const selectedDateKey = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart, { weekStartsOn: 1 });
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: startDate, end: endDate });
-
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Paper
@@ -76,7 +70,7 @@ export default function Calendary({
         </Typography>
 
         <Stack direction="row" spacing={{ xs: 0, sm: 1 }} sx={{ alignItems: 'center' }}>
-          <IconButton onClick={prevMonth} size="small">
+          <IconButton onClick={scheduleStore.prevMonth} size="small">
             <ChevronLeft sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
 
@@ -87,7 +81,7 @@ export default function Calendary({
             {format(currentMonth, 'LLLL yyyy', { locale: ru })}
           </Typography>
 
-          <IconButton onClick={nextMonth} size="small">
+          <IconButton onClick={scheduleStore.nextMonth} size="small">
             <ChevronRight sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
         </Stack>
@@ -129,15 +123,15 @@ export default function Calendary({
         >
           {days.map((date) => {
             const dateKey = format(date, 'yyyy-MM-dd');
-            const isToday = dateKey === format(today, 'yyyy-MM-dd');
-            const isSelected = selectedDate && dateKey === format(selectedDate, 'yyyy-MM-dd');
+            const isToday = dateKey === todayKey;
+            const isSelected = dateKey === selectedDateKey;
             const dayTasks = tasks[dateKey] || [];
             const isCurrentMonth = isSameMonth(date, monthStart);
 
             return (
               <Box
                 key={dateKey}
-                onClick={() => handleSelectDate(date)}
+                onClick={() => scheduleStore.selectDate(date, isMobile)}
                 sx={{
                   minWidth: 0,
                   minHeight: { xs: 68, sm: 92, md: 105 },
@@ -231,3 +225,5 @@ export default function Calendary({
     </Paper>
   );
 }
+
+export default injectMobxStore('scheduleStore', Calendary);

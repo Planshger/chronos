@@ -17,25 +17,24 @@ import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
 import TaskCreateDialogContent from './TaskCreateDialogContent';
 import { initialTaskItem, TaskItem } from '../../models/task_model';
 import { useEffect, useState } from 'react';
-import { useLoading, useSchedule } from '../../ScheduleModule';
-import Loader from '../../../../shared/ui/Loader';
+import ScheduleStore from '../../stores/ScheduleStore';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import TaskEditDialogContent from './TaskEditDialogContent';
 
 interface TaskDialogContentProps {
   dayTasks: TaskItem[];
+  scheduleStore: ScheduleStore;
 }
 
-export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) {
+function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) {
   const theme = useTheme();
-  const { activeModal, setActiveModal, onDeleteTasks } = useSchedule();
+  const { activeModal } = scheduleStore;
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [expandedTaskId, setExpandedTaskId] = useState<string>();
   const [editedTask, setEditedTask] = useState<string>();
 
   const allSelected = dayTasks.length > 0 && selectedIds.length === dayTasks.length;
   const someSelected = selectedIds.length > 0 && !allSelected;
-
-  const { loading } = useLoading();
 
   const toggleAll = () => {
     setSelectedIds(selectedIds.length > 0 ? [] : dayTasks.map((t) => t.id));
@@ -55,7 +54,7 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
       open={activeModal !== null}
       onClose={(reason) => {
         if (reason !== 'backdropClick') return;
-        setActiveModal(null);
+        scheduleStore.setActiveModal(null);
       }}
       maxWidth="sm"
       fullWidth
@@ -83,7 +82,7 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
               color="error"
               startIcon={<Delete fontSize="small" />}
               onClick={() => {
-                onDeleteTasks(selectedIds);
+                scheduleStore.onDeleteTasks(selectedIds);
                 setSelectedIds([]);
               }}
             >
@@ -92,12 +91,12 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
           )}
 
           {activeModal === 'tasks_list' && (
-            <IconButton size="small" onClick={() => setActiveModal('task_create')}>
+            <IconButton size="small" onClick={() => scheduleStore.setActiveModal('task_create')}>
               <Add fontSize="small" color="primary" />
             </IconButton>
           )}
 
-          <IconButton size="small" onClick={() => setActiveModal(null)}>
+          <IconButton size="small" onClick={() => scheduleStore.setActiveModal(null)}>
             <Close fontSize="small" sx={{ color: 'grey.500' }} />
           </IconButton>
         </Stack>
@@ -153,7 +152,7 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
                     className="edit-button"
                     size="small"
                     onClick={(e) => {
-                      setActiveModal('task_edit');
+                      scheduleStore.setActiveModal('task_edit');
                       setEditedTask(task.id);
                     }}
                     sx={{ position: 'absolute', right: 50 }}
@@ -195,7 +194,8 @@ export default function TaskDialogContent({ dayTasks }: TaskDialogContentProps) 
           />
         ) : null}
       </DialogContent>
-      {loading && <Loader size={80} />}
     </Dialog>
   );
 }
+
+export default injectMobxStore('scheduleStore', TaskDialogContent);

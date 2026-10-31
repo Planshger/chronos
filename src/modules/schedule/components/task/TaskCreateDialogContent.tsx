@@ -1,18 +1,22 @@
 import { Button, Stack, TextField, useTheme } from '@mui/material';
 import { useState } from 'react';
 import { initialTaskItem, TaskItem } from '../../models/task_model';
-import { useSchedule } from '../../ScheduleModule';
+import ScheduleStore from '../../stores/ScheduleStore';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
-export default function TaskCreateDialogContent() {
+interface TaskCreateDialogContentProps {
+  scheduleStore: ScheduleStore;
+}
+
+function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps) {
   const theme = useTheme();
-  const { handleSaveTask } = useSchedule();
   const [newTask, setNewTask] = useState<TaskItem>(initialTaskItem);
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        handleSaveTask(newTask);
+        scheduleStore.handleSaveTask(newTask);
       }}
     >
       <Stack spacing={3}>
@@ -65,3 +69,5 @@ export default function TaskCreateDialogContent() {
     </form>
   );
 }
+
+export default injectMobxStore('scheduleStore', TaskCreateDialogContent);

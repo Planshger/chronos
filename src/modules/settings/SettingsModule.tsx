@@ -5,7 +5,6 @@ import { SettingIcons } from './constants/SettingIcons';
 import { TouchApp } from '@mui/icons-material';
 import React, { createContext, useContext, useState } from 'react';
 import { AdminSettingsData, SettingsData } from './data/SettingsData';
-import { useAuth } from '../auth/AuthProvider';
 import Loader from '../../shared/ui/Loader';
 import AdminManagePlansSettings from './components/admin/AdminManagePlansSettings';
 import ProfileSettings from './components/user/ProfileSettings';
@@ -14,6 +13,8 @@ import AnalyticsSettings from './components/user/AnalyticsSettings';
 import TelegramSettings from './components/user/telegram/TelegramSettings';
 import ListSettings from './components/ListSettings';
 import MapSettings from './components/user/MapSettings';
+import AuthStore from '../auth/stores/AuthStore';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
 
 const settingsComponents: Record<string, React.ComponentType> = {
   profile_settings: ProfileSettings,
@@ -36,12 +37,17 @@ export function useLoading() {
   return useContext(LoadingContext);
 }
 
-export default function Settings() {
+interface SettingsProps {
+  authStore: AuthStore;
+}
+
+function Settings({ authStore }: SettingsProps) {
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const location = useLocation();
-  const { user } = useAuth();
   const navigate = useNavigate();
+  const user = authStore.user;
+
   const currentPath = location.pathname.split('/').pop() || 'profile_settings';
   let settingsData: SettingsModel[] = user?.role === 'admin' ? AdminSettingsData : SettingsData;
 
@@ -52,12 +58,29 @@ export default function Settings() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
-      <Container maxWidth={false} sx={{ py: { xs: 1, sm: 2, md: 3 }, px: { xs: 1, sm: 2, md: 3 } }}>
+    <Box
+      sx={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: theme.palette.background.paper,
+      }}
+    >
+      <Container
+        maxWidth={false}
+        sx={{
+          py: { xs: 1, sm: 2, md: 3 },
+          px: { xs: 1, sm: 2, md: 3 },
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: 0,
+        }}
+      >
         <Stack
           spacing={4}
           direction={{ xs: 'column', sm: 'column', md: 'row' }}
-          sx={{ alignItems: 'stretch', minWidth: 0 }}
+          sx={{ alignItems: 'stretch', minWidth: 0, flex: 1, minHeight: 0 }}
         >
           <ListSettings onSelect={handleSelect} settingsData={settingsData} />
 
@@ -67,7 +90,9 @@ export default function Settings() {
               borderRadius: 7,
               flex: '1 1 0',
               minWidth: 0,
-              minHeight: { xs: '60vh', md: 'calc(100dvh - 48px)' },
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
               bgcolor: theme.palette.background.default,
               border: `1px solid ${theme.custom.border.light}`,
               boxShadow: theme.custom.shadows.sm,
@@ -103,9 +128,17 @@ export default function Settings() {
               })}
             </Stack>
 
-            <Box sx={{ pt: { xs: 3, sm: 6, md: 4 }, width: '100%', minWidth: 0 }}>
+            <Box
+              sx={{
+                pt: { xs: 3, sm: 6, md: 4 },
+                width: '100%',
+                flex: '1',
+                minHeight: 0,
+                minWidth: 0,
+              }}
+            >
               <LoadingContext.Provider value={{ setLoading, loading }}>
-                <CurrentComponent />
+                <CurrentComponent key={`${user.id}:${user.role}`} />
               </LoadingContext.Provider>
             </Box>
           </Paper>
@@ -115,3 +148,5 @@ export default function Settings() {
     </Box>
   );
 }
+
+export default injectMobxStore('authStore', Settings);

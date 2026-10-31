@@ -7,3 +7,5 @@ export interface MessageModel {
   createdAt: string;
   processed: boolean;
 }
+
+export type NewMessageModel = Omit<MessageModel, 'id'>;

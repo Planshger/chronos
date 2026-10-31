@@ -1,24 +1,30 @@
 import { AutoAwesome } from '@mui/icons-material';
 import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
-import { useAuth } from '../../../auth/AuthProvider';
+import AuthStore from '../../../auth/stores/AuthStore';
 import { useNavigate } from 'react-router-dom';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import { useLoading } from '../../SettingsModule';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
-export default function ManagePlansSettings() {
-  const { user, setUser } = useAuth();
+interface ManagePlansSettingsProps {
+  authStore: AuthStore;
+}
+
+function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
+  const user = authStore.user;
   const { setLoading } = useLoading();
   const { showError } = useApiError();
   const navigate = useNavigate();
 
   const cancelPlan = async () => {
+    if (!user) return;
     try {
       await withLoading(
         () =>
           updateUserData({ ...user, plan: '', status: 'Ожидание оплаты' }).then((res) =>
-            setUser(res),
+            authStore.setUser(res),
           ),
         setLoading,
       );
@@ -26,6 +32,8 @@ export default function ManagePlansSettings() {
       showError(error);
     }
   };
+  if (!user) return null;
+
   return (
     <Stack spacing={3} sx={{ alignItems: 'center' }}>
       <Avatar
@@ -72,3 +80,5 @@ export default function ManagePlansSettings() {
     </Stack>
   );
 }
+
+export default injectMobxStore('authStore', ManagePlansSettings);

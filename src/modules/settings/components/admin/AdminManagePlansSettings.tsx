@@ -17,10 +17,10 @@ export default function AdminManagePlansSettings() {
     openEdit: boolean;
     openCreate: boolean;
     plan: PlanModel;
-  }>({ openEdit: false, openCreate: false, plan: {} as PlanModel });
+  }>({ openEdit: false, openCreate: false, plan: initialPlan });
 
   const loadData = useCallback(() => {
-    void withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
+    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
   }, [setLoading, showError]);
 
   const loadAddPlan = useCallback(

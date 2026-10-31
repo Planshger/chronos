@@ -14,15 +14,20 @@ import SendIcon from '@mui/icons-material/Send';
 import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 import { MessageModel } from '../../../models/message_model';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
-import { useAuth } from '../../../../auth/AuthProvider';
 import { useApiError } from '../../../../../shared/errors/ApiErrorProvider';
+import AuthStore from '../../../../auth/stores/AuthStore';
+import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
 
 const POLL_INTERVAL = 3000;
 const MAX_MESSAGES = 10;
 
-export function PageWithChat() {
+interface PageWithChatProps {
+  authStore: AuthStore;
+}
+
+function PageWithChat({ authStore }: PageWithChatProps) {
   const theme = useTheme();
-  const { user } = useAuth();
+  const user = authStore.user;
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
@@ -63,7 +68,7 @@ export function PageWithChat() {
         telegramId: null,
         createdAt: new Date().toISOString(),
         processed: false,
-      } as MessageModel);
+      });
       setInput('');
       await loadMessages();
     } catch (err) {
@@ -90,6 +95,8 @@ export function PageWithChat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  if (!user) return null;
 
   return (
     <Box sx={{ maxWidth: 560, mx: 'auto', p: 2 }}>
@@ -207,3 +214,5 @@ export function PageWithChat() {
     </Box>
   );
 }
+
+export default injectMobxStore('authStore', PageWithChat);

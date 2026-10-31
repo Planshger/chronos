@@ -45,6 +45,10 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
     throw new NetworkError(method, path, error);
   }
 
+  if (!body.trim() && method === 'DELETE') {
+    return undefined as T;
+  }
+
   if (!body) {
     throw new EmptyResponseError(method, path, response.status);
   }

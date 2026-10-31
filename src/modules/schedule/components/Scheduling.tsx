@@ -2,12 +2,19 @@ import { Add, CalendarToday, DirectionsCar, Hotel, ListAlt, Restaurant } from '@
 import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
+import ScheduleStore from '../stores/ScheduleStore';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
-import { useSchedule } from '../ScheduleModule';
+interface SchedulingProps {
+  scheduleStore: ScheduleStore;
+}
 
-export default function Scheduling() {
-  const { selectedDate, setActiveModal, tasks } = useSchedule();
+function Scheduling({ scheduleStore }: SchedulingProps) {
   const theme = useTheme();
+  const { selectedDate, tasks } = scheduleStore;
+  const selectedDateKey = selectedDate ? format(selectedDate, 'yyyy-MM-dd') : null;
+  const selectedDayTasks = selectedDateKey ? (tasks[selectedDateKey] ?? []) : [];
+  const hasTasks = selectedDayTasks.length > 0;
 
   return (
     <Box sx={{ width: { xs: '100%', md: 'min(320px, 30%)' }, minWidth: 0, flexShrink: 0 }}>
@@ -29,15 +36,9 @@ export default function Scheduling() {
           <Stack spacing={3}>
             {[
               {
-                icon: (tasks[format(selectedDate, 'yyyy-MM-dd')]?.length || 0) > 0 ? ListAlt : Add,
-                label:
-                  (tasks[format(selectedDate, 'yyyy-MM-dd')]?.length || 0) > 0
-                    ? `Задачи (${tasks[format(selectedDate, 'yyyy-MM-dd')].length})`
-                    : 'Добавить задачу',
-                id:
-                  (tasks[format(selectedDate, 'yyyy-MM-dd')]?.length || 0) > 0
-                    ? 'tasks_list'
-                    : 'task_create',
+                icon: hasTasks ? ListAlt : Add,
+                label: hasTasks ? `Задачи (${selectedDayTasks.length})` : 'Добавить задачу',
+                id: hasTasks ? 'tasks_list' : 'task_create',
                 color: theme.custom.accent.blue,
                 bg: `${theme.custom.accent.blue}15`,
               },
@@ -67,7 +68,7 @@ export default function Scheduling() {
                 key={action.id}
                 variant="outlined"
                 fullWidth
-                onClick={() => setActiveModal(action.id)}
+                onClick={() => scheduleStore.setActiveModal(action.id)}
                 sx={{
                   justifyContent: 'flex-start',
                   borderRadius: 3,
@@ -128,3 +129,5 @@ export default function Scheduling() {
     </Box>
   );
 }
+
+export default injectMobxStore('scheduleStore', Scheduling);

@@ -1,10 +1,15 @@
 import { Box, Button, Paper, Typography } from '@mui/material';
 import { QRCodeSVG } from 'qrcode.react';
 import TelegramIcon from '../TelegramIcon';
-import { useAuth } from '../../../../auth/AuthProvider';
+import AuthStore from '../../../../auth/stores/AuthStore';
+import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
 
-export function PageWithQR() {
-  const { user } = useAuth();
+interface PageWithQRProps {
+  authStore: AuthStore;
+}
+
+function PageWithQR({ authStore }: PageWithQRProps) {
+  const { user } = authStore;
   const botUsername = 'AssistFromChronos_bot';
   const deepLink = `https://t.me/${botUsername}?start=${encodeURIComponent(user?.id ?? '')}`;
 
@@ -49,3 +54,5 @@ export function PageWithQR() {
     </Box>
   );
 }
+
+export default injectMobxStore('authStore', PageWithQR);

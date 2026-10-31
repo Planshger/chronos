@@ -1,19 +1,22 @@
 import { Button, Stack, TextField } from '@mui/material';
 import { ChangeEvent, useCallback, useState } from 'react';
-import UserModel from '../../../../shared/models/user_model';
+import UserModel, { initialUser } from '../../../../shared/models/user_model';
 import { useLoading } from '../../SettingsModule';
-import { useAuth } from '../../../auth/AuthProvider';
+import AuthStore from '../../../auth/stores/AuthStore';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
-export default function ProfileSettings() {
+interface ProfileSettingsProps {
+  authStore: AuthStore;
+}
+
+function ProfileSettings({ authStore }: ProfileSettingsProps) {
   const { setLoading } = useLoading();
-  const { user, setUser } = useAuth();
+  const user = authStore.user;
   const { showError } = useApiError();
-  const [editUser, setEditUser] = useState<UserModel>(
-    user ?? ({ name: 'name', email: 'email' } as UserModel),
-  );
+  const [editUser, setEditUser] = useState<UserModel>(user ?? initialUser);
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
@@ -27,14 +30,14 @@ export default function ProfileSettings() {
     if (user?.email !== editUser.email || user?.name !== editUser.name) {
       try {
         await withLoading(
-          () => updateUserData(editUser).then((updatedUser) => setUser(updatedUser)),
+          () => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)),
           setLoading,
         );
       } catch (error) {
         showError(error);
       }
     }
-  }, [editUser, user, setLoading, setUser, showError]);
+  }, [editUser, user, setLoading, showError, authStore]);
 
   return (
     <Stack
@@ -72,3 +75,5 @@ export default function ProfileSettings() {
     </Stack>
   );
 }
+
+export default injectMobxStore('authStore', ProfileSettings);

@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { TaskItem } from '../../models/task_model';
-import { Button, Stack, TextField } from '@mui/material';
-import { useSchedule } from '../../ScheduleModule';
+import { Button, Stack, TextField, useTheme } from '@mui/material';
+import ScheduleStore from '../../stores/ScheduleStore';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
 interface TaskEditDialogContentProps {
   task: TaskItem;
+  scheduleStore: ScheduleStore;
 }
 
-export default function TaskEditDialogContent({ task }: TaskEditDialogContentProps) {
-  const { handleEditTask } = useSchedule();
+function TaskEditDialogContent({ task, scheduleStore }: TaskEditDialogContentProps) {
+  const theme = useTheme();
   const [newTask, setNewTask] = useState<TaskItem>(task);
 
   return (
@@ -55,7 +57,7 @@ export default function TaskEditDialogContent({ task }: TaskEditDialogContentPro
       <Button
         variant="contained"
         fullWidth
-        onClick={() => handleEditTask(newTask)}
+        onClick={() => scheduleStore.handleEditTask(newTask)}
         sx={{ borderRadius: 3 }}
       >
         Сохранить
@@ -63,3 +65,5 @@ export default function TaskEditDialogContent({ task }: TaskEditDialogContentPro
     </Stack>
   );
 }
+
+export default injectMobxStore('scheduleStore', TaskEditDialogContent);

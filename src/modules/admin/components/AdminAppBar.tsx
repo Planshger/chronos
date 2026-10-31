@@ -1,12 +1,16 @@
 import { AppBar, Button, Stack, Toolbar, Typography, useTheme } from '@mui/material';
 import { CreditCard, GppGood, Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../auth/AuthProvider';
+import AuthStore from '../../auth/stores/AuthStore';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
-export default function AdminAppBar() {
+interface AdminAppBarProps {
+  authStore: AuthStore;
+}
+
+function AdminAppBar({ authStore }: AdminAppBarProps) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { logout } = useAuth();
 
   return (
     <AppBar position="sticky">
@@ -58,7 +62,7 @@ export default function AdminAppBar() {
 
           <Button
             variant="outlined"
-            onClick={() => logout()}
+            onClick={authStore.logout}
             sx={{
               fontSize: { xs: 0, lg: 15, md: 15 },
               color: 'error.main',
@@ -74,3 +78,5 @@ export default function AdminAppBar() {
     </AppBar>
   );
 }
+
+export default injectMobxStore('authStore', AdminAppBar);

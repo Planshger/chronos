@@ -5,10 +5,15 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
-import { useAuth } from '../../auth/AuthProvider';
+import AuthStore from '../../auth/stores/AuthStore';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
-const LandingAppBar = () => {
-  const { token, logout, user } = useAuth();
+interface LandingAppBarProps {
+  authStore: AuthStore;
+}
+
+const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
+  const token = authStore.token;
   const navigate = useNavigate();
 
   const onClick = useCallback(
@@ -21,6 +26,8 @@ const LandingAppBar = () => {
     },
     [navigate, token],
   );
+
+  const { logout, user } = authStore;
 
   return (
     <Box sx={{ p: 4 }}>
@@ -48,4 +55,4 @@ const LandingAppBar = () => {
   );
 };
 
-export default LandingAppBar;
+export default injectMobxStore('authStore', LandingAppBar);

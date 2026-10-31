@@ -1,14 +1,16 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuth } from '../../modules/auth/AuthProvider';
+import AuthStore from '../../modules/auth/stores/AuthStore';
 import { Role } from '../../shared/models/user_model';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
 
 interface PrivateRouteProps {
   roles?: Role[];
+  authStore: AuthStore;
 }
 
-export default function PrivateRoute({ roles }: PrivateRouteProps) {
-  const { token, user, isAuthChecked } = useAuth();
+function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
   const location = useLocation();
+  const { token, user, isAuthChecked } = authStore;
 
   if (!isAuthChecked) {
     return null;
@@ -28,3 +30,5 @@ export default function PrivateRoute({ roles }: PrivateRouteProps) {
 
   return <Outlet />;
 }
+
+export default injectMobxStore('authStore', PrivateRoute);

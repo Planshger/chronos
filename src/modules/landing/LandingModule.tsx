@@ -13,33 +13,39 @@ import { CalendarToday, Chat, LocationOn, CheckCircle, FlashOn } from '@mui/icon
 import { appName } from '../../shared/constants/name';
 import LandingAppBar from './components/LandingAppBar';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthProvider';
 import { useCallback } from 'react';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
+import AuthStore from '../auth/stores/AuthStore';
 
 const features = [
   {
     icon: <CalendarToday />,
     title: 'Умный календарь',
     desc: 'Организуйте дни с интуитивным и красивым календарем. Добавляйте задачи в один клик.',
-    accent: 'primary',
+    accent: '#6366f1',
   },
   {
     icon: <Chat />,
     title: 'ИИ-ассистент',
     desc: 'Ваш личный ИИ всегда готов помочь проанализировать расписание или найти лучшее время для встречи.',
-    accent: 'secondary',
+    accent: '#a855f7',
   },
   {
     icon: <LocationOn />,
     title: 'Мгновенное бронирование',
     desc: 'Нужна машина или столик? Заказывайте такси, отели и рестораны прямо из событий календаря.',
-    accent: 'pink',
+    accent: '#f472b6',
   },
 ];
 
-export default function LandingPage() {
+interface LandingPageProps {
+  authStore: AuthStore;
+}
+
+function LandingPage({ authStore }: LandingPageProps) {
   const theme = useTheme();
-  const { token, user } = useAuth();
+  const token = authStore.token;
+  const user = authStore.user;
   const navigator = useNavigate();
 
   const onClick = useCallback(() => {
@@ -219,19 +225,13 @@ export default function LandingPage() {
                         width: 56,
                         height: 56,
                         borderRadius: 2,
-                        bgcolor:
-                          f.accent === 'pink'
-                            ? `${theme.custom.accent.pink}15`
-                            : `${theme.palette[f.accent].main}15`,
+                        bgcolor: `${f.accent}15`,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         mb: 3,
                         transition: 'transform 0.2s',
-                        color:
-                          f.accent === 'pink'
-                            ? theme.custom.accent.pink
-                            : theme.palette[f.accent].main,
+                        color: f.accent,
                       }}
                     >
                       {f.icon}
@@ -309,3 +309,5 @@ export default function LandingPage() {
     </Box>
   );
 }
+
+export default injectMobxStore('authStore', LandingPage);

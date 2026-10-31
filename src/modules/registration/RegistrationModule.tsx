@@ -7,22 +7,31 @@ import {
   ArrowBack as ArrowBackIcon,
   PersonAddAlt1,
 } from '@mui/icons-material';
-import { useAuth } from '../auth/AuthProvider';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
+import AuthStore from '../auth/stores/AuthStore';
 import { auth, register } from '../auth/datasources/authorization_data_source';
 import UserModel, { initialUser } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
-export default function RegistrationPage() {
+interface RegistrationPageProps {
+  authStore: AuthStore;
+}
+
+function RegistrationPage({ authStore }: RegistrationPageProps) {
   const theme = useTheme();
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, seInput] = useState<UserModel>(initialUser);
-  const { setToken } = useAuth();
   const { showError } = useApiError();
   const navigate = useNavigate();
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    seInput((prev) => ({ ...prev, [e.target.name]: e.target.value }) as UserModel);
+  }, []);
+
   let pageTitle = 'Создать аккаунт';
   let pageDescription = 'Введите данные для создания аккаунта и выбора тарифа.';
   let submitLabel = 'Продолжить';
@@ -39,13 +48,12 @@ export default function RegistrationPage() {
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
-
     try {
       if (isAdminLogin) {
         await withLoading(
           () =>
             auth(input, 'admin').then((res) => {
-              setToken(res.token);
+              authStore.setToken(res.token);
               navigate('/admin', { replace: true });
             }),
           setLoading,
@@ -57,7 +65,7 @@ export default function RegistrationPage() {
         await withLoading(
           () =>
             auth(input, 'user').then((res) => {
-              setToken(res.token);
+              authStore.setToken(res.token);
               navigate('/schedule', { replace: true });
             }),
           setLoading,
@@ -68,7 +76,7 @@ export default function RegistrationPage() {
       await withLoading(
         () =>
           register({ ...input, status: 'Ожидание оплаты' }).then((res) => {
-            setToken(res.token);
+            authStore.setToken(res.token);
             navigate('/plans', { replace: true });
           }),
         setLoading,
@@ -77,10 +85,6 @@ export default function RegistrationPage() {
       showError(error);
     }
   }
-
-  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    seInput((prev) => ({ ...prev, [e.target.name]: e.target.value }) as UserModel);
-  }, []);
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -240,3 +244,5 @@ export default function RegistrationPage() {
     </Box>
   );
 }
+
+export default injectMobxStore('authStore', RegistrationPage);

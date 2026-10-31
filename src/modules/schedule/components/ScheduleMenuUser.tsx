@@ -13,18 +13,19 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { SettingsData } from '../../settings/data/SettingsData';
 import { SettingIcons } from '../../settings/constants/SettingIcons';
-import { useAuth } from '../../auth/AuthProvider';
+import AuthStore from '../../auth/stores/AuthStore';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface ScheduleMenuUserProps {
   openMenu: null | HTMLElement;
   closeUserMenu: Function;
+  authStore: AuthStore;
 }
 
-export default function ScheduleMenuUser({ openMenu, closeUserMenu }: ScheduleMenuUserProps) {
+function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUserProps) {
   const theme = useTheme();
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = authStore;
 
   function onClick(id: string) {
     if (id === 'telegram' || id === 'whatsapp') {
@@ -87,3 +88,5 @@ export default function ScheduleMenuUser({ openMenu, closeUserMenu }: ScheduleMe
     </Menu>
   );
 }
+
+export default injectMobxStore('authStore', ScheduleMenuUser);

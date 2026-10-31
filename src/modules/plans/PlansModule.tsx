@@ -11,8 +11,9 @@ import {
 } from '@mui/material';
 import { ArrowBack, Done } from '@mui/icons-material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { useAuth } from '../auth/AuthProvider';
 import { useCallback, useEffect, useState } from 'react';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
+import AuthStore from '../auth/stores/AuthStore';
 import { updateUserData } from '../admin/datasources/admin_data_source';
 import Loader from '../../shared/ui/Loader';
 import PlanModel from './models/plan_model';
@@ -20,12 +21,16 @@ import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
 
-export default function PlansPage() {
+interface PlansPageProps {
+  authStore: AuthStore;
+}
+
+function PlansPage({ authStore }: PlansPageProps) {
   const theme = useTheme();
   const navigate = useNavigate();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { user, setUser } = useAuth();
+  const user = authStore?.user;
   const { showError } = useApiError();
 
   const savePlanFromUser = useCallback(
@@ -35,7 +40,7 @@ export default function PlansPage() {
           await withLoading(
             () =>
               updateUserData({ ...user, plan: namePlan, status: 'Активен' }).then((res) =>
-                setUser(res),
+                authStore.setUser(res),
               ),
             setLoading,
           );
@@ -47,11 +52,11 @@ export default function PlansPage() {
         navigate('/register');
       }
     },
-    [user, navigate, setLoading, setUser, showError],
+    [user, navigate, showError, authStore],
   );
 
   useEffect(() => {
-    void withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
+    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
   }, [showError]);
 
   return (
@@ -119,12 +124,8 @@ export default function PlansPage() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: {
-            xs: 'minmax(0, 1fr)',
-            sm: 'repeat(2, minmax(0, 1fr))',
-            md: 'repeat(3, minmax(0, 1fr))',
-            lg: 'repeat(4, minmax(0, 1fr))',
-          },
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 350px), 350px))',
+          justifyContent: 'center',
           gap: { xs: 2, md: 3 },
           width: '100%',
           maxWidth: 1280,
@@ -240,3 +241,5 @@ export default function PlansPage() {
     </Paper>
   );
 }
+
+export default injectMobxStore('authStore', PlansPage);

@@ -25,7 +25,8 @@ export {
 } from './admin/datasources/admin_data_source';
 export { type PaginationModel as AdminPaginationModel } from './admin/models/user_pagination_model';
 
-export { default as AuthProvider, useAuth } from './auth/AuthProvider';
+export { createStores, initializeStores, type AppStores } from '../app/stores/AppStores';
+export { default as AuthStore } from './auth/stores/AuthStore';
 export {
   auth,
   authMe,
@@ -50,11 +51,8 @@ export type { default as PlanModel } from './plans/models/plan_model';
 
 export { default as RegistrationModule } from './registration/RegistrationModule';
 
-export {
-  default as ScheduleModule,
-  useLoading as useScheduleLoading,
-  useSchedule,
-} from './schedule/ScheduleModule';
+export { default as ScheduleModule } from './schedule/ScheduleModule';
+export { default as ScheduleStore } from './schedule/stores/ScheduleStore';
 export { default as ScheduleAiDialog } from './schedule/components/AiDialog';
 export { default as ScheduleCalendar } from './schedule/components/Calendary';
 export { default as ScheduleOptionsDialog } from './schedule/components/OptionsDialog';
@@ -95,8 +93,8 @@ export { default as TelegramIcon } from './settings/components/user/TelegramIcon
 export { default as WhatsAppIcon } from './settings/components/user/WhatsAppIcon';
 export { default as WhatsAppSettings } from './settings/components/user/WhatsAppSettings';
 export { default as TelegramSettings } from './settings/components/user/telegram/TelegramSettings';
-export { PageWithChat } from './settings/components/user/telegram/PageWithChat';
-export { PageWithQR } from './settings/components/user/telegram/PageWithQR';
+export { default as PageWithChat } from './settings/components/user/telegram/PageWithChat';
+export { default as PageWithQR } from './settings/components/user/telegram/PageWithQR';
 export { SettingIcons } from './settings/constants/SettingIcons';
 export { AdminSettingsData, SettingsData } from './settings/data/SettingsData';
 export { getMessages, sendMessage } from './settings/data/datasources/messages_data_source';
