@@ -14,7 +14,7 @@ import { memo, useCallback } from 'react';
 
 import React from 'react';
 import DropdownList from '../DropdownList';
-import UserModel from '../../../../shared/models/user_model';
+import UserModel, { UserStatus } from '../../../../shared/models/user_model';
 
 interface AdminTableEditMenuProps {
   onClick: (user: UserModel) => void;
@@ -130,7 +130,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
           <DropdownList
             id="status"
             label="Статус"
-            menuItems={['Активен', 'Заблокирован', 'Ожидание оплаты']}
+            menuItems={Object.values(UserStatus)}
             value={editedUser.status}
             variant="standard"
             onChange={(event) => handleSelectChange(event, 'status')}

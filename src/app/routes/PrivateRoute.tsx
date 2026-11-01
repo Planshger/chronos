@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import AuthStore from '../../modules/auth/stores/AuthStore';
-import { Role } from '../../shared/models/user_model';
+import { Role, UserStatus } from '../../shared/models/user_model';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 
 interface PrivateRouteProps {
@@ -20,7 +20,7 @@ function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
     return <Navigate to="/register" state={{ from: location }} replace />;
   }
 
-  if (user?.plan === '' && user.role === 'user' && user.status === 'Ожидание оплаты') {
+  if (user?.plan === '' && user.role === 'user' && user.status === UserStatus.PendingPayment) {
     return <Navigate to="/plans" state={{ from: location }} replace />;
   }
 

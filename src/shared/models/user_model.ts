@@ -1,11 +1,17 @@
 export type Role = 'user' | 'admin' | '';
 
+export enum UserStatus {
+  Active = 'Активен',
+  Blocked = 'Заблокирован',
+  PendingPayment = 'Ожидание оплаты',
+}
+
 export default interface UserModel {
   id: number;
   name: string;
   email: string;
   plan: string;
-  status: string;
+  status: UserStatus | '';
   password?: string;
   tgLinked: boolean;
   role: Role;

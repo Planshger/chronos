@@ -10,7 +10,7 @@ import {
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import AuthStore from '../auth/stores/AuthStore';
 import { auth, register } from '../auth/datasources/authorization_data_source';
-import UserModel, { initialUser } from '../../shared/models/user_model';
+import UserModel, { initialUser, UserStatus } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
@@ -24,12 +24,12 @@ function RegistrationPage({ authStore }: RegistrationPageProps) {
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [input, seInput] = useState<UserModel>(initialUser);
+  const [input, setInput] = useState<UserModel>(initialUser);
   const { showError } = useApiError();
   const navigate = useNavigate();
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    seInput((prev) => ({ ...prev, [e.target.name]: e.target.value }) as UserModel);
+    setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }) as UserModel);
   }, []);
 
   let pageTitle = 'Создать аккаунт';
@@ -75,7 +75,7 @@ function RegistrationPage({ authStore }: RegistrationPageProps) {
 
       await withLoading(
         () =>
-          register({ ...input, status: 'Ожидание оплаты' }).then((res) => {
+          register({ ...input, status: UserStatus.PendingPayment }).then((res) => {
             authStore.setToken(res.token);
             navigate('/plans', { replace: true });
           }),

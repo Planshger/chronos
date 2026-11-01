@@ -1,10 +1,15 @@
-import { API_BASE_URL } from './URL';
 import {
   EmptyResponseError,
   HttpError,
   NetworkError,
   ResponseParseError,
 } from '../errors/AppError';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error('REACT_APP_API_BASE_URL is not set. Add it to your .env file.');
+}
 
 export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);

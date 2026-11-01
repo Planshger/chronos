@@ -20,6 +20,7 @@ import PlanModel from './models/plan_model';
 import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiErrorProvider';
+import { UserStatus } from '../../shared/models/user_model';
 
 interface PlansPageProps {
   authStore: AuthStore;
@@ -39,7 +40,7 @@ function PlansPage({ authStore }: PlansPageProps) {
         try {
           await withLoading(
             () =>
-              updateUserData({ ...user, plan: namePlan, status: 'Активен' }).then((res) =>
+              updateUserData({ ...user, plan: namePlan, status: UserStatus.Active }).then((res) =>
                 authStore.setUser(res),
               ),
             setLoading,

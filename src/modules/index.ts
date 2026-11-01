@@ -54,7 +54,7 @@ export { default as RegistrationModule } from './registration/RegistrationModule
 export { default as ScheduleModule } from './schedule/ScheduleModule';
 export { default as ScheduleStore } from './schedule/stores/ScheduleStore';
 export { default as ScheduleAiDialog } from './schedule/components/AiDialog';
-export { default as ScheduleCalendar } from './schedule/components/Calendary';
+export { default as ScheduleCalendar } from './schedule/components/Calendar';
 export { default as ScheduleOptionsDialog } from './schedule/components/OptionsDialog';
 export { default as ScheduleAppBar } from './schedule/components/ScheduleAppBar';
 export { default as ScheduleMenuUser } from './schedule/components/ScheduleMenuUser';

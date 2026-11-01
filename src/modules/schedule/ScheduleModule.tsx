@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Box, Container, Dialog, Stack, useMediaQuery, useTheme } from '@mui/material';
-import Calendary from './components/Calendary';
+import Calendar from './components/Calendar';
 import ScheduleAppBar from './components/ScheduleAppBar';
 import Scheduling from './components/Scheduling';
 import AiDialog from './components/AiDialog';
@@ -28,7 +28,7 @@ function Schedule({ scheduleStore }: ScheduleProps) {
           direction={{ xs: 'column', md: 'row' }}
           sx={{ alignItems: 'stretch', minWidth: 0 }}
         >
-          <Calendary />
+          <Calendar />
           {!isMobile && <Scheduling />}
         </Stack>
       </Container>

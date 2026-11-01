@@ -22,11 +22,11 @@ import { ru } from 'date-fns/locale';
 import ScheduleStore from '../stores/ScheduleStore';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
-interface CalendaryProps {
+interface CalendarProps {
   scheduleStore: ScheduleStore;
 }
 
-function Calendary({ scheduleStore }: CalendaryProps) {
+function Calendar({ scheduleStore }: CalendarProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { currentMonth, selectedDate, tasks } = scheduleStore;
@@ -226,4 +226,4 @@ function Calendary({ scheduleStore }: CalendaryProps) {
   );
 }
 
-export default injectMobxStore('scheduleStore', Calendary);
+export default injectMobxStore('scheduleStore', Calendar);

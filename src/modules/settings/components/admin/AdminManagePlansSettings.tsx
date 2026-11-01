@@ -13,7 +13,7 @@ export default function AdminManagePlansSettings() {
   const { setLoading } = useLoading();
   const { showError } = useApiError();
   const [plans, setPlans] = useState<PlanModel[]>([]);
-  const [changePlans, setchangePlans] = useState<{
+  const [changePlans, setChangePlans] = useState<{
     openEdit: boolean;
     openCreate: boolean;
     plan: PlanModel;
@@ -33,7 +33,7 @@ export default function AdminManagePlansSettings() {
 
   const switchEditMenu = useCallback(
     (plan?: PlanModel) => {
-      setchangePlans((prev) => {
+      setChangePlans((prev) => {
         if (changePlans.openCreate) {
           return { ...prev, openCreate: !prev.openCreate, plan: plan ?? prev.plan };
         }
@@ -73,7 +73,7 @@ export default function AdminManagePlansSettings() {
           size="small"
           sx={{ mb: 4, position: 'relative' }}
           startIcon={<Add />}
-          onClick={() => setchangePlans({ plan: initialPlan, openEdit: false, openCreate: true })}
+          onClick={() => setChangePlans({ plan: initialPlan, openEdit: false, openCreate: true })}
         >
           Создать
         </Button>
@@ -173,7 +173,7 @@ export default function AdminManagePlansSettings() {
 
                 <Button
                   variant="contained"
-                  onClick={() => setchangePlans({ plan: p, openEdit: true, openCreate: false })}
+                  onClick={() => setChangePlans({ plan: p, openEdit: true, openCreate: false })}
                   sx={{
                     borderRadius: '10px',
                     bgcolor: p.popular

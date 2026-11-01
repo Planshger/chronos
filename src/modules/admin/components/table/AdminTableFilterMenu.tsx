@@ -14,6 +14,7 @@ import { Close } from '@mui/icons-material';
 import { headCells } from './AdminTableHead';
 import { getFilterData } from '../../datasources/admin_data_source';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { UserStatus } from '../../../../shared/models/user_model';
 
 export interface FilterValuesProps {
   id: string;
@@ -37,7 +38,7 @@ const initialprops = [
 ];
 
 const menuItems = new Map<string, string[]>([
-  ['status', ['Активен', 'Заблокирован', 'Ожидает']],
+  ['status', Object.values(UserStatus)],
   ['plan', ['Базовый', 'Премиум', 'Пробный']],
   ['role', ['user', 'admin']],
 ]);

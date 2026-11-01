@@ -7,6 +7,7 @@ import { useLoading } from '../../SettingsModule';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { UserStatus } from '../../../../shared/models/user_model';
 
 interface ManagePlansSettingsProps {
   authStore: AuthStore;
@@ -23,7 +24,7 @@ function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
     try {
       await withLoading(
         () =>
-          updateUserData({ ...user, plan: '', status: 'Ожидание оплаты' }).then((res) =>
+          updateUserData({ ...user, plan: '', status: UserStatus.PendingPayment }).then((res) =>
             authStore.setUser(res),
           ),
         setLoading,
