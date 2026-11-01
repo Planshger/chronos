@@ -137,7 +137,6 @@ export default class ScheduleStore {
         }),
       (result) => {
         this.taskData = result;
-        this.activeModal = null;
       },
       userId,
     );

@@ -24,7 +24,11 @@ function AutocompleteList({
   const theme = useTheme();
 
   return (
-    <Stack direction={'row'} spacing={1}>
+    <Stack
+      direction={'row'}
+      spacing={1}
+      sx={{ width: { xs: '50%', md: '100%', lg: '100%' }, pl: { xs: 10 } }}
+    >
       <Search sx={{ pt: 0.3 }} />
 
       <Autocomplete

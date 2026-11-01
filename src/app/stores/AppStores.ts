@@ -17,7 +17,8 @@ export function createStores(showError: (error: unknown) => void): AppStores {
 export function initializeStores({ authStore, scheduleStore }: AppStores): () => void {
   const disposeAuthReaction = reaction(
     () => authStore.user.id,
-    (userId) => scheduleStore.setUserId(userId > 0 ? userId : null),
+    (userId) =>
+      authStore.user.role === 'user' ? scheduleStore.setUserId(userId > 0 ? userId : null) : null,
     { fireImmediately: true },
   );
 

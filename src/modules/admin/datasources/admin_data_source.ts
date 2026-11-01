@@ -45,9 +45,9 @@ export function getFilterData(
 }
 
 export async function deleteUserData(idsToDelete: number[]) {
-  for (const id of idsToDelete) {
-    await apiRequest<void>(`/users/${id}`, { method: 'DELETE' });
-  }
+  await Promise.all(
+    idsToDelete.map((id) => apiRequest<void>(`/users/${id}`, { method: 'DELETE' })),
+  );
 }
 
 export async function updateUserData(user: UserModel): Promise<UserModel> {

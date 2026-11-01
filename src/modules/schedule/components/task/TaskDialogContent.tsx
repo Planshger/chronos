@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import ScheduleStore from '../../stores/ScheduleStore';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import TaskEditDialogContent from './TaskEditDialogContent';
+import Loader from '../../../../shared/ui/Loader';
 
 interface TaskDialogContentProps {
   dayTasks: TaskItem[];
@@ -193,6 +194,8 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
             task={dayTasks.find((i) => i.id === editedTask) ?? initialTaskItem}
           />
         ) : null}
+
+        {scheduleStore.loading && <Loader size={80} />}
       </DialogContent>
     </Dialog>
   );
