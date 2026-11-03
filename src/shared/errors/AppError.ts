@@ -1,5 +1,6 @@
 export type AppErrorCode =
-  'NETWORK_ERROR' | 'HTTP_ERROR' | 'EMPTY_RESPONSE' | 'INVALID_RESPONSE' | 'INVALID_CREDENTIALS';
+  'NETWORK_ERROR' | 'HTTP_ERROR' | 'EMPTY_RESPONSE' | 'INVALID_RESPONSE' | 'INVALID_CREDENTIALS'
+  | 'USER_STATUS_ERROR';
 
 export class AppError extends Error {
   constructor(
@@ -65,5 +66,11 @@ export class ResponseParseError extends AppError {
 export class InvalidCredentialsError extends AppError {
   constructor() {
     super('Invalid email or password', 'INVALID_CREDENTIALS', 'Неверная почта или пароль');
+  }
+}
+
+export class BlockedUserError extends AppError {
+  constructor() {
+    super('User account is blocked', 'USER_STATUS_ERROR', 'Пользователь заблокирован');
   }
 }

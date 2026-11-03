@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import UserModel, { initialUser, UserStatus } from '../../../shared/models/user_model';
+import { BlockedUserError } from '../../../shared/errors/AppError';
 import { authMe, getToken, setTokenInStorage } from '../datasources/authorization_data_source';
 
 type ShowError = (error: unknown) => void;
@@ -59,7 +60,7 @@ export default class AuthStore {
       if (requestId !== this.requestId) return;
 
       if (user.status === UserStatus.Blocked) {
-        alert('Пользователь заблокирован');
+        this.showError(new BlockedUserError());
         this.logout();
         return;
       }
