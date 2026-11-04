@@ -1,10 +1,11 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { useEffect, useState } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import { Provider } from 'mobx-react';
 import App from './App';
 import { ApiErrorProvider, useApiError } from './shared/errors/ApiErrorProvider';
 import { AppStores, createStores, initializeStores } from './app/stores/AppStores';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './shared/queryClient';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
@@ -22,7 +23,9 @@ function AppWithStores() {
 }
 
 root.render(
-  <ApiErrorProvider>
-    <AppWithStores />
-  </ApiErrorProvider>,
+  <QueryClientProvider client={queryClient}>
+    <ApiErrorProvider>
+      <AppWithStores />
+    </ApiErrorProvider>
+  </QueryClientProvider>,
 );

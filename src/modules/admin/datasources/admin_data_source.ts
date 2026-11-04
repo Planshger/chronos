@@ -2,6 +2,7 @@ import { FilterValuesProps } from '../components/table/AdminTableFilterMenu';
 import { PaginationModel } from '../models/user_pagination_model';
 import UserModel from '../../../shared/models/user_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
+import { queryClient } from '../../../shared/queryClient';
 
 export function getAllUsers(): Promise<UserModel[]> {
   return apiRequest<UserModel[]>('/users');
@@ -12,7 +13,10 @@ export async function getUsersWithPagination(
   limit: number,
 ): Promise<PaginationModel> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
-  return apiRequest<PaginationModel>(`/users?${params.toString()}`);
+  return queryClient.fetchQuery({
+    queryKey: ['usersPag', params],
+    queryFn: () => apiRequest<PaginationModel>(`/users?${params.toString()}`),
+  });
 }
 
 export async function getSortBy(

@@ -2,6 +2,7 @@ import UserModel, { Role } from '../../../shared/models/user_model';
 import { RegisterUserModel } from '../models/register_user_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
 import { HttpError, InvalidCredentialsError } from '../../../shared/errors/AppError';
+import { queryClient } from '../../../shared/queryClient';
 
 const TOKEN_KEY = 'token';
 
@@ -49,7 +50,11 @@ export async function auth(user: UserModel, role: Role): Promise<RegisterUserMod
 }
 
 export async function authMe(token: string): Promise<UserModel | null> {
-  return apiRequest<UserModel | null>('/auth_me', {
-    headers: { Authorization: `Bearer ${token}` },
+  return queryClient.fetchQuery({
+    queryKey: ['authMe', token],
+    queryFn: () =>
+      apiRequest<UserModel | null>('/auth_me', {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
   });
 }
