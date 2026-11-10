@@ -46,7 +46,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
               onClick={() => onClick(user.role === 'admin' ? '/admin' : '/schedule')}
               sx={{ color: 'text.primary' }}
             >
-              Вход
+              Регистрация
             </Button>
           )}
         </Toolbar>

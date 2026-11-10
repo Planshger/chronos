@@ -39,10 +39,14 @@ function PlansPage({ authStore }: PlansPageProps) {
       if (user?.role === 'user') {
         try {
           await withLoading(
-            () =>
-              updateUserData({ ...user, plan: namePlan, status: UserStatus.Active }).then((res) =>
-                authStore.setUser(res),
-              ),
+            async () => {
+              const updatedUser = await updateUserData({
+                ...user,
+                plan: namePlan,
+                status: UserStatus.Active,
+              });
+              authStore.setUser(updatedUser);
+            },
             setLoading,
           );
           navigate('/schedule');
@@ -57,7 +61,10 @@ function PlansPage({ authStore }: PlansPageProps) {
   );
 
   useEffect(() => {
-    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
+    withLoading(async () => {
+      const plans = await getAllPlans();
+      setPlans(plans);
+    }, setLoading).catch(showError);
   }, [showError]);
 
   return (

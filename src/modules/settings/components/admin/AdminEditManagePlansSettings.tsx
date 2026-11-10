@@ -110,7 +110,10 @@ function AdminEditManagePlansSettings({
     async (id: number) => {
       try {
         await withLoading(() => deletePlans(id), setLoading);
-        await withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading);
+        await withLoading(async () => {
+          const plans = await getAllPlans();
+          setPlans(plans);
+        }, setLoading);
         onClose();
       } catch (error) {
         showError(error);

@@ -50,37 +50,28 @@ function RegistrationPage({ authStore }: RegistrationPageProps) {
     e.preventDefault();
     try {
       if (isAdminLogin) {
-        await withLoading(
-          () =>
-            auth(input, 'admin').then((res) => {
-              authStore.setToken(res.token);
-              navigate('/admin', { replace: true });
-            }),
-          setLoading,
-        );
+        await withLoading(async () => {
+          const res = await auth(input, 'admin');
+          authStore.setToken(res.token);
+          navigate('/admin', { replace: true });
+        }, setLoading);
         return;
       }
 
       if (isLogin) {
-        await withLoading(
-          () =>
-            auth(input, 'user').then((res) => {
-              authStore.setToken(res.token);
-              navigate('/schedule', { replace: true });
-            }),
-          setLoading,
-        );
+        await withLoading(async () => {
+          const res = await auth(input, 'user');
+          authStore.setToken(res.token);
+          navigate('/schedule', { replace: true });
+        }, setLoading);
         return;
       }
 
-      await withLoading(
-        () =>
-          register({ ...input, status: UserStatus.PendingPayment }).then((res) => {
-            authStore.setToken(res.token);
-            navigate('/plans', { replace: true });
-          }),
-        setLoading,
-      );
+      withLoading(async () => {
+        const res = await register({ ...input, status: UserStatus.PendingPayment });
+        authStore.setToken(res.token);
+        navigate('/plans', { replace: true });
+      }, setLoading);
     } catch (error: unknown) {
       showError(error);
     }

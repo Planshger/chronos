@@ -19,10 +19,10 @@ function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
   const { showError } = useApiError();
   const navigate = useNavigate();
 
-  const cancelPlan = async () => {
+  const cancelPlan = () => {
     if (!user) return;
     try {
-      await withLoading(
+      withLoading(
         () =>
           updateUserData({ ...user, plan: '', status: UserStatus.PendingPayment }).then((res) =>
             authStore.setUser(res),

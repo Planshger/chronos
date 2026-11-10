@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import { StrictMode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Provider } from 'mobx-react';
 import App from './App';
 import { ApiErrorProvider, useApiError } from './shared/errors/ApiErrorProvider';
