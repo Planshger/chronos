@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import { useLoading } from '../../SettingsModule';
 import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import { UserStatus } from '../../../../shared/models/user_model';
 

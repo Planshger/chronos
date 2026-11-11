@@ -26,7 +26,7 @@ import {
   updateUserData,
 } from '../../datasources/admin_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 
 const initialUsersProps: PaginationModel = {
   items: [],

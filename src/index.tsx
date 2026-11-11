@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import { useEffect, useState } from 'react';
 import { Provider } from 'mobx-react';
 import App from './App';
-import { ApiErrorProvider, useApiError } from './shared/errors/ApiErrorProvider';
+import ApiErrorSnackbar from './shared/errors/ApiError';
 import { AppStores, createStores, initializeStores } from './app/stores/AppStores';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './shared/queryClient';
@@ -10,13 +10,13 @@ import { queryClient } from './shared/queryClient';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 function AppWithStores() {
-  const { showError } = useApiError();
-  const [stores] = useState<AppStores>(() => createStores(showError));
+  const [stores] = useState<AppStores>(() => createStores());
 
   useEffect(() => initializeStores(stores), [stores]);
 
   return (
     <Provider {...stores}>
+      <ApiErrorSnackbar />
       <App />
     </Provider>
   );
@@ -24,8 +24,6 @@ function AppWithStores() {
 
 root.render(
   <QueryClientProvider client={queryClient}>
-    <ApiErrorProvider>
-      <AppWithStores />
-    </ApiErrorProvider>
+    <AppWithStores />
   </QueryClientProvider>,
 );

@@ -17,7 +17,7 @@ import Loader from '../../../../shared/ui/Loader';
 import { useLoading } from '../../SettingsModule';
 import { deletePlans, getAllPlans } from '../../../plans/datasources/plans_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 
 interface AdminEditManagePlansSettingsProps {
   updatePlan: (plan: PlanModel) => Promise<void>;

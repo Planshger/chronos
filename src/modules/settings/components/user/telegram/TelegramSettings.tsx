@@ -4,7 +4,7 @@ import PageWithQR from './PageWithQR';
 import PageWithChat from './PageWithChat';
 import { authMe } from '../../../../auth/datasources/authorization_data_source';
 import Loader from '../../../../../shared/ui/Loader';
-import { useApiError } from '../../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../../shared/errors/ApiError';
 import AuthStore from '../../../../auth/stores/AuthStore';
 import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
 

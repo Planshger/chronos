@@ -13,7 +13,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import { Close } from '@mui/icons-material';
 import { headCells } from './AdminTableHead';
 import { getFilterData } from '../../datasources/admin_data_source';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 import { UserStatus } from '../../../../shared/models/user_model';
 
 export interface FilterValuesProps {

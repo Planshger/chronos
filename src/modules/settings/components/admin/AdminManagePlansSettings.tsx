@@ -6,7 +6,7 @@ import { addPlan, getAllPlans, updatePlanData } from '../../../plans/datasources
 import { useLoading } from '../../SettingsModule';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
 import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 
 export default function AdminManagePlansSettings() {
   const theme = useTheme();

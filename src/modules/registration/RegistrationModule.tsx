@@ -13,19 +13,19 @@ import { auth, register } from '../auth/datasources/authorization_data_source';
 import UserModel, { initialUser, UserStatus } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';
-import { useApiError } from '../../shared/errors/ApiErrorProvider';
+import ApiErrorStore from '../../shared/errors/ApiErrorStore';
 
-interface RegistrationPageProps {
+interface RegistrationModuleProps {
   authStore: AuthStore;
+  apiErrorStore: ApiErrorStore;
 }
 
-function RegistrationPage({ authStore }: RegistrationPageProps) {
+function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProps) {
   const theme = useTheme();
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState<UserModel>(initialUser);
-  const { showError } = useApiError();
   const navigate = useNavigate();
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ function RegistrationPage({ authStore }: RegistrationPageProps) {
         navigate('/plans', { replace: true });
       }, setLoading);
     } catch (error: unknown) {
-      showError(error);
+      apiErrorStore.showError(error);
     }
   }
 
@@ -236,4 +236,4 @@ function RegistrationPage({ authStore }: RegistrationPageProps) {
   );
 }
 
-export default injectMobxStore('authStore', RegistrationPage);
+export default injectMobxStore(['authStore', 'apiErrorStore'], RegistrationModule);

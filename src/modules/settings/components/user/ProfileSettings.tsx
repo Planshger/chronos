@@ -5,7 +5,7 @@ import { useLoading } from '../../SettingsModule';
 import AuthStore from '../../../auth/stores/AuthStore';
 import { updateUserData } from '../../../admin/datasources/admin_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../../../shared/errors/ApiError';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
 interface ProfileSettingsProps {

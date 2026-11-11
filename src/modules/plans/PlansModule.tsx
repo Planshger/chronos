@@ -19,7 +19,7 @@ import Loader from '../../shared/ui/Loader';
 import PlanModel from './models/plan_model';
 import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
-import { useApiError } from '../../shared/errors/ApiErrorProvider';
+import { useApiError } from '../../shared/errors/ApiError';
 import { UserStatus } from '../../shared/models/user_model';
 
 interface PlansPageProps {
@@ -38,17 +38,14 @@ function PlansPage({ authStore }: PlansPageProps) {
     async (namePlan: string) => {
       if (user?.role === 'user') {
         try {
-          await withLoading(
-            async () => {
-              const updatedUser = await updateUserData({
-                ...user,
-                plan: namePlan,
-                status: UserStatus.Active,
-              });
-              authStore.setUser(updatedUser);
-            },
-            setLoading,
-          );
+          await withLoading(async () => {
+            const updatedUser = await updateUserData({
+              ...user,
+              plan: namePlan,
+              status: UserStatus.Active,
+            });
+            authStore.setUser(updatedUser);
+          }, setLoading);
           navigate('/schedule');
         } catch (error) {
           showError(error);
