@@ -1,14 +1,18 @@
-import { SettingsModel } from '../models/settings_model';
+import { SettingsModel, SettingId } from '../models/settings_model';
 
 export const SettingsData: SettingsModel[] = [
-  { id: 'profile_settings', label: 'Настройки профиля' },
-  { id: 'manage_plans', label: 'Управление тарифом' },
-  { id: 'analytics', label: 'Аналитика' },
-  { id: 'map_settings', label: 'Карты для такси' },
-  { id: 'messengers', label: 'Мессенджеры', messenger: [{ id: 'telegram', label: 'Telegram' }] },
+  { id: SettingId.Profile, label: 'Настройки профиля' },
+  { id: SettingId.ManagePlans, label: 'Управление тарифом' },
+  { id: SettingId.Analytics, label: 'Аналитика' },
+  { id: SettingId.Map, label: 'Карты для такси' },
+  {
+    id: SettingId.Messengers,
+    label: 'Мессенджеры',
+    messenger: [{ id: SettingId.Telegram, label: 'Telegram' }],
+  },
 ];
 
 export const AdminSettingsData: SettingsModel[] = [
-  { id: 'admin_profile_settings', label: 'Настройки профиля' },
-  { id: 'admin_manage_plans', label: 'Управление тарифами' },
+  { id: SettingId.AdminProfile, label: 'Настройки профиля' },
+  { id: SettingId.AdminManagePlans, label: 'Управление тарифами' },
 ];

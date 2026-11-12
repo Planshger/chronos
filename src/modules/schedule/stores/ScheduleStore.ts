@@ -8,13 +8,22 @@ import {
 } from '../datasources/task_data_source';
 import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
 
+export enum ScheduleModal {
+  TaskCreate = 'task_create',
+  TasksList = 'tasks_list',
+  TaskEdit = 'task_edit',
+  Taxi = 'taxi',
+  Hotel = 'hotel',
+  Restaurant = 'restaurant',
+}
+
 type ShowError = (error: unknown) => void;
 
 export default class ScheduleStore {
   taskData: TaskModel = { ...initialTaskModel, tasks: {} };
   currentMonth = new Date();
   selectedDate: Date | null = null;
-  activeModal: string | null = null;
+  activeModal: ScheduleModal | null = null;
   isSchedulingOpen = false;
   loading = false;
   private userId: number | null = null;
@@ -55,7 +64,7 @@ export default class ScheduleStore {
     }
   }
 
-  setActiveModal(name: string | null): void {
+  setActiveModal(name: ScheduleModal | null): void {
     this.activeModal = name;
   }
 
@@ -98,7 +107,7 @@ export default class ScheduleStore {
       () => addTask(dateKey, { ...task, id: crypto.randomUUID() }, this.taskData, userId),
       (result) => {
         this.taskData = result;
-        this.activeModal = 'tasks_list';
+        this.activeModal = ScheduleModal.TasksList;
       },
       userId,
     );
@@ -113,7 +122,7 @@ export default class ScheduleStore {
       () => editTask(dateKey, task, this.taskData),
       (result) => {
         this.taskData = result;
-        this.activeModal = 'tasks_list';
+        this.activeModal = ScheduleModal.TasksList;
       },
       userId,
     );

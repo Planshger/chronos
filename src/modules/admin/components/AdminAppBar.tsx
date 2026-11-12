@@ -3,6 +3,7 @@ import { CreditCard, GppGood, Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { SettingId } from '../../settings/models/settings_model';
 
 interface AdminAppBarProps {
   authStore: AuthStore;
@@ -31,7 +32,7 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
         <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
           <Button
             variant="outlined"
-            onClick={() => navigate(`/settings/admin_profile_settings`)}
+            onClick={() => navigate(`/settings/${SettingId.AdminProfile}`)}
             sx={{
               fontSize: { xs: 0, lg: 15, md: 15 },
               borderColor: theme.custom.border.light,
@@ -45,7 +46,7 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
 
           <Button
             variant="outlined"
-            onClick={() => navigate(`/settings/admin_manage_plans`)}
+            onClick={() => navigate(`/settings/${SettingId.AdminManagePlans}`)}
             sx={{
               fontSize: { xs: 0, lg: 15, md: 15 },
               color: theme.palette.primary.main,

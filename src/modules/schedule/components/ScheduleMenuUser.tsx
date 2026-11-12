@@ -12,12 +12,13 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { SettingIcons, SettingsData } from '../../settings';
+import { SettingId } from '../../settings/models/settings_model';
 import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface ScheduleMenuUserProps {
   openMenu: null | HTMLElement;
-  closeUserMenu: Function;
+  closeUserMenu: () => void;
   authStore: AuthStore;
 }
 
@@ -26,8 +27,8 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
   const navigate = useNavigate();
   const { user, logout } = authStore;
 
-  function onClick(id: string) {
-    if (id === 'telegram' || id === 'whatsapp') {
+  function onClick(id: SettingId) {
+    if (id === SettingId.Telegram || id === SettingId.WhatsApp) {
       navigate(`/settings/${id}`, { state: { open: true } });
     } else {
       navigate(`/settings/${id}`);
@@ -56,7 +57,7 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
             key={item.id}
             sx={{ py: 1 }}
             onClick={() => {
-              onClick(item.id === 'messengers' ? 'telegram' : item.id);
+              onClick(item.id === SettingId.Messengers ? SettingId.Telegram : item.id);
               closeUserMenu();
             }}
           >

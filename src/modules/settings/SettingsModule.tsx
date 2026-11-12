@@ -1,6 +1,6 @@
 import { Box, Container, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SettingsModel } from './models/settings_model';
+import { SettingsModel, SettingId } from './models/settings_model';
 import { SettingIcons } from './constants/SettingIcons';
 import { TouchApp } from '@mui/icons-material';
 import React from 'react';
@@ -16,15 +16,16 @@ import MapSettings from './components/user/MapSettings';
 import { AuthStore } from '../auth';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import SettingsStore from './stores/SettingsStore';
+import { Role } from '../../shared/models/user_model';
 
-const settingsComponents: Record<string, React.ComponentType> = {
-  profile_settings: ProfileSettings,
-  manage_plans: ManagePlansSettings,
-  analytics: AnalyticsSettings,
-  map_settings: MapSettings,
-  telegram: TelegramSettings,
-  admin_profile_settings: ProfileSettings,
-  admin_manage_plans: AdminManagePlansSettings,
+const settingsComponents: Partial<Record<SettingId, React.ComponentType>> = {
+  [SettingId.Profile]: ProfileSettings,
+  [SettingId.ManagePlans]: ManagePlansSettings,
+  [SettingId.Analytics]: AnalyticsSettings,
+  [SettingId.Map]: MapSettings,
+  [SettingId.Telegram]: TelegramSettings,
+  [SettingId.AdminProfile]: ProfileSettings,
+  [SettingId.AdminManagePlans]: AdminManagePlansSettings,
 };
 
 interface SettingsProps {
@@ -38,12 +39,15 @@ function Settings({ authStore, settingsStore }: SettingsProps) {
   const navigate = useNavigate();
   const user = authStore.user;
 
-  const currentPath = location.pathname.split('/').pop() || 'profile_settings';
-  let settingsData: SettingsModel[] = user?.role === 'admin' ? AdminSettingsData : SettingsData;
+  const currentPath = location.pathname.split('/').pop() || SettingId.Profile;
+  const currentSettingId = Object.values(SettingId).find((id) => id === currentPath);
+  const settingsData: SettingsModel[] =
+    user?.role === Role.Admin ? AdminSettingsData : SettingsData;
 
-  const CurrentComponent = settingsComponents[currentPath] || ProfileSettings;
+  const CurrentComponent =
+    (currentSettingId && settingsComponents[currentSettingId]) || ProfileSettings;
 
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: SettingId) => {
     navigate(`/settings/${id}`);
   };
 
@@ -94,10 +98,10 @@ function Settings({ authStore, settingsStore }: SettingsProps) {
               sx={{ alignItems: 'center', minWidth: 0, pt: { xs: 0, md: 1 } }}
             >
               {settingsData.map((item) => {
-                const messenger = item.messenger?.find((m) => m.id === currentPath);
+                const messenger = item.messenger?.find((m) => m.id === currentSettingId);
                 const IconComponent = SettingIcons.get(item.id) ?? TouchApp;
 
-                return item.id === currentPath || messenger ? (
+                return item.id === currentSettingId || messenger ? (
                   <Typography
                     key={item.id}
                     variant="h6"

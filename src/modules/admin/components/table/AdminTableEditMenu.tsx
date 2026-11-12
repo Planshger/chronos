@@ -15,6 +15,7 @@ import { memo, useCallback } from 'react';
 import React from 'react';
 import DropdownList from '../DropdownList';
 import UserModel, { UserStatus } from '../../../../shared/models/user_model';
+import { ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL } from '../../constants/adminTableOptions';
 
 interface AdminTableEditMenuProps {
   onClick: (user: UserModel) => void;
@@ -38,7 +39,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
     setEditedUser((prev) => {
       return {
         ...prev,
-        [id as keyof UserModel]: event.target.value === 'Нет' ? '' : event.target.value,
+        [id as keyof UserModel]: event.target.value === NO_PLAN_LABEL ? '' : event.target.value,
       };
     });
   }, []);
@@ -121,7 +122,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
           <DropdownList
             id="plan"
             label="Тариф"
-            menuItems={['Базовый', 'Премиум', 'Пробный', 'Нет']}
+            menuItems={[...ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL]}
             value={editedUser.plan}
             variant="standard"
             onChange={(event) => handleSelectChange(event, 'plan')}

@@ -16,7 +16,7 @@ import ScheduleMenuUser from './ScheduleMenuUser';
 
 interface MainAppBarProps {
   isAiOpen: boolean;
-  setIsAiOpen: Function;
+  setIsAiOpen: (isAiOpen: boolean) => void;
 }
 
 export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProps) {

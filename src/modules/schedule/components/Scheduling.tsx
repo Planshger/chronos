@@ -3,6 +3,7 @@ import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
 import ScheduleStore from '../stores/ScheduleStore';
+import { ScheduleModal } from '../stores/ScheduleStore';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface SchedulingProps {
@@ -38,28 +39,28 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
               {
                 icon: hasTasks ? ListAlt : Add,
                 label: hasTasks ? `Задачи (${selectedDayTasks.length})` : 'Добавить задачу',
-                id: hasTasks ? 'tasks_list' : 'task_create',
+                id: hasTasks ? ScheduleModal.TasksList : ScheduleModal.TaskCreate,
                 color: theme.custom.accent.blue,
                 bg: `${theme.custom.accent.blue}15`,
               },
               {
                 icon: DirectionsCar,
                 label: 'Заказать такси',
-                id: 'taxi',
+                id: ScheduleModal.Taxi,
                 color: theme.custom.accent.amber,
                 bg: `${theme.custom.accent.amber}15`,
               },
               {
                 icon: Hotel,
                 label: 'Бронь отеля',
-                id: 'hotel',
+                id: ScheduleModal.Hotel,
                 color: theme.custom.accent.green,
                 bg: `${theme.custom.accent.green}15`,
               },
               {
                 icon: Restaurant,
                 label: 'Резерв столика',
-                id: 'restaurant',
+                id: ScheduleModal.Restaurant,
                 color: theme.custom.accent.pink,
                 bg: `${theme.custom.accent.pink}15`,
               },

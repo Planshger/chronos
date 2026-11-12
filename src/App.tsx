@@ -16,6 +16,8 @@ import TelegramSettings from './pages/settings/TelegramSettings';
 import MapSettings from './pages/settings/MapSettings';
 import NotFoundPage from './pages/notFound/NotFoundPage';
 import ErrorBoundary from './shared/errors/ErrorBoundary';
+import { Role } from './shared/models/user_model';
+import { SettingId } from './modules/settings/models/settings_model';
 
 function App() {
   return (
@@ -29,27 +31,27 @@ function App() {
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/plans" element={<PlansPage />} />
 
-            <Route element={<PrivateRoute roles={['user']} />}>
+            <Route element={<PrivateRoute roles={[Role.User]} />}>
               <Route path="/schedule" element={<Schedule />} />
             </Route>
 
-            <Route element={<PrivateRoute roles={['admin']} />}>
+            <Route element={<PrivateRoute roles={[Role.Admin]} />}>
               <Route path="/admin" element={<Admin />} />
             </Route>
 
-            <Route element={<PrivateRoute roles={['user', 'admin']} />}>
+            <Route element={<PrivateRoute roles={[Role.User, Role.Admin]} />}>
               <Route path="/settings" element={<Settings />}>
-                <Route index element={<Navigate to={'profile_settings'} replace />} />
+                <Route index element={<Navigate to={SettingId.Profile} replace />} />
 
-                <Route path="profile_settings" element={<ProfileSettings />} />
-                <Route path="manage_plans" element={<ManagePlansSettings />} />
-                <Route path="analytics" element={<AnalyticsSettings />} />
-                <Route path="telegram" element={<TelegramSettings />} />
-                <Route path="map_settings" element={<MapSettings />} />
+                <Route path={SettingId.Profile} element={<ProfileSettings />} />
+                <Route path={SettingId.ManagePlans} element={<ManagePlansSettings />} />
+                <Route path={SettingId.Analytics} element={<AnalyticsSettings />} />
+                <Route path={SettingId.Telegram} element={<TelegramSettings />} />
+                <Route path={SettingId.Map} element={<MapSettings />} />
 
-                <Route element={<PrivateRoute roles={['admin']} />}>
-                  <Route path="admin_profile_settings" element={<ProfileSettings />} />
-                  <Route path="admin_manage_plans" element={<ManagePlansSettings />} />
+                <Route element={<PrivateRoute roles={[Role.Admin]} />}>
+                  <Route path={SettingId.AdminProfile} element={<ProfileSettings />} />
+                  <Route path={SettingId.AdminManagePlans} element={<ManagePlansSettings />} />
                 </Route>
               </Route>
             </Route>

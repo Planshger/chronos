@@ -2,7 +2,7 @@ import { Box, IconButton, Paper, Stack, TextField, Typography, useTheme } from '
 import { AutoAwesome, Close } from '@mui/icons-material';
 
 interface AiDialogProps {
-  setIsAiOpen: Function;
+  setIsAiOpen: (isAiOpen: boolean) => void;
 }
 
 export default function AiDialog({ setIsAiOpen }: AiDialogProps) {

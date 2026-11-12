@@ -5,7 +5,7 @@ import { alpha } from '@mui/material/styles';
 
 interface AdminTableToolbarProps {
   numSelected: number;
-  openFilterMenu: Function;
+  openFilterMenu: () => void;
   deleteUserData: () => void;
 }
 

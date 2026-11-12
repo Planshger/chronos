@@ -2,6 +2,7 @@ import { TaskItem } from '../models/task_model';
 import { format } from 'date-fns/format';
 import TaskDialogContent from './task/TaskDialogContent';
 import ScheduleStore from '../stores/ScheduleStore';
+import { ScheduleModal } from '../stores/ScheduleStore';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface OptionsDialogProps {
@@ -15,9 +16,9 @@ function OptionsDialog({ scheduleStore }: OptionsDialogProps) {
 
   return (
     <div>
-      {activeModal === 'task_create' ||
-      activeModal === 'tasks_list' ||
-      activeModal === 'task_edit' ? (
+      {activeModal === ScheduleModal.TaskCreate ||
+      activeModal === ScheduleModal.TasksList ||
+      activeModal === ScheduleModal.TaskEdit ? (
         <TaskDialogContent dayTasks={dayTasks} />
       ) : null}
     </div>

@@ -15,6 +15,8 @@ import { headCells } from './AdminTableHead';
 import { getFilterData } from '../../datasources/admin_data_source';
 import { useApiError } from '../../../../shared/errors/ApiError';
 import { UserStatus } from '../../../../shared/models/user_model';
+import { PaginationModel } from '../../models/user_pagination_model';
+import { ADMIN_PLAN_OPTIONS } from '../../constants/adminTableOptions';
 
 export interface FilterValuesProps {
   id: string;
@@ -24,7 +26,7 @@ export interface FilterValuesProps {
 interface AdminTableFilterMenuProps {
   onClose: () => void;
   open: boolean;
-  setData: Function;
+  setData: (data: PaginationModel) => void;
   currentPage: number;
   perPage: number;
   searchProp: string;
@@ -39,7 +41,7 @@ const initialprops = [
 
 const menuItems = new Map<string, string[]>([
   ['status', Object.values(UserStatus)],
-  ['plan', ['Базовый', 'Премиум', 'Пробный']],
+  ['plan', ADMIN_PLAN_OPTIONS],
   ['role', ['user', 'admin']],
 ]);
 

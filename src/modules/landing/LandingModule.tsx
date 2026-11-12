@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { AuthStore } from '../auth';
+import { Role } from '../../shared/models/user_model';
 
 const features = [
   {
@@ -50,7 +51,7 @@ function LandingPage({ authStore }: LandingPageProps) {
 
   const onClick = useCallback(() => {
     if (token) {
-      if (user?.role === 'admin') {
+      if (user?.role === Role.Admin) {
         navigator('/admin');
       } else {
         navigator('/schedule');
@@ -59,7 +60,7 @@ function LandingPage({ authStore }: LandingPageProps) {
       navigator('/register');
     }
 
-    if (user?.plan === '' && user?.role === 'user') {
+    if (user?.plan === '' && user?.role === Role.User) {
       navigator('/plans');
     }
   }, [navigator, token, user?.plan, user?.role]);

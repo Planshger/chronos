@@ -15,9 +15,10 @@ import {
 } from '@mui/material';
 import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
 import TaskCreateDialogContent from './TaskCreateDialogContent';
-import { initialTaskItem, TaskItem } from '../../models/task_model';
+import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
 import { useEffect, useState } from 'react';
 import ScheduleStore from '../../stores/ScheduleStore';
+import { ScheduleModal } from '../../stores/ScheduleStore';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import TaskEditDialogContent from './TaskEditDialogContent';
 import Loader from '../../../../shared/ui/Loader';
@@ -68,16 +69,16 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
           alignItems: 'center',
         }}
       >
-        {activeModal === 'task_create'
+        {activeModal === ScheduleModal.TaskCreate
           ? 'Новое событие'
-          : activeModal === 'tasks_list'
+          : activeModal === ScheduleModal.TasksList
             ? 'События дня'
-            : activeModal === 'task_edit'
+            : activeModal === ScheduleModal.TaskEdit
               ? 'Редактирование'
               : ''}
 
         <Stack direction="row" spacing={1}>
-          {activeModal === 'tasks_list' && selectedIds.length > 0 && (
+          {activeModal === ScheduleModal.TasksList && selectedIds.length > 0 && (
             <Button
               size="small"
               color="error"
@@ -91,8 +92,11 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
             </Button>
           )}
 
-          {activeModal === 'tasks_list' && (
-            <IconButton size="small" onClick={() => scheduleStore.setActiveModal('task_create')}>
+          {activeModal === ScheduleModal.TasksList && (
+            <IconButton
+              size="small"
+              onClick={() => scheduleStore.setActiveModal(ScheduleModal.TaskCreate)}
+            >
               <Add fontSize="small" color="primary" />
             </IconButton>
           )}
@@ -104,7 +108,7 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
       </DialogTitle>
 
       <DialogContent dividers sx={{ py: 3 }}>
-        {activeModal === 'tasks_list' ? (
+        {activeModal === ScheduleModal.TasksList ? (
           <Stack spacing={2}>
             {dayTasks.length > 0 && (
               <FormControlLabel
@@ -139,9 +143,9 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
 
                     <Box>
                       <Chip
-                        label={task.type === 'встреча' ? 'Встреча' : 'Задача'}
+                        label={task.type === TaskType.Meeting ? 'Встреча' : 'Задача'}
                         size="small"
-                        color={task.type === 'встреча' ? 'secondary' : 'primary'}
+                        color={task.type === TaskType.Meeting ? 'secondary' : 'primary'}
                         sx={{ mb: 0.5, fontSize: '0.6rem', height: 20 }}
                       />
 
@@ -153,7 +157,7 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
                     className="edit-button"
                     size="small"
                     onClick={(e) => {
-                      scheduleStore.setActiveModal('task_edit');
+                      scheduleStore.setActiveModal(ScheduleModal.TaskEdit);
                       setEditedTask(task.id);
                     }}
                     sx={{ position: 'absolute', right: 50 }}
@@ -187,9 +191,9 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
               </Paper>
             ))}
           </Stack>
-        ) : activeModal === 'task_create' ? (
+        ) : activeModal === ScheduleModal.TaskCreate ? (
           <TaskCreateDialogContent />
-        ) : activeModal === 'task_edit' ? (
+        ) : activeModal === ScheduleModal.TaskEdit ? (
           <TaskEditDialogContent
             task={dayTasks.find((i) => i.id === editedTask) ?? initialTaskItem}
           />

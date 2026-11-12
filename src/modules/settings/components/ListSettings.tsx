@@ -8,12 +8,12 @@ import {
 } from '@mui/material';
 import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SettingsModel } from '../models/settings_model';
+import { SettingsModel, SettingId } from '../models/settings_model';
 import { useEffect, useState } from 'react';
 import { SettingIcons } from '../constants/SettingIcons';
 
 interface ListSettingsProps {
-  onSelect: (id: string) => void;
+  onSelect: (id: SettingId) => void;
   settingsData: SettingsModel[];
 }
 
@@ -25,8 +25,8 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
   const initialOpen = location.state?.open;
   const [open, setOpen] = useState(false);
 
-  function handleSelect(id: string) {
-    if (id === 'messengers') {
+  function handleSelect(id: SettingId) {
+    if (id === SettingId.Messengers) {
       setOpen(!open);
     } else {
       onSelect(id);
@@ -83,7 +83,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
 
             <ListItemText primary={item.label} sx={{ display: { xs: 'none', md: 'block' } }} />
 
-            {item.id === 'messengers' && (open ? <ExpandLess /> : <ExpandMore />)}
+            {item.id === SettingId.Messengers && (open ? <ExpandLess /> : <ExpandMore />)}
           </ListItemButton>
         );
       })}
@@ -91,7 +91,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {settingsData
-            .find((i) => i.id === 'messengers')
+            .find((i) => i.id === SettingId.Messengers)
             ?.messenger?.map((messenger) => {
               const Icon = SettingIcons.get(messenger.id) ?? TouchApp;
 

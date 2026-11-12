@@ -3,6 +3,7 @@ import { ScheduleStore } from '../../modules/schedule';
 import { AuthStore } from '../../modules/auth';
 import { SettingsStore } from '../../modules/settings';
 import ApiErrorStore from '../../shared/errors/ApiErrorStore';
+import { Role } from '../../shared/models/user_model';
 
 export interface AppStores {
   authStore: AuthStore;
@@ -26,7 +27,9 @@ export function initializeStores({ authStore, scheduleStore }: AppStores): () =>
   const disposeAuthReaction = reaction(
     () => authStore.user.id,
     (userId) =>
-      authStore.user.role === 'user' ? scheduleStore.setUserId(userId > 0 ? userId : null) : null,
+      authStore.user.role === Role.User
+        ? scheduleStore.setUserId(userId > 0 ? userId : null)
+        : null,
     { fireImmediately: true },
   );
 

@@ -21,6 +21,7 @@ import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { ru } from 'date-fns/locale';
 import ScheduleStore from '../stores/ScheduleStore';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { TaskType } from '../models/task_model';
 
 interface CalendarProps {
   scheduleStore: ScheduleStore;
@@ -180,7 +181,8 @@ function Calendar({ scheduleStore }: CalendarProps) {
                         size="small"
                         variant="outlined"
                         sx={{
-                          bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
+                          bgcolor:
+                            task.type === TaskType.Meeting ? 'secondary.light' : 'primary.light',
                           height: 20,
                           width: 20,
                         }}
@@ -195,9 +197,10 @@ function Calendar({ scheduleStore }: CalendarProps) {
                           fontSize: '0.6rem',
                           height: 20,
                           maxWidth: '100%',
-                          bgcolor: task.type === 'встреча' ? 'secondary.light' : 'primary.light',
+                          bgcolor:
+                            task.type === TaskType.Meeting ? 'secondary.light' : 'primary.light',
                           color:
-                            task.type === 'встреча'
+                            task.type === TaskType.Meeting
                               ? 'secondary.contrastText'
                               : 'primary.contrastText',
                           border: 'none',

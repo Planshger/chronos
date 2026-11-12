@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { Role } from '../../../shared/models/user_model';
 
 interface LandingAppBarProps {
   authStore: AuthStore;
@@ -43,7 +44,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
             </Button>
           ) : (
             <Button
-              onClick={() => onClick(user.role === 'admin' ? '/admin' : '/schedule')}
+              onClick={() => onClick(user.role === Role.Admin ? '/admin' : '/schedule')}
               sx={{ color: 'text.primary' }}
             >
               Регистрация

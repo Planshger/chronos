@@ -14,7 +14,17 @@ export interface TaskItem {
   id: string;
   title: string;
   description: string;
-  type: string;
+  type: TaskType;
 }
 
-export const initialTaskItem: TaskItem = { id: '', title: '', description: '', type: 'задача' };
+export enum TaskType {
+  Task = 'задача',
+  Meeting = 'встреча',
+}
+
+export const initialTaskItem: TaskItem = {
+  id: '',
+  title: '',
+  description: '',
+  type: TaskType.Task,
+};

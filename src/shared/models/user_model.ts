@@ -1,4 +1,7 @@
-export type Role = 'user' | 'admin' | '';
+export enum Role {
+  User = 'user',
+  Admin = 'admin',
+}
 
 export enum UserStatus {
   Active = 'Активен',
@@ -14,7 +17,7 @@ export default interface UserModel {
   status: UserStatus | '';
   password?: string;
   tgLinked: boolean;
-  role: Role;
+  role: Role | '';
 }
 
 export const initialUser: UserModel = {

@@ -21,6 +21,7 @@ import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
 import { useApiError } from '../../shared/errors/ApiError';
 import { UserStatus } from '../../shared/models/user_model';
+import { Role } from '../../shared/models/user_model';
 
 interface PlansPageProps {
   authStore: AuthStore;
@@ -36,7 +37,7 @@ function PlansPage({ authStore }: PlansPageProps) {
 
   const savePlanFromUser = useCallback(
     async (namePlan: string) => {
-      if (user?.role === 'user') {
+      if (user?.role === Role.User) {
         try {
           await withLoading(async () => {
             const updatedUser = await updateUserData({
