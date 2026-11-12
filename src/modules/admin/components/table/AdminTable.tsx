@@ -188,8 +188,17 @@ export default function AdminTable() {
 
   return (
     <Box sx={{ width: '100%', p: { xs: 1.5, lg: 10 } }}>
-      <Box sx={{ pb: 2, display: 'flex', justifyContent: 'center' }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+      <Box sx={{ pb: 2, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1}
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            width: '100%',
+            maxWidth: 960,
+            minWidth: 0,
+          }}
+        >
           <AutocompleteList
             key={editDomain ? 'email' : 'name'}
             id={editDomain ? 'email' : 'name'}
@@ -200,30 +209,33 @@ export default function AdminTable() {
             value={input.value}
           />
 
-          <TextField
-            value={domain}
-            onChange={(e) => {
-              setDomain(e.target.value);
-              debouncedSearch(input.value + e.target.value);
-            }}
-            disabled={!editDomain}
-            size="small"
-            variant="standard"
-            sx={{
-              width: 160,
-              '& .MuiInputBase-input.Mui-disabled': {
-                WebkitTextFillColor: theme.palette.text.secondary,
-              },
-            }}
-          />
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0 }}>
+            <TextField
+              value={domain}
+              onChange={(e) => {
+                setDomain(e.target.value);
+                debouncedSearch(input.value + e.target.value);
+              }}
+              disabled={!editDomain}
+              size="small"
+              variant="standard"
+              sx={{
+                width: { xs: '100%', sm: 160 },
+                flex: { xs: 1, sm: 'none' },
+                '& .MuiInputBase-input.Mui-disabled': {
+                  WebkitTextFillColor: theme.palette.text.secondary,
+                },
+              }}
+            />
 
-          <Switch
-            checked={editDomain}
-            onChange={(e) => {
-              switchSearchWithDomain(e);
-            }}
-            size="small"
-          />
+            <Switch
+              checked={editDomain}
+              onChange={(e) => {
+                switchSearchWithDomain(e);
+              }}
+              size="small"
+            />
+          </Stack>
         </Stack>
       </Box>
 
@@ -234,7 +246,9 @@ export default function AdminTable() {
           deleteUserData={loadDataWithDeleteUser}
         />
 
-        <TableContainer sx={{ bgcolor: theme.palette.background.default }}>
+        <TableContainer
+          sx={{ bgcolor: theme.palette.background.default, maxWidth: '100%', overflowX: 'auto' }}
+        >
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <AdminTableHead
               numSelected={selected.length}

@@ -24,16 +24,12 @@ function AutocompleteList({
   const theme = useTheme();
 
   return (
-    <Stack
-      direction={'row'}
-      spacing={1}
-      sx={{ width: { xs: '50%', md: '100%', lg: '100%' }, pl: { xs: 10 } }}
-    >
-      <Search sx={{ pt: 0.3 }} />
+    <Stack direction="row" spacing={1} sx={{ width: '100%', minWidth: 0, flex: 1 }}>
+      <Search sx={{ pt: 0.3, flexShrink: 0 }} />
 
       <Autocomplete
         id={`${id}-autocomplete`}
-        sx={{ width: { lg: '400px', xs: '300px' } }}
+        sx={{ flex: 1, minWidth: 0 }}
         autoComplete
         disableClearable={disableClearable}
         freeSolo

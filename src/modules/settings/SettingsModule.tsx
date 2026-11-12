@@ -54,7 +54,8 @@ function Settings({ authStore, settingsStore }: SettingsProps) {
   return (
     <Box
       sx={{
-        height: '100vh',
+        minHeight: '100dvh',
+        height: { xs: 'auto', md: '100dvh' },
         display: 'flex',
         flexDirection: 'column',
         bgcolor: theme.palette.background.paper,
@@ -82,9 +83,9 @@ function Settings({ authStore, settingsStore }: SettingsProps) {
             sx={{
               p: { xs: 2, sm: 3 },
               borderRadius: 7,
-              flex: '1 1 0',
+              flex: { xs: '0 0 auto', md: '1 1 0' },
               minWidth: 0,
-              minHeight: 0,
+              minHeight: { xs: 'auto', md: 0 },
               display: 'flex',
               flexDirection: 'column',
               bgcolor: theme.palette.background.default,

@@ -1,4 +1,4 @@
-import { AppBar, Button, Stack, Toolbar, Typography, useTheme } from '@mui/material';
+import { AppBar, Box, Button, Stack, Toolbar, Typography, useTheme } from '@mui/material';
 import { CreditCard, GppGood, Logout, Settings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../auth';
@@ -15,40 +15,58 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
 
   return (
     <AppBar position="sticky">
-      <Toolbar sx={{ justifyContent: 'space-between' }}>
+      <Toolbar sx={{ justifyContent: 'space-between', gap: { xs: 1, sm: 2 } }}>
         <Typography
           variant="h6"
+          aria-label="Админ панель"
           sx={{
             display: 'flex',
             alignItems: 'center',
             gap: 1,
-            fontSize: { xs: 0, lg: 20, md: 20 },
+            minWidth: 0,
+            fontSize: { xs: '1.1rem', sm: '1.25rem' },
           }}
         >
-          <GppGood sx={{ fontSize: 38, color: theme.palette.primary.main }} />
-          Админ панель
+          <GppGood
+            sx={{ flexShrink: 0, fontSize: { xs: 30, sm: 38 }, color: theme.palette.primary.main }}
+          />
+          <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+            Админ панель
+          </Box>
         </Typography>
 
-        <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
+        <Stack
+          direction="row"
+          spacing={{ xs: 0.5, sm: 2 }}
+          sx={{ alignItems: 'center', flexShrink: 0 }}
+        >
           <Button
             variant="outlined"
+            aria-label="Профиль"
+            title="Профиль"
             onClick={() => navigate(`/settings/${SettingId.AdminProfile}`)}
             sx={{
-              fontSize: { xs: 0, lg: 15, md: 15 },
+              minWidth: { xs: 40, sm: 'auto' },
+              px: { xs: 1, sm: 2 },
               borderColor: theme.custom.border.light,
               color: theme.palette.text.primary,
               '&:hover': { backgroundColor: theme.custom.background.muted },
             }}
           >
-            <Settings sx={{ mr: { lg: 1, xs: 0 } }} />
-            Профиль
+            <Settings sx={{ mr: { xs: 0, sm: 1 } }} />
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              Профиль
+            </Box>
           </Button>
 
           <Button
             variant="outlined"
+            aria-label="Тарифы"
+            title="Тарифы"
             onClick={() => navigate(`/settings/${SettingId.AdminManagePlans}`)}
             sx={{
-              fontSize: { xs: 0, lg: 15, md: 15 },
+              minWidth: { xs: 40, sm: 'auto' },
+              px: { xs: 1, sm: 2 },
               color: theme.palette.primary.main,
               bgcolor: `${theme.palette.primary.main}15`,
               '&:hover': {
@@ -57,22 +75,29 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
               },
             }}
           >
-            <CreditCard sx={{ mr: { lg: 1, xs: 0 } }} />
-            Тарифы
+            <CreditCard sx={{ mr: { xs: 0, sm: 1 } }} />
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              Тарифы
+            </Box>
           </Button>
 
           <Button
             variant="outlined"
+            aria-label="Выход"
+            title="Выход"
             onClick={authStore.logout}
             sx={{
-              fontSize: { xs: 0, lg: 15, md: 15 },
+              minWidth: { xs: 40, sm: 'auto' },
+              px: { xs: 1, sm: 2 },
               color: 'error.main',
               bgcolor: `${theme.palette.primary.main}15`,
               '&:hover': { borderColor: 'error.main', bgcolor: `${theme.palette.primary.main}15` },
             }}
           >
-            <Logout sx={{ mr: { lg: 1, xs: 0 } }} />
-            Выход
+            <Logout sx={{ mr: { xs: 0, sm: 1 } }} />
+            <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              Выход
+            </Box>
           </Button>
         </Stack>
       </Toolbar>

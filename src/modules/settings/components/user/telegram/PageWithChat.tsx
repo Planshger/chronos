@@ -99,7 +99,7 @@ function PageWithChat({ authStore }: PageWithChatProps) {
   if (!user) return null;
 
   return (
-    <Box sx={{ maxWidth: 560, mx: 'auto', p: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: 560, mx: 'auto', p: { xs: 0, sm: 2 } }}>
       <Stack direction="row" spacing={1} sx={{ mb: 2, alignItems: 'center' }}>
         <TelegramIcon />
 
@@ -111,7 +111,7 @@ function PageWithChat({ authStore }: PageWithChatProps) {
       <Paper
         variant="outlined"
         sx={{
-          height: 420,
+          height: 'clamp(240px, 60dvh, 420px)',
           display: 'flex',
           flexDirection: 'column',
           borderRadius: 3,

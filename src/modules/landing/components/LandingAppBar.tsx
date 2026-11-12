@@ -33,8 +33,12 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
   return (
     <Box sx={{ p: 4 }}>
       <AppBar position="fixed" sx={{ backdropFilter: 'blur(10px)' }}>
-        <Toolbar>
-          <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
+        <Toolbar sx={{ px: { xs: 2, sm: 3 } }}>
+          <Typography
+            variant="h3"
+            component="div"
+            sx={{ flexGrow: 1, minWidth: 0, fontSize: { xs: '1.75rem', sm: '2rem' } }}
+          >
             Chronos
           </Typography>
 
