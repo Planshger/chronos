@@ -26,10 +26,13 @@ export function createStores(): AppStores {
 export function initializeStores({ authStore, scheduleStore }: AppStores): () => void {
   const disposeAuthReaction = reaction(
     () => authStore.user.id,
-    (userId) =>
-      authStore.user.role === Role.User
-        ? scheduleStore.setUserId(userId > 0 ? userId : null)
-        : null,
+    (userId) => {
+      if (authStore.user.role !== Role.User) {
+        return;
+      }
+
+      scheduleStore.setUserId(userId > 0 ? userId : null);
+    },
     { fireImmediately: true },
   );
 
