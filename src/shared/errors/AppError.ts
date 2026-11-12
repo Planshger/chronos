@@ -1,5 +1,9 @@
 export type AppErrorCode =
-  'NETWORK_ERROR' | 'HTTP_ERROR' | 'EMPTY_RESPONSE' | 'INVALID_RESPONSE' | 'INVALID_CREDENTIALS'
+  | 'NETWORK_ERROR'
+  | 'HTTP_ERROR'
+  | 'EMPTY_RESPONSE'
+  | 'INVALID_RESPONSE'
+  | 'INVALID_CREDENTIALS'
   | 'USER_STATUS_ERROR';
 
 export class AppError extends Error {
