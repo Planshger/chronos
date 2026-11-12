@@ -1,16 +1,19 @@
 import { Add, Done } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, Stack, Typography, useTheme } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
-import { addPlan, getAllPlans, updatePlanData } from '../../../plans/datasources/plans_data_source';
-import { useLoading } from '../../SettingsModule';
+import { addPlan, getAllPlans, initialPlan, PlanModel, updatePlanData } from '../../../plans';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import SettingsStore from '../../stores/SettingsStore';
 
-export default function AdminManagePlansSettings() {
+interface AdminManagePlansSettingsProps {
+  settingsStore: SettingsStore;
+}
+
+function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsProps) {
   const theme = useTheme();
-  const { setLoading } = useLoading();
   const { showError } = useApiError();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [changePlans, setChangePlans] = useState<{
@@ -20,8 +23,10 @@ export default function AdminManagePlansSettings() {
   }>({ openEdit: false, openCreate: false, plan: initialPlan });
 
   const loadData = useCallback(() => {
-    withLoading(() => getAllPlans().then((res) => setPlans(res)), setLoading).catch(showError);
-  }, [setLoading, showError]);
+    withLoading(() => getAllPlans().then((res) => setPlans(res)), settingsStore.setLoading).catch(
+      showError,
+    );
+  }, [settingsStore, showError]);
 
   const loadAddPlan = useCallback(
     async (plan: PlanModel) => {
@@ -37,6 +42,7 @@ export default function AdminManagePlansSettings() {
         if (changePlans.openCreate) {
           return { ...prev, openCreate: !prev.openCreate, plan: plan ?? prev.plan };
         }
+
         return { ...prev, openEdit: !prev.openEdit, plan: plan ?? prev.plan };
       });
     },
@@ -208,3 +214,5 @@ export default function AdminManagePlansSettings() {
     </Box>
   );
 }
+
+export default injectMobxStore('settingsStore', AdminManagePlansSettings);

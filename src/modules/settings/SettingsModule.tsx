@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingsModel } from './models/settings_model';
 import { SettingIcons } from './constants/SettingIcons';
 import { TouchApp } from '@mui/icons-material';
-import React, { createContext, useContext, useState } from 'react';
+import React from 'react';
 import { AdminSettingsData, SettingsData } from './data/SettingsData';
 import Loader from '../../shared/ui/Loader';
 import AdminManagePlansSettings from './components/admin/AdminManagePlansSettings';
@@ -13,8 +13,9 @@ import AnalyticsSettings from './components/user/AnalyticsSettings';
 import TelegramSettings from './components/user/telegram/TelegramSettings';
 import ListSettings from './components/ListSettings';
 import MapSettings from './components/user/MapSettings';
-import AuthStore from '../auth/stores/AuthStore';
+import { AuthStore } from '../auth';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
+import SettingsStore from './stores/SettingsStore';
 
 const settingsComponents: Record<string, React.ComponentType> = {
   profile_settings: ProfileSettings,
@@ -26,23 +27,12 @@ const settingsComponents: Record<string, React.ComponentType> = {
   admin_manage_plans: AdminManagePlansSettings,
 };
 
-interface LoadingContextProps {
-  setLoading: (value: boolean) => void;
-  loading: boolean;
-}
-
-const LoadingContext = createContext<LoadingContextProps>({ setLoading: () => {}, loading: false });
-
-export function useLoading() {
-  return useContext(LoadingContext);
-}
-
 interface SettingsProps {
   authStore: AuthStore;
+  settingsStore: SettingsStore;
 }
 
-function Settings({ authStore }: SettingsProps) {
-  const [loading, setLoading] = useState(false);
+function Settings({ authStore, settingsStore }: SettingsProps) {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -137,16 +127,14 @@ function Settings({ authStore }: SettingsProps) {
                 minWidth: 0,
               }}
             >
-              <LoadingContext.Provider value={{ setLoading, loading }}>
-                <CurrentComponent key={`${user.id}:${user.role}`} />
-              </LoadingContext.Provider>
+              <CurrentComponent key={`${user.id}:${user.role}`} />
             </Box>
           </Paper>
         </Stack>
       </Container>
-      {loading && <Loader size={80} />}
+      {settingsStore.loading && <Loader size={80} />}
     </Box>
   );
 }
 
-export default injectMobxStore('authStore', Settings);
+export default injectMobxStore(['authStore', 'settingsStore'], Settings);

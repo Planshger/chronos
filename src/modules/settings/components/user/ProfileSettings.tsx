@@ -1,19 +1,19 @@
 import { Button, Stack, TextField } from '@mui/material';
 import { ChangeEvent, useCallback, useState } from 'react';
 import UserModel, { initialUser } from '../../../../shared/models/user_model';
-import { useLoading } from '../../SettingsModule';
-import AuthStore from '../../../auth/stores/AuthStore';
-import { updateUserData } from '../../../admin/datasources/admin_data_source';
+import { AuthStore } from '../../../auth';
+import { SettingsStore } from '../../stores/SettingsStore';
+import { updateUserData } from '../../../../shared/api/userApi';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 
 interface ProfileSettingsProps {
   authStore: AuthStore;
+  settingsStore: SettingsStore;
 }
 
-function ProfileSettings({ authStore }: ProfileSettingsProps) {
-  const { setLoading } = useLoading();
+function ProfileSettings({ authStore, settingsStore }: ProfileSettingsProps) {
   const user = authStore.user;
   const { showError } = useApiError();
   const [editUser, setEditUser] = useState<UserModel>(user ?? initialUser);
@@ -31,13 +31,13 @@ function ProfileSettings({ authStore }: ProfileSettingsProps) {
       try {
         withLoading(
           () => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)),
-          setLoading,
+          settingsStore.setLoading,
         );
       } catch (error) {
         showError(error);
       }
     }
-  }, [editUser, user, setLoading, showError, authStore]);
+  }, [editUser, user, settingsStore, showError, authStore]);
 
   return (
     <Stack
@@ -76,4 +76,4 @@ function ProfileSettings({ authStore }: ProfileSettingsProps) {
   );
 }
 
-export default injectMobxStore('authStore', ProfileSettings);
+export default injectMobxStore(['authStore', 'settingsStore'], ProfileSettings);

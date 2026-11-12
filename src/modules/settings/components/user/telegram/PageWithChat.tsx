@@ -15,7 +15,7 @@ import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react'
 import { MessageModel } from '../../../models/message_model';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { useApiError } from '../../../../../shared/errors/ApiError';
-import AuthStore from '../../../../auth/stores/AuthStore';
+import { AuthStore } from '../../../../auth';
 import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
 
 const POLL_INTERVAL = 3000;

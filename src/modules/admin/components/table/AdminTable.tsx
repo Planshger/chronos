@@ -23,8 +23,8 @@ import {
   getFilterData,
   getSortBy,
   getUsersWithPagination,
-  updateUserData,
 } from '../../datasources/admin_data_source';
+import { updateUserData } from '../../../../shared/api/userApi';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
 

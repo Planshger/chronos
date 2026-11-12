@@ -10,16 +10,17 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { memo, useCallback, useEffect, useState } from 'react';
-import PlanModel, { initialPlan } from '../../../plans/models/plan_model';
+import { useCallback, useEffect, useState } from 'react';
+import { deletePlans, getAllPlans, initialPlan, PlanModel } from '../../../plans';
 import NumberField from '../../../../shared/ui/NumberField';
 import Loader from '../../../../shared/ui/Loader';
-import { useLoading } from '../../SettingsModule';
-import { deletePlans, getAllPlans } from '../../../plans/datasources/plans_data_source';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import SettingsStore from '../../stores/SettingsStore';
 
 interface AdminEditManagePlansSettingsProps {
+  settingsStore: SettingsStore;
   updatePlan: (plan: PlanModel) => Promise<void>;
   setPlans: (plans: PlanModel[]) => void;
   addPlan: (plan: PlanModel) => Promise<void>;
@@ -57,6 +58,7 @@ function arraysEqual(a: string[] | undefined, b: string[] | undefined): boolean 
 }
 
 function AdminEditManagePlansSettings({
+  settingsStore,
   updatePlan,
   onClose,
   open,
@@ -66,7 +68,6 @@ function AdminEditManagePlansSettings({
   addPlan,
 }: AdminEditManagePlansSettingsProps) {
   const [editedPlan, setEditedPlan] = useState<PlanModel>(isCreate ? initialPlan : plan);
-  const { setLoading, loading } = useLoading();
   const { showError } = useApiError();
   const theme = useTheme();
 
@@ -109,17 +110,17 @@ function AdminEditManagePlansSettings({
   const handleDeletePlan = useCallback(
     async (id: number) => {
       try {
-        await withLoading(() => deletePlans(id), setLoading);
+        await withLoading(() => deletePlans(id), settingsStore.setLoading);
         await withLoading(async () => {
           const plans = await getAllPlans();
           setPlans(plans);
-        }, setLoading);
+        }, settingsStore.setLoading);
         onClose();
       } catch (error) {
         showError(error);
       }
     },
-    [setLoading, setPlans, onClose, showError],
+    [settingsStore, setPlans, onClose, showError],
   );
 
   const handleSave = useCallback(async () => {
@@ -325,10 +326,10 @@ function AdminEditManagePlansSettings({
           </Button>
         </Stack>
 
-        {loading && <Loader size={80} />}
+        {settingsStore.loading && <Loader size={80} />}
       </Box>
     </Modal>
   );
 }
 
-export default memo(AdminEditManagePlansSettings);
+export default injectMobxStore('settingsStore', AdminEditManagePlansSettings);

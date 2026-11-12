@@ -53,10 +53,3 @@ export async function deleteUserData(idsToDelete: number[]) {
     idsToDelete.map((id) => apiRequest<void>(`/users/${id}`, { method: 'DELETE' })),
   );
 }
-
-export async function updateUserData(user: UserModel): Promise<UserModel> {
-  return apiRequest<UserModel>(`/users/${user.id}`, {
-    method: 'PATCH',
-    body: JSON.stringify(user),
-  });
-}

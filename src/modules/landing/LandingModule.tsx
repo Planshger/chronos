@@ -15,7 +15,7 @@ import LandingAppBar from './components/LandingAppBar';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
-import AuthStore from '../auth/stores/AuthStore';
+import { AuthStore } from '../auth';
 
 const features = [
   {
@@ -68,7 +68,7 @@ function LandingPage({ authStore }: LandingPageProps) {
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.default }}>
       <LandingAppBar />
 
-      <Box sx={{ pt: 16, pb: 14 }}>
+      <Box sx={{ pt: 23, pb: 21 }}>
         <Box
           sx={{
             position: 'absolute',

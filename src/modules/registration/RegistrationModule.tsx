@@ -8,8 +8,7 @@ import {
   PersonAddAlt1,
 } from '@mui/icons-material';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
-import AuthStore from '../auth/stores/AuthStore';
-import { auth, register } from '../auth/datasources/authorization_data_source';
+import { auth, AuthStore, register } from '../auth';
 import UserModel, { initialUser, UserStatus } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
-import AuthStore from '../../auth/stores/AuthStore';
+import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface LandingAppBarProps {

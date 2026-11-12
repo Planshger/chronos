@@ -1,4 +1,4 @@
-import { MapSettings } from '../../modules';
+import { MapSettings } from '../../modules/settings';
 
 export default function MapSettingsPage() {
   return <MapSettings />;

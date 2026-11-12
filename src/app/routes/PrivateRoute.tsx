@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import AuthStore from '../../modules/auth/stores/AuthStore';
+import { AuthStore } from '../../modules/auth';
 import { Role, UserStatus } from '../../shared/models/user_model';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 

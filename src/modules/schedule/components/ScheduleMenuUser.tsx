@@ -11,9 +11,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { SettingsData } from '../../settings/data/SettingsData';
-import { SettingIcons } from '../../settings/constants/SettingIcons';
-import AuthStore from '../../auth/stores/AuthStore';
+import { SettingIcons, SettingsData } from '../../settings';
+import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface ScheduleMenuUserProps {

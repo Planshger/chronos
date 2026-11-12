@@ -1,9 +1,9 @@
 import { AutoAwesome } from '@mui/icons-material';
 import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
-import AuthStore from '../../../auth/stores/AuthStore';
+import { AuthStore } from '../../../auth';
 import { useNavigate } from 'react-router-dom';
-import { updateUserData } from '../../../admin/datasources/admin_data_source';
-import { useLoading } from '../../SettingsModule';
+import { updateUserData } from '../../../../shared/api/userApi';
+import SettingsStore from '../../stores/SettingsStore';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
@@ -11,11 +11,11 @@ import { UserStatus } from '../../../../shared/models/user_model';
 
 interface ManagePlansSettingsProps {
   authStore: AuthStore;
+  settingsStore: SettingsStore;
 }
 
-function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
+function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsProps) {
   const user = authStore.user;
-  const { setLoading } = useLoading();
   const { showError } = useApiError();
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
           updateUserData({ ...user, plan: '', status: UserStatus.PendingPayment }).then((res) =>
             authStore.setUser(res),
           ),
-        setLoading,
+        settingsStore.setLoading,
       );
     } catch (error) {
       showError(error);
@@ -82,4 +82,4 @@ function ManagePlansSettings({ authStore }: ManagePlansSettingsProps) {
   );
 }
 
-export default injectMobxStore('authStore', ManagePlansSettings);
+export default injectMobxStore(['authStore', 'settingsStore'], ManagePlansSettings);
