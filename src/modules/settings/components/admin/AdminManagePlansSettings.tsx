@@ -1,7 +1,14 @@
-import { Add, Done } from '@mui/icons-material';
-import { Box, Button, Card, CardContent, Stack, Typography, useTheme } from '@mui/material';
+import { Add } from '@mui/icons-material';
+import { Box, Button, useTheme } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
-import { addPlan, getAllPlans, initialPlan, PlanModel, updatePlanData } from '../../../plans';
+import {
+  addPlan,
+  getAllPlans,
+  initialPlan,
+  PlanCard,
+  PlanModel,
+  updatePlanData,
+} from '../../../plans';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
@@ -99,106 +106,14 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
         }}
       >
         {plans.map((p) => (
-          <Card
+          <PlanCard
             key={p.name}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              width: '100%',
-              bgcolor: theme.palette.background.default,
-              borderRadius: 4,
-              border: p.popular
-                ? `2px solid ${theme.palette.text.primary}`
-                : !p.active
-                  ? `2px solid red`
-                  : `1px solid ${theme.custom.border.light}`,
-              boxShadow: theme.custom.shadows.sm,
-              outline: p.popular ? `1px solid ${theme.palette.text.primary}` : 'none',
-            }}
-          >
-            <CardContent sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-              {p.popular ? (
-                <Box
-                  sx={{
-                    bgcolor: theme.palette.text.primary,
-                    textAlign: 'center',
-                    borderRadius: '20px',
-                    width: '130px',
-                  }}
-                >
-                  <Typography
-                    variant="h2"
-                    sx={{
-                      textTransform: 'uppercase',
-                      color: theme.palette.background.default,
-                      fontSize: '13px',
-                      mb: 0.5,
-                      mt: 0.5,
-                    }}
-                  >
-                    Хит продаж
-                  </Typography>
-                </Box>
-              ) : (
-                ''
-              )}
-
-              <Typography variant="h3" sx={{ pb: 1, pt: 2 }}>
-                {p.name}
-              </Typography>
-
-              <Typography variant="h2" sx={{ pb: 1 }}>
-                {p.price} {p.trial ? '₽' : '₽ / мес'}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
-                {p.description}
-              </Typography>
-
-              <Stack
-                direction="column"
-                spacing={3}
-                sx={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  pt: 4,
-                }}
-              >
-                <Stack direction="column" spacing={3}>
-                  {p.features.map((f) => (
-                    <Box key={f} sx={{ display: 'flex', flexDirection: 'row' }}>
-                      <Done sx={{ width: 20, height: 20, color: 'grey' }} />
-                      <Typography variant="h3" sx={{ fontSize: '15px', ml: 1 }}>
-                        {f}
-                      </Typography>
-                    </Box>
-                  ))}
-                </Stack>
-
-                <Button
-                  variant="contained"
-                  onClick={() => setChangePlans({ plan: p, openEdit: true, openCreate: false })}
-                  sx={{
-                    borderRadius: '10px',
-                    bgcolor: p.popular
-                      ? theme.palette.text.primary
-                      : theme.palette.background.paper,
-                    color: p.popular
-                      ? theme.palette.background.default
-                      : theme.palette.text.primary,
-                    fontSize: p.popular ? '16px' : '14px',
-                    boxShadow: 'none',
-                    border: `1px solid ${theme.custom.border.light}`,
-                    '&:hover': { boxShadow: '0 15px 25px -5px #a855f7' },
-                  }}
-                >
-                  Редактировать
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
+            plan={p}
+            actionLabel="Редактировать"
+            onAction={() => setChangePlans({ plan: p, openEdit: true, openCreate: false })}
+            highlightInactive
+            outlinePopular
+          />
         ))}
       </Box>
 
