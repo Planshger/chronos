@@ -13,7 +13,7 @@ export async function getUsersWithPagination(
   limit: number,
 ): Promise<PaginationModel> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
-  return queryClient.fetchQuery({
+  return queryClient.query({
     queryKey: ['usersPag', params],
     queryFn: () => apiRequest<PaginationModel>(`/users?${params.toString()}`),
   });

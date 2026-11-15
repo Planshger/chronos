@@ -50,7 +50,7 @@ export async function auth(user: UserModel, role: Role): Promise<RegisterUserMod
 }
 
 export async function authMe(token: string): Promise<UserModel | null> {
-  return queryClient.fetchQuery({
+  return queryClient.query({
     queryKey: ['authMe', token],
     queryFn: () =>
       apiRequest<UserModel | null>('/auth_me', {

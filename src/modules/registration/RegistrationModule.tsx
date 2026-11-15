@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { auth, AuthStore, register } from '../auth';
-import UserModel, { initialUser, UserStatus } from '../../shared/models/user_model';
+import UserModel, { initialUser, Role, UserStatus } from '../../shared/models/user_model';
 import Loader from '../../shared/ui/Loader';
 import { withLoading } from '../../shared/utils/withLoading';
 import ApiErrorStore from '../../shared/errors/ApiErrorStore';
@@ -50,8 +50,8 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
     try {
       if (isAdminLogin) {
         await withLoading(async () => {
-          const res = await auth(input, 'admin');
-          authStore.setToken(res.token);
+          const res = await auth(input, Role.Admin);
+          authStore.setToken(res.token, res.data);
           navigate('/admin', { replace: true });
         }, setLoading);
         return;
@@ -59,16 +59,16 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
 
       if (isLogin) {
         await withLoading(async () => {
-          const res = await auth(input, 'user');
-          authStore.setToken(res.token);
+          const res = await auth(input, Role.User);
+          authStore.setToken(res.token, res.data);
           navigate('/schedule', { replace: true });
         }, setLoading);
         return;
       }
 
-      withLoading(async () => {
+      await withLoading(async () => {
         const res = await register({ ...input, status: UserStatus.PendingPayment });
-        authStore.setToken(res.token);
+        authStore.setToken(res.token, res.data);
         navigate('/plans', { replace: true });
       }, setLoading);
     } catch (error: unknown) {

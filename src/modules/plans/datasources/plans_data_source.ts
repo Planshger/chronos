@@ -3,7 +3,7 @@ import { apiRequest } from '../../../shared/api/apiRequest';
 import { queryClient } from '../../../shared/queryClient';
 
 export function getAllPlans(): Promise<PlanModel[]> {
-  return queryClient.fetchQuery({
+  return queryClient.query({
     queryKey: ['plans'],
     queryFn: () => apiRequest<PlanModel[]>('/plans'),
   });

@@ -8,6 +8,7 @@ type ShowError = (error: unknown) => void;
 export default class AuthStore {
   token = getToken() ?? '';
   user: UserModel = initialUser;
+
   isAuthChecked = !this.token;
   private requestId = 0;
 
@@ -19,15 +20,14 @@ export default class AuthStore {
     );
   }
 
-  setToken(token: string): void {
+  setToken(token: string, userData: UserModel): void {
     this.token = token;
-    this.user = initialUser;
     this.isAuthChecked = !token;
     setTokenInStorage(token || null);
     this.requestId += 1;
 
     if (token) {
-      this.authenticate();
+      this.authenticate(userData);
     }
   }
 
@@ -45,7 +45,7 @@ export default class AuthStore {
     setTokenInStorage(null);
   }
 
-  async authenticate(): Promise<void> {
+  async authenticate(userData?: UserModel): Promise<void> {
     if (!this.token) {
       this.logout();
       return;
@@ -53,10 +53,14 @@ export default class AuthStore {
 
     const token = this.token;
     const requestId = ++this.requestId;
-    setTokenInStorage(token);
 
     try {
-      const user = (await authMe(token)) ?? initialUser;
+      const user = userData ? userData : await authMe(token);
+      if (!user) {
+        this.logout();
+        return;
+      }
+
       if (requestId !== this.requestId) return;
 
       if (user.status === UserStatus.Blocked) {
