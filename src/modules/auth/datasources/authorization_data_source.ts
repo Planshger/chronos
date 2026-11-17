@@ -1,7 +1,7 @@
+import { HttpError, InvalidCredentialsError } from '../../../shared/errors/AppError';
 import UserModel, { Role } from '../../../shared/models/user_model';
 import { RegisterUserModel } from '../models/register_user_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
-import { HttpError, InvalidCredentialsError } from '../../../shared/errors/AppError';
 import { queryClient } from '../../../shared/queryClient';
 
 const TOKEN_KEY = 'token';

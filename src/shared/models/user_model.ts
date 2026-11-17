@@ -17,7 +17,7 @@ export default interface UserModel {
   status: UserStatus | '';
   password?: string;
   tgLinked: boolean;
-  role: Role | '';
+  role: Role;
 }
 
 export const initialUser: UserModel = {
@@ -27,6 +27,6 @@ export const initialUser: UserModel = {
   plan: '',
   status: '',
   password: '',
-  role: '',
+  role: Role.User,
   tgLinked: false,
 };

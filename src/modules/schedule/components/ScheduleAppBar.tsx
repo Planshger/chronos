@@ -1,18 +1,9 @@
+// prettier-ignore
+import { AppBar, Avatar, Box, Button, IconButton, Stack, Toolbar, Typography, useTheme } from '@mui/material';
 import { AccessTime, Chat, Person } from '@mui/icons-material';
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  Toolbar,
-  Typography,
-  useTheme,
-} from '@mui/material';
 import { appName } from '../../../shared/constants/name';
-import { useState } from 'react';
 import ScheduleMenuUser from './ScheduleMenuUser';
+import { useState } from 'react';
 
 interface MainAppBarProps {
   isAiOpen: boolean;

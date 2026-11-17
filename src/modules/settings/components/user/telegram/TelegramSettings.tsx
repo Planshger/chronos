@@ -1,11 +1,11 @@
+import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
+import { useApiError } from '../../../../../shared/errors/ApiError';
 import { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import PageWithQR from './PageWithQR';
-import PageWithChat from './PageWithChat';
 import { authMe, AuthStore } from '../../../../auth';
 import Loader from '../../../../../shared/ui/Loader';
-import { useApiError } from '../../../../../shared/errors/ApiError';
-import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
+import PageWithChat from './PageWithChat';
+import PageWithQR from './PageWithQR';
 
 interface TelegramSettingsProps {
   authStore: AuthStore;

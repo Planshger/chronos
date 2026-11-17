@@ -1,10 +1,10 @@
 import { Add, CalendarToday, DirectionsCar, Hotel, ListAlt, Restaurant } from '@mui/icons-material';
 import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { ScheduleModal } from '../stores/ScheduleStore';
+import ScheduleStore from '../stores/ScheduleStore';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
-import ScheduleStore from '../stores/ScheduleStore';
-import { ScheduleModal } from '../stores/ScheduleStore';
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface SchedulingProps {
   scheduleStore: ScheduleStore;

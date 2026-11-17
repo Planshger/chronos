@@ -1,18 +1,18 @@
 import { Box, Paper, Typography, Link, useTheme } from '@mui/material';
-import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
-import { AuthStore } from '../auth';
-import { updateUserData } from '../../shared/api/userApi';
-import Loader from '../../shared/ui/Loader';
-import PlanModel from './models/plan_model';
 import { getAllPlans } from './datasources/plans_data_source';
 import { withLoading } from '../../shared/utils/withLoading';
-import { useApiError } from '../../shared/errors/ApiError';
 import { UserStatus } from '../../shared/models/user_model';
+import { useApiError } from '../../shared/errors/ApiError';
+import { updateUserData } from '../../shared/api/userApi';
+import { useCallback, useEffect, useState } from 'react';
 import { Role } from '../../shared/models/user_model';
+import { ArrowBack } from '@mui/icons-material';
 import PlanCard from './components/PlanCard';
+import Loader from '../../shared/ui/Loader';
+import PlanModel from './models/plan_model';
+import { AuthStore } from '../auth';
 
 interface PlansPageProps {
   authStore: AuthStore;

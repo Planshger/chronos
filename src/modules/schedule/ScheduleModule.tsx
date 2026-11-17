@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import { Box, Container, Dialog, Stack, useMediaQuery, useTheme } from '@mui/material';
-import Calendar from './components/Calendar';
-import ScheduleAppBar from './components/ScheduleAppBar';
-import Scheduling from './components/Scheduling';
-import AiDialog from './components/AiDialog';
-import OptionsDialog from './components/OptionsDialog';
-import Loader from '../../shared/ui/Loader';
-import ScheduleStore from './stores/ScheduleStore';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
+import ScheduleAppBar from './components/ScheduleAppBar';
+import OptionsDialog from './components/OptionsDialog';
+import ScheduleStore from './stores/ScheduleStore';
+import Scheduling from './components/Scheduling';
+import Calendar from './components/Calendar';
+import AiDialog from './components/AiDialog';
+import Loader from '../../shared/ui/Loader';
+import { useState } from 'react';
 
 interface ScheduleProps {
   scheduleStore: ScheduleStore;

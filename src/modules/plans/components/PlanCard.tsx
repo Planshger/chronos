@@ -1,6 +1,6 @@
-import { Done } from '@mui/icons-material';
 import { Box, Button, Card, CardContent, Stack, Typography, useTheme } from '@mui/material';
 import PlanModel from '../models/plan_model';
+import { Done } from '@mui/icons-material';
 
 interface PlanCardProps {
   plan: PlanModel;

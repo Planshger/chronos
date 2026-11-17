@@ -1,9 +1,9 @@
+import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import TaskDialogContent from './task/TaskDialogContent';
+import { ScheduleModal } from '../stores/ScheduleStore';
+import ScheduleStore from '../stores/ScheduleStore';
 import { TaskItem } from '../models/task_model';
 import { format } from 'date-fns/format';
-import TaskDialogContent from './task/TaskDialogContent';
-import ScheduleStore from '../stores/ScheduleStore';
-import { ScheduleModal } from '../stores/ScheduleStore';
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
 
 interface OptionsDialogProps {
   scheduleStore: ScheduleStore;

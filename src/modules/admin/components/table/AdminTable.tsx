@@ -1,32 +1,28 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import { PaginationModel } from '../../models/user_pagination_model';
+// prettier-ignore
+import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination } from '../../datasources/admin_data_source';
 import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
-import AdminTableToolbar from './AdminTableToolbar';
-import AdminTableHead from './AdminTableHead';
-import AdminTablePagination from './AdminTablePagination';
-import Loader from '../../../../shared/ui/Loader';
-import { Edit } from '@mui/icons-material';
 import { IconButton, Stack, Switch, TextField, useTheme } from '@mui/material';
-import AdminTableEditMenu from './AdminTableEditMenu';
 import UserModel, { initialUser } from '../../../../shared/models/user_model';
-import AutocompleteList from '../AutocompleteList';
-import {
-  deleteUserData,
-  getFilterData,
-  getSortBy,
-  getUsersWithPagination,
-} from '../../datasources/admin_data_source';
-import { updateUserData } from '../../../../shared/api/userApi';
+import { PaginationModel } from '../../models/user_pagination_model';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
+import { updateUserData } from '../../../../shared/api/userApi';
+import TableContainer from '@mui/material/TableContainer';
+import AdminTablePagination from './AdminTablePagination';
+import AdminTableEditMenu from './AdminTableEditMenu';
+import AdminTableToolbar from './AdminTableToolbar';
+import AutocompleteList from '../AutocompleteList';
+import Loader from '../../../../shared/ui/Loader';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Checkbox from '@mui/material/Checkbox';
+import AdminTableHead from './AdminTableHead';
+import { Edit } from '@mui/icons-material';
+import Table from '@mui/material/Table';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
+import * as React from 'react';
 
 const initialUsersProps: PaginationModel = {
   items: [],

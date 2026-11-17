@@ -1,5 +1,5 @@
-import { ComponentType } from 'react';
 import { inject, observer } from 'mobx-react';
+import { ComponentType } from 'react';
 
 export default function injectMobxStore<
   StoreKey extends string,

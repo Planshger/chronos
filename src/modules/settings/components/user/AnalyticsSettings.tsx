@@ -1,5 +1,5 @@
-import { BarChart } from '@mui/icons-material';
 import { Grid, Paper, Stack, Typography } from '@mui/material';
+import { BarChart } from '@mui/icons-material';
 
 export default function AnalyticsSettings() {
   return (

@@ -1,22 +1,13 @@
-import {
-  Box,
-  Container,
-  Typography,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  Stack,
-  useTheme,
-} from '@mui/material';
+// prettier-ignore
+import { Box, Container, Typography, Button, Grid, Card, CardContent, Stack, useTheme } from '@mui/material';
 import { CalendarToday, Chat, LocationOn, CheckCircle, FlashOn } from '@mui/icons-material';
-import { appName } from '../../shared/constants/name';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
 import LandingAppBar from './components/LandingAppBar';
+import { appName } from '../../shared/constants/name';
+import { Role } from '../../shared/models/user_model';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { AuthStore } from '../auth';
-import { Role } from '../../shared/models/user_model';
 
 const features = [
   {
@@ -51,17 +42,16 @@ function LandingPage({ authStore }: LandingPageProps) {
 
   const onClick = useCallback(() => {
     if (token) {
-      if (user?.role === Role.Admin) {
+      if (user.role === Role.Admin) {
         navigator('/admin');
       } else {
         navigator('/schedule');
       }
+      if (user?.plan === '' && user.role === Role.User) {
+        navigator('/plans');
+      }
     } else {
       navigator('/register');
-    }
-
-    if (user?.plan === '' && user?.role === Role.User) {
-      navigator('/plans');
     }
   }, [navigator, token, user?.plan, user?.role]);
 

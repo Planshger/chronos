@@ -1,22 +1,14 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import DropdownList from '../DropdownList';
-import { memo, useCallback, useEffect, useState } from 'react';
-import { Close } from '@mui/icons-material';
-import { headCells } from './AdminTableHead';
-import { getFilterData } from '../../datasources/admin_data_source';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import { UserStatus } from '../../../../shared/models/user_model';
-import { PaginationModel } from '../../models/user_pagination_model';
+// prettier-ignore
+import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, Typography, useTheme } from '@mui/material';
 import { ADMIN_PLAN_OPTIONS } from '../../constants/adminTableOptions';
+import { PaginationModel } from '../../models/user_pagination_model';
+import { getFilterData } from '../../datasources/admin_data_source';
+import { UserStatus } from '../../../../shared/models/user_model';
+import { useApiError } from '../../../../shared/errors/ApiError';
+import { memo, useCallback, useEffect, useState } from 'react';
+import { headCells } from './AdminTableHead';
+import { Close } from '@mui/icons-material';
+import DropdownList from '../DropdownList';
 
 export interface FilterValuesProps {
   id: string;

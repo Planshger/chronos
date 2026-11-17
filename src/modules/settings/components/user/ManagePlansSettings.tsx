@@ -1,13 +1,13 @@
-import { AutoAwesome } from '@mui/icons-material';
 import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
-import { AuthStore } from '../../../auth';
-import { useNavigate } from 'react-router-dom';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { withLoading } from '../../../../shared/utils/withLoading';
+import { UserStatus } from '../../../../shared/models/user_model';
+import { useApiError } from '../../../../shared/errors/ApiError';
 import { updateUserData } from '../../../../shared/api/userApi';
 import SettingsStore from '../../stores/SettingsStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { UserStatus } from '../../../../shared/models/user_model';
+import { AutoAwesome } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { AuthStore } from '../../../auth';
 
 interface ManagePlansSettingsProps {
   authStore: AuthStore;

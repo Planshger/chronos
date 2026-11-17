@@ -1,27 +1,12 @@
-import {
-  eachDayOfInterval,
-  endOfMonth,
-  endOfWeek,
-  format,
-  isSameMonth,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns';
-import {
-  Box,
-  Chip,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+// prettier-ignore
+import { eachDayOfInterval, endOfMonth, endOfWeek, format, isSameMonth, startOfMonth, startOfWeek } from 'date-fns';
+// prettier-ignore
+import { Box, Chip, IconButton, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
-import { ru } from 'date-fns/locale';
-import ScheduleStore from '../stores/ScheduleStore';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import ScheduleStore from '../stores/ScheduleStore';
 import { TaskType } from '../models/task_model';
+import { ru } from 'date-fns/locale';
 
 interface CalendarProps {
   scheduleStore: ScheduleStore;

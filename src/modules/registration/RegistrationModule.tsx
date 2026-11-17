@@ -1,18 +1,14 @@
-import { useCallback, useState } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+// prettier-ignore
+import { Person as UserIcon, Shield as ShieldIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
 import { Box, Typography, TextField, Button, Link, Paper, useTheme } from '@mui/material';
-import {
-  Person as UserIcon,
-  Shield as ShieldIcon,
-  ArrowBack as ArrowBackIcon,
-  PersonAddAlt1,
-} from '@mui/icons-material';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
-import { auth, AuthStore, register } from '../auth';
 import UserModel, { initialUser, Role, UserStatus } from '../../shared/models/user_model';
-import Loader from '../../shared/ui/Loader';
-import { withLoading } from '../../shared/utils/withLoading';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import injectMobxStore from '../../shared/utils/injectMobxStore';
 import ApiErrorStore from '../../shared/errors/ApiErrorStore';
+import { withLoading } from '../../shared/utils/withLoading';
+import { auth, AuthStore, register } from '../auth';
+import { useCallback, useState } from 'react';
+import Loader from '../../shared/ui/Loader';
 
 interface RegistrationModuleProps {
   authStore: AuthStore;

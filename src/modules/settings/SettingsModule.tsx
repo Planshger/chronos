@@ -1,22 +1,22 @@
 import { Box, Container, Paper, Stack, Typography, useTheme } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { SettingsModel, SettingId } from './models/settings_model';
-import { SettingIcons } from './constants/SettingIcons';
-import { TouchApp } from '@mui/icons-material';
-import React from 'react';
-import { AdminSettingsData, SettingsData } from './data/SettingsData';
-import Loader from '../../shared/ui/Loader';
 import AdminManagePlansSettings from './components/admin/AdminManagePlansSettings';
-import ProfileSettings from './components/user/ProfileSettings';
-import ManagePlansSettings from './components/user/ManagePlansSettings';
-import AnalyticsSettings from './components/user/AnalyticsSettings';
 import TelegramSettings from './components/user/telegram/TelegramSettings';
-import ListSettings from './components/ListSettings';
-import MapSettings from './components/user/MapSettings';
-import { AuthStore } from '../auth';
+import ManagePlansSettings from './components/user/ManagePlansSettings';
+import { AdminSettingsData, SettingsData } from './data/SettingsData';
+import AnalyticsSettings from './components/user/AnalyticsSettings';
+import { SettingsModel, SettingId } from './models/settings_model';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
-import SettingsStore from './stores/SettingsStore';
+import ProfileSettings from './components/user/ProfileSettings';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SettingIcons } from './constants/SettingIcons';
+import MapSettings from './components/user/MapSettings';
 import { Role } from '../../shared/models/user_model';
+import ListSettings from './components/ListSettings';
+import SettingsStore from './stores/SettingsStore';
+import { TouchApp } from '@mui/icons-material';
+import Loader from '../../shared/ui/Loader';
+import { AuthStore } from '../auth';
+import React from 'react';
 
 const settingsComponents: Partial<Record<SettingId, React.ComponentType>> = {
   [SettingId.Profile]: ProfileSettings,

@@ -1,20 +1,11 @@
-import { Logout, TouchApp } from '@mui/icons-material';
-import {
-  Box,
-  Chip,
-  Divider,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { SettingIcons, SettingsData } from '../../settings';
-import { SettingId } from '../../settings/models/settings_model';
-import { AuthStore } from '../../auth';
+// prettier-ignore
+import { Box, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useTheme } from '@mui/material';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { SettingId } from '../../settings/models/settings_model';
+import { SettingIcons, SettingsData } from '../../settings';
+import { Logout, TouchApp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { AuthStore } from '../../auth';
 
 interface ScheduleMenuUserProps {
   openMenu: null | HTMLElement;

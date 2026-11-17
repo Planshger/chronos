@@ -1,6 +1,6 @@
-import { memo } from 'react';
-import { TablePagination, useTheme } from '@mui/material';
 import { PaginationModel } from '../../models/user_pagination_model';
+import { TablePagination, useTheme } from '@mui/material';
+import { memo } from 'react';
 
 interface AdminTablePaginationProps {
   loadDataWithPagination: (page: number, limit: number) => void;

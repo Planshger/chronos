@@ -1,5 +1,5 @@
-import { apiRequest } from '../../../shared/api/apiRequest';
 import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
+import { apiRequest } from '../../../shared/api/apiRequest';
 
 export function emptyDays(tasks: Task): Task {
   return Object.fromEntries(

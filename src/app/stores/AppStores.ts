@@ -1,9 +1,9 @@
-import { reaction } from 'mobx';
-import { ScheduleStore } from '../../modules/schedule';
-import { AuthStore } from '../../modules/auth';
-import { SettingsStore } from '../../modules/settings';
 import ApiErrorStore from '../../shared/errors/ApiErrorStore';
+import { ScheduleStore } from '../../modules/schedule';
+import { SettingsStore } from '../../modules/settings';
 import { Role } from '../../shared/models/user_model';
+import { AuthStore } from '../../modules/auth';
+import { reaction } from 'mobx';
 
 export interface AppStores {
   authStore: AuthStore;

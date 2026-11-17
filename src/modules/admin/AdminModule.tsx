@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material';
-import AdminAppBar from './components/AdminAppBar';
 import AdminTable from './components/table/AdminTable';
+import AdminAppBar from './components/AdminAppBar';
 
 export default function Admin() {
   const theme = useTheme();

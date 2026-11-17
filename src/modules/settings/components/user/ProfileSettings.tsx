@@ -1,12 +1,12 @@
-import { Button, Stack, TextField } from '@mui/material';
-import { ChangeEvent, useCallback, useState } from 'react';
 import UserModel, { initialUser } from '../../../../shared/models/user_model';
-import { AuthStore } from '../../../auth';
-import { SettingsStore } from '../../stores/SettingsStore';
-import { updateUserData } from '../../../../shared/api/userApi';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { updateUserData } from '../../../../shared/api/userApi';
+import { ChangeEvent, useCallback, useState } from 'react';
+import { SettingsStore } from '../../stores/SettingsStore';
+import { Button, Stack, TextField } from '@mui/material';
+import { AuthStore } from '../../../auth';
 
 interface ProfileSettingsProps {
   authStore: AuthStore;

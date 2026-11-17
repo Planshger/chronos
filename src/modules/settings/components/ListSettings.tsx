@@ -1,16 +1,10 @@
-import {
-  Collapse,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  useTheme,
-} from '@mui/material';
+// prettier-ignore
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
 import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingsModel, SettingId } from '../models/settings_model';
-import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingIcons } from '../constants/SettingIcons';
+import { useEffect, useState } from 'react';
 
 interface ListSettingsProps {
   onSelect: (id: SettingId) => void;

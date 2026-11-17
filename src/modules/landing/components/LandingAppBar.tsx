@@ -1,13 +1,13 @@
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
-import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 import { Role } from '../../../shared/models/user_model';
+import Typography from '@mui/material/Typography';
+import { useNavigate } from 'react-router-dom';
+import Toolbar from '@mui/material/Toolbar';
+import AppBar from '@mui/material/AppBar';
+import Button from '@mui/material/Button';
+import { AuthStore } from '../../auth';
+import Box from '@mui/material/Box';
+import { useCallback } from 'react';
 
 interface LandingAppBarProps {
   authStore: AuthStore;

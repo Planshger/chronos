@@ -1,9 +1,5 @@
-import {
-  EmptyResponseError,
-  HttpError,
-  NetworkError,
-  ResponseParseError,
-} from '../errors/AppError';
+// prettier-ignore
+import { EmptyResponseError, HttpError, NetworkError, ResponseParseError } from '../errors/AppError';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 

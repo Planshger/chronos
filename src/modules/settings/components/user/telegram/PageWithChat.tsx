@@ -1,22 +1,13 @@
-import {
-  Box,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import TelegramIcon from '../TelegramIcon';
-import SendIcon from '@mui/icons-material/Send';
-import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
-import { MessageModel } from '../../../models/message_model';
+// prettier-ignore
+import { Box, CircularProgress, Divider, IconButton, Paper, Stack, TextField, Typography, useTheme } from '@mui/material';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
-import { useApiError } from '../../../../../shared/errors/ApiError';
-import { AuthStore } from '../../../../auth';
+import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
 import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
+import { useApiError } from '../../../../../shared/errors/ApiError';
+import { MessageModel } from '../../../models/message_model';
+import SendIcon from '@mui/icons-material/Send';
+import { AuthStore } from '../../../../auth';
+import TelegramIcon from '../TelegramIcon';
 
 const POLL_INTERVAL = 3000;
 const MAX_MESSAGES = 10;

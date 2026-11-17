@@ -1,6 +1,6 @@
-import PlanModel from '../models/plan_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
 import { queryClient } from '../../../shared/queryClient';
+import PlanModel from '../models/plan_model';
 
 export function getAllPlans(): Promise<PlanModel[]> {
   return queryClient.query({

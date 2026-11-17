@@ -1,7 +1,7 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { authMe, getToken, setTokenInStorage } from '../datasources/authorization_data_source';
 import UserModel, { initialUser, UserStatus } from '../../../shared/models/user_model';
 import { BlockedUserError } from '../../../shared/errors/AppError';
-import { authMe, getToken, setTokenInStorage } from '../datasources/authorization_data_source';
+import { makeAutoObservable, runInAction } from 'mobx';
 
 type ShowError = (error: unknown) => void;
 

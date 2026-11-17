@@ -1,23 +1,14 @@
-import { Close } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  Stack,
-  Switch,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+// prettier-ignore
+import { Box, Button, IconButton, Modal, Stack, Switch, TextField, Typography, useTheme } from '@mui/material';
 import { deletePlans, getAllPlans, initialPlan, PlanModel } from '../../../plans';
-import NumberField from '../../../../shared/ui/NumberField';
-import Loader from '../../../../shared/ui/Loader';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import NumberField from '../../../../shared/ui/NumberField';
+import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
+import Loader from '../../../../shared/ui/Loader';
+import { Close } from '@mui/icons-material';
 
 interface AdminEditManagePlansSettingsProps {
   settingsStore: SettingsStore;

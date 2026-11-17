@@ -1,8 +1,8 @@
-import { Button, Stack, TextField, useTheme } from '@mui/material';
-import { useState } from 'react';
 import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
-import ScheduleStore from '../../stores/ScheduleStore';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { Button, Stack, TextField, useTheme } from '@mui/material';
+import ScheduleStore from '../../stores/ScheduleStore';
+import { useState } from 'react';
 
 interface TaskCreateDialogContentProps {
   scheduleStore: ScheduleStore;

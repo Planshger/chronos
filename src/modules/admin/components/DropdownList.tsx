@@ -1,12 +1,5 @@
-import {
-  Box,
-  CSSObject,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+// prettier-ignore
+import { Box, CSSObject, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { memo } from 'react';
 
 interface DropdownListProps {

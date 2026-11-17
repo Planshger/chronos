@@ -1,6 +1,6 @@
 import { Autocomplete, Stack, TextField, useTheme } from '@mui/material';
-import { memo } from 'react';
 import { Search } from '@mui/icons-material';
+import { memo } from 'react';
 
 interface AutocompleteListProps {
   id: string;

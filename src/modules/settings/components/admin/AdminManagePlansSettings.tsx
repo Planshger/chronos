@@ -1,19 +1,13 @@
-import { Add } from '@mui/icons-material';
-import { Box, Button, useTheme } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  addPlan,
-  getAllPlans,
-  initialPlan,
-  PlanCard,
-  PlanModel,
-  updatePlanData,
-} from '../../../plans';
+// prettier-ignore
+import { addPlan, getAllPlans, initialPlan, PlanCard, PlanModel, updatePlanData } from '../../../plans';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
+import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
+import { Box, Button, useTheme } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 interface AdminManagePlansSettingsProps {
   settingsStore: SettingsStore;

@@ -1,21 +1,12 @@
-import { Close } from '@mui/icons-material';
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { memo, useCallback } from 'react';
-
-import React from 'react';
-import DropdownList from '../DropdownList';
-import UserModel, { UserStatus } from '../../../../shared/models/user_model';
+// prettier-ignore
+import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, TextField, Typography, useTheme } from '@mui/material';
 import { ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL } from '../../constants/adminTableOptions';
+import UserModel, { UserStatus } from '../../../../shared/models/user_model';
+
+import { Close } from '@mui/icons-material';
+import DropdownList from '../DropdownList';
+import { memo, useCallback } from 'react';
+import React from 'react';
 
 interface AdminTableEditMenuProps {
   onClick: (user: UserModel) => void;

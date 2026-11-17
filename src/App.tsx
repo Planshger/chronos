@@ -1,23 +1,23 @@
-import { ThemeProvider } from '@mui/material/styles';
-import LandingPage from './pages/landing/LandingPage';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import RegistrationPage from './pages/registration/RegistrationPage';
-import CssBaseline from '@mui/material/CssBaseline';
-import PlansPage from './pages/plans/PlansPage';
-import Schedule from './pages/schedule/Schedule';
-import Settings from './pages/settings/Settings';
-import theme from './shared/ui/theme/darkTheme';
-import Admin from './pages/admin/Admin';
-import PrivateRoute from './app/routes/PrivateRoute';
-import ProfileSettings from './pages/settings/ProfileSettings';
 import ManagePlansSettings from './pages/settings/ManagePlansSettings';
+import RegistrationPage from './pages/registration/RegistrationPage';
+import { SettingId } from './modules/settings/models/settings_model';
 import AnalyticsSettings from './pages/settings/AnalyticsSettings';
 import TelegramSettings from './pages/settings/TelegramSettings';
-import MapSettings from './pages/settings/MapSettings';
-import NotFoundPage from './pages/notFound/NotFoundPage';
+import ProfileSettings from './pages/settings/ProfileSettings';
 import ErrorBoundary from './shared/errors/ErrorBoundary';
+import NotFoundPage from './pages/notFound/NotFoundPage';
+import MapSettings from './pages/settings/MapSettings';
+import LandingPage from './pages/landing/LandingPage';
+import { ThemeProvider } from '@mui/material/styles';
+import PrivateRoute from './app/routes/PrivateRoute';
+import CssBaseline from '@mui/material/CssBaseline';
 import { Role } from './shared/models/user_model';
-import { SettingId } from './modules/settings/models/settings_model';
+import Schedule from './pages/schedule/Schedule';
+import Settings from './pages/settings/Settings';
+import PlansPage from './pages/plans/PlansPage';
+import theme from './shared/ui/theme/darkTheme';
+import Admin from './pages/admin/Admin';
 
 function App() {
   return (

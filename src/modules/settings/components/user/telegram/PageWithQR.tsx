@@ -1,8 +1,8 @@
-import { Box, Button, Paper, Typography } from '@mui/material';
-import { QRCodeSVG } from 'qrcode.react';
-import TelegramIcon from '../TelegramIcon';
-import { AuthStore } from '../../../../auth';
 import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
+import { Box, Button, Paper, Typography } from '@mui/material';
+import { AuthStore } from '../../../../auth';
+import TelegramIcon from '../TelegramIcon';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface PageWithQRProps {
   authStore: AuthStore;

@@ -1,27 +1,14 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-  useTheme,
-} from '@mui/material';
-import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
-import TaskCreateDialogContent from './TaskCreateDialogContent';
+// prettier-ignore
+import { Box, Button, Checkbox, Chip, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
-import { useEffect, useState } from 'react';
-import ScheduleStore from '../../stores/ScheduleStore';
-import { ScheduleModal } from '../../stores/ScheduleStore';
+import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import TaskCreateDialogContent from './TaskCreateDialogContent';
 import TaskEditDialogContent from './TaskEditDialogContent';
+import { ScheduleModal } from '../../stores/ScheduleStore';
+import ScheduleStore from '../../stores/ScheduleStore';
 import Loader from '../../../../shared/ui/Loader';
+import { useEffect, useState } from 'react';
 
 interface TaskDialogContentProps {
   dayTasks: TaskItem[];

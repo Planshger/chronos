@@ -1,9 +1,9 @@
 import { AppBar, Box, Button, Stack, Toolbar, Typography, useTheme } from '@mui/material';
 import { CreditCard, GppGood, Logout, Settings } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { AuthStore } from '../../auth';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 import { SettingId } from '../../settings/models/settings_model';
+import { useNavigate } from 'react-router-dom';
+import { AuthStore } from '../../auth';
 
 interface AdminAppBarProps {
   authStore: AuthStore;

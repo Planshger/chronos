@@ -1,12 +1,8 @@
+// prettier-ignore
+import { addTask, editTask, getUserTasksByUserId, updateTasksData } from '../datasources/task_data_source';
+import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
 import { addMonths, format, subMonths } from 'date-fns';
 import { makeAutoObservable, runInAction } from 'mobx';
-import {
-  addTask,
-  editTask,
-  getUserTasksByUserId,
-  updateTasksData,
-} from '../datasources/task_data_source';
-import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
 
 export enum ScheduleModal {
   TaskCreate = 'task_create',
