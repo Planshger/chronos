@@ -101,8 +101,8 @@ function AdminEditManagePlansSettings({
   const handleDeletePlan = useCallback(
     async (id: number) => {
       try {
-        await withLoading(() => deletePlans(id), settingsStore.setLoading);
         await withLoading(async () => {
+          await deletePlans(id);
           const plans = await getAllPlans();
           setPlans(plans);
         }, settingsStore.setLoading);

@@ -15,16 +15,18 @@ interface ApiErrorSnackbarProps {
 
 function ApiErrorSnackbar({ apiErrorStore }: ApiErrorSnackbarProps) {
   const clearError = () => apiErrorStore.clearError();
+  const notification = apiErrorStore.currentNotification;
 
   return (
     <Snackbar
-      open={apiErrorStore.message !== null}
+      key={notification?.id}
+      open={notification !== null}
       autoHideDuration={6000}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       onClose={clearError}
     >
       <Alert severity="error" variant="filled" onClose={clearError}>
-        {apiErrorStore.message}
+        {notification?.message}
       </Alert>
     </Snackbar>
   );

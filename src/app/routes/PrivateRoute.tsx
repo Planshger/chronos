@@ -2,6 +2,7 @@ import { Role, UserStatus } from '../../shared/models/user_model';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { AuthStore } from '../../modules/auth';
+import Loader from '../../shared/ui/Loader';
 
 interface PrivateRouteProps {
   roles?: Role[];
@@ -13,7 +14,7 @@ function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
   const { token, user, isAuthChecked } = authStore;
 
   if (!isAuthChecked) {
-    return null;
+    return <Loader size={80} />;
   }
 
   if (token === '') {
