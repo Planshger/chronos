@@ -73,6 +73,12 @@ export class InvalidCredentialsError extends AppError {
   }
 }
 
+export class InvalidUserRoleError extends AppError {
+  constructor() {
+    super('Invalid user role', 'INVALID_CREDENTIALS', 'Недостаточно прав для входа в систему');
+  }
+}
+
 export class BlockedUserError extends AppError {
   constructor() {
     super('User account is blocked', 'USER_STATUS_ERROR', 'Пользователь заблокирован');

@@ -1,12 +1,13 @@
-import { authMe, getToken, setTokenInStorage } from '../datasources/authorization_data_source';
 import UserModel, { initialUser, UserStatus } from '../../../shared/models/user_model';
+import { getToken, setTokenInStorage } from '../../../shared/api/authToken';
 import { BlockedUserError } from '../../../shared/errors/AppError';
+import { authMe } from '../datasources/authorization_data_source';
 import { makeAutoObservable, runInAction } from 'mobx';
 
 type ShowError = (error: unknown) => void;
 
 export default class AuthStore {
-  token = getToken() ?? '';
+  token = getToken();
   user: UserModel = initialUser;
 
   isAuthChecked = !this.token;

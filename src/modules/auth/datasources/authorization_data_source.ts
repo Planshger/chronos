@@ -1,22 +1,9 @@
-import { HttpError, InvalidCredentialsError } from '../../../shared/errors/AppError';
+// prettier-ignore
+import { HttpError, InvalidCredentialsError, InvalidUserRoleError } from '../../../shared/errors/AppError';
 import UserModel, { Role } from '../../../shared/models/user_model';
 import { RegisterUserModel } from '../models/register_user_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
 import { queryClient } from '../../../shared/queryClient';
-
-const TOKEN_KEY = 'token';
-
-export function getToken(): string | null {
-  return localStorage.getItem(TOKEN_KEY);
-}
-
-export function setTokenInStorage(token: string | null) {
-  if (token) {
-    localStorage.setItem(TOKEN_KEY, token);
-  } else {
-    localStorage.removeItem(TOKEN_KEY);
-  }
-}
 
 export async function register(user: UserModel, role: string = 'user'): Promise<RegisterUserModel> {
   return apiRequest<RegisterUserModel>('/register', {
@@ -43,7 +30,7 @@ export async function auth(user: UserModel, role: Role): Promise<RegisterUserMod
   }
 
   if (data.data.role !== role) {
-    throw new InvalidCredentialsError();
+    throw new InvalidUserRoleError();
   }
 
   return data;

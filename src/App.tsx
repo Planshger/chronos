@@ -3,6 +3,7 @@ import ManagePlansSettings from './pages/settings/ManagePlansSettings';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import { SettingId } from './modules/settings/models/settings_model';
 import AnalyticsSettings from './pages/settings/AnalyticsSettings';
+import AuthSessionHandler from './app/routes/AuthSessionHandler';
 import TelegramSettings from './pages/settings/TelegramSettings';
 import ProfileSettings from './pages/settings/ProfileSettings';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
@@ -25,6 +26,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
+        <AuthSessionHandler />
         <ErrorBoundary>
           <Routes>
             <Route path="/" element={<LandingPage />} />

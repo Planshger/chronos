@@ -4,8 +4,8 @@ import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
 import { updateUserData } from '../../../../shared/api/userApi';
 import { ChangeEvent, useCallback, useState } from 'react';
-import { SettingsStore } from '../../stores/SettingsStore';
 import { Button, Stack, TextField } from '@mui/material';
+import SettingsStore from '../../stores/SettingsStore';
 import { AuthStore } from '../../../auth';
 
 interface ProfileSettingsProps {
