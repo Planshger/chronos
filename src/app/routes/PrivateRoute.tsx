@@ -17,6 +17,9 @@ function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
   }
 
   if (token === '') {
+    if (roles?.length === 1 && roles.includes(Role.Admin)) {
+      return <Navigate to="/admin/login" state={{ from: location }} replace />;
+    }
     return <Navigate to="/register" state={{ from: location }} replace />;
   }
 

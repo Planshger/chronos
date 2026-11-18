@@ -1,5 +1,5 @@
 // prettier-ignore
-import { Person as UserIcon, Shield as ShieldIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
+import { Person as UserIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
 import { Box, Typography, TextField, Button, Link, Paper, useTheme } from '@mui/material';
 import UserModel, { initialUser, Role, UserStatus } from '../../shared/models/user_model';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
@@ -17,7 +17,6 @@ interface RegistrationModuleProps {
 
 function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProps) {
   const theme = useTheme();
-  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState<UserModel>(initialUser);
@@ -31,11 +30,7 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
   let pageDescription = 'Введите данные для создания аккаунта и выбора тарифа.';
   let submitLabel = 'Продолжить';
 
-  if (isAdminLogin) {
-    pageTitle = 'Доступ Администратора';
-    pageDescription = 'Введите данные для входа в панель управления.';
-    submitLabel = 'Войти в админ-панель';
-  } else if (isLogin) {
+  if (isLogin) {
     pageTitle = 'Вход в аккаунт';
     pageDescription = 'Введите данные для входа в аккаунта.';
     submitLabel = 'Войти';
@@ -44,15 +39,6 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      if (isAdminLogin) {
-        await withLoading(async () => {
-          const res = await auth(input, Role.Admin);
-          authStore.setToken(res.token, res.data);
-          navigate('/admin', { replace: true });
-        }, setLoading);
-        return;
-      }
-
       if (isLogin) {
         await withLoading(async () => {
           const res = await auth(input, Role.User);
@@ -128,7 +114,7 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
               required
             />
 
-            {!isAdminLogin && !isLogin && (
+            {!isLogin && (
               <TextField
                 name="name"
                 label="Имя пользователя"
@@ -180,33 +166,9 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
               textAlign: 'center',
             }}
           >
-            {!isAdminLogin && (
-              <Button
-                variant="text"
-                onClick={() => setIsLogin(!isLogin)}
-                sx={{
-                  color: theme.palette.text.secondary,
-                  fontWeight: 500,
-                  textTransform: 'none',
-                  '&:hover': { color: theme.palette.text.primary },
-                }}
-                startIcon={
-                  !isLogin ? (
-                    <UserIcon sx={{ width: 18, height: 18 }} />
-                  ) : (
-                    <PersonAddAlt1 sx={{ width: 18, height: 18 }} />
-                  )
-                }
-              >
-                {isLogin ? 'Создать аккаунт' : 'Войти как пользователь'}
-              </Button>
-            )}
             <Button
               variant="text"
-              onClick={() => {
-                setIsAdminLogin(!isAdminLogin);
-                setIsLogin(true);
-              }}
+              onClick={() => setIsLogin(!isLogin)}
               sx={{
                 color: theme.palette.text.secondary,
                 fontWeight: 500,
@@ -214,14 +176,14 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
                 '&:hover': { color: theme.palette.text.primary },
               }}
               startIcon={
-                isAdminLogin ? (
+                !isLogin ? (
                   <UserIcon sx={{ width: 18, height: 18 }} />
                 ) : (
-                  <ShieldIcon sx={{ width: 18, height: 18 }} />
+                  <PersonAddAlt1 sx={{ width: 18, height: 18 }} />
                 )
               }
             >
-              {isAdminLogin ? 'Войти как пользователь' : 'Вход для Администратора'}
+              {isLogin ? 'Создать аккаунт' : 'Войти как пользователь'}
             </Button>
           </Box>
         </Paper>

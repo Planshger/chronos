@@ -5,6 +5,7 @@ import { SettingId } from './modules/settings/models/settings_model';
 import AnalyticsSettings from './pages/settings/AnalyticsSettings';
 import TelegramSettings from './pages/settings/TelegramSettings';
 import ProfileSettings from './pages/settings/ProfileSettings';
+import AdminLoginPage from './pages/admin/AdminLoginPage';
 import ErrorBoundary from './shared/errors/ErrorBoundary';
 import NotFoundPage from './pages/notFound/NotFoundPage';
 import MapSettings from './pages/settings/MapSettings';
@@ -30,6 +31,7 @@ function App() {
 
             <Route path="/register" element={<RegistrationPage />} />
             <Route path="/plans" element={<PlansPage />} />
+            <Route path="/admin/login" element={<AdminLoginPage />} />
 
             <Route element={<PrivateRoute roles={[Role.User]} />}>
               <Route path="/schedule" element={<Schedule />} />

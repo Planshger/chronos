@@ -42,7 +42,7 @@ export async function auth(user: UserModel, role: Role): Promise<RegisterUserMod
     throw error;
   }
 
-  if ((data.data.role ?? '') !== role) {
+  if (data.data.role !== role) {
     throw new InvalidCredentialsError();
   }
 
