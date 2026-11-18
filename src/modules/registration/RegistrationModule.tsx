@@ -42,7 +42,7 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
       if (isLogin) {
         await withLoading(async () => {
           const res = await auth(input, Role.User);
-          authStore.setToken(res.token, res.data);
+          authStore.authenticate(res.token, res.data);
           navigate('/schedule', { replace: true });
         }, setLoading);
         return;
@@ -50,7 +50,7 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
 
       await withLoading(async () => {
         const res = await register({ ...input, status: UserStatus.PendingPayment });
-        authStore.setToken(res.token, res.data);
+        authStore.authenticate(res.token, res.data);
         navigate('/plans', { replace: true });
       }, setLoading);
     } catch (error: unknown) {

@@ -31,7 +31,7 @@ function AdminLoginModule({ authStore, apiErrorStore }: AdminLoginModuleProps) {
     try {
       await withLoading(async () => {
         const res = await auth(input, Role.Admin);
-        authStore.setToken(res.token, res.data);
+        authStore.authenticate(res.token, res.data);
         navigate('/admin', { replace: true });
       }, setLoading);
     } catch (error: unknown) {

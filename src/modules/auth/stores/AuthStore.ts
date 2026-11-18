@@ -21,17 +21,6 @@ export default class AuthStore {
     );
   }
 
-  setToken(token: string, userData: UserModel): void {
-    this.token = token;
-    this.isAuthChecked = !token;
-    setTokenInStorage(token || null);
-    this.requestId += 1;
-
-    if (token) {
-      this.authenticate(userData);
-    }
-  }
-
   setUser(user: UserModel): void {
     if (!this.token || !this.user.id || user.id !== this.user.id) return;
 
@@ -46,23 +35,26 @@ export default class AuthStore {
     setTokenInStorage(null);
   }
 
-  async authenticate(userData?: UserModel): Promise<void> {
-    if (!this.token) {
+  async authenticate(token = this.token, userData?: UserModel): Promise<void> {
+    if (!token) {
       this.logout();
       return;
     }
 
-    const token = this.token;
     const requestId = ++this.requestId;
+    this.token = '';
+    this.user = initialUser;
+    this.isAuthChecked = false;
+    setTokenInStorage(null);
 
     try {
       const user = userData ? userData : await authMe(token);
+      if (requestId !== this.requestId) return;
+
       if (!user) {
         this.logout();
         return;
       }
-
-      if (requestId !== this.requestId) return;
 
       if (user.status === UserStatus.Blocked) {
         this.showError(new BlockedUserError());
@@ -70,7 +62,9 @@ export default class AuthStore {
         return;
       }
 
+      setTokenInStorage(token);
       runInAction(() => {
+        this.token = token;
         this.user = user;
       });
     } catch (error) {
