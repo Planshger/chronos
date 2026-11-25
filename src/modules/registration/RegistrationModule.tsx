@@ -1,14 +1,16 @@
-// prettier-ignore
 import { Person as UserIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
-import { Box, Typography, TextField, Button, Link, Paper, useTheme } from '@mui/material';
+import { Box, Typography, TextField, useTheme } from '@mui/material';
 import UserModel, { initialUser, Role, UserStatus } from '../../shared/models/user_model';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import ApiErrorStore from '../../shared/errors/ApiErrorStore';
 import { withLoading } from '../../shared/utils/withLoading';
 import { auth, AuthStore, register } from '../auth';
 import { useCallback, useState } from 'react';
 import Loader from '../../shared/ui/Loader';
+import { AuthFormCard, AuthFormContent, AuthSubmitButton } from '../../shared/ui/style/AuthForm.style';
+import { PageBackLink } from '../../shared/ui/style/PageBackLink.style';
+import { RegistrationToggleButton, RegistrationToggleSection } from './RegistrationModule.style';
 
 interface RegistrationModuleProps {
   authStore: AuthStore;
@@ -61,36 +63,14 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 3 }}>
-        <Link
-          component={RouterLink}
-          to="/"
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 1,
-            fontSize: '15px',
-            fontWeight: 500,
-            color: theme.palette.text.secondary,
-            textDecoration: 'none',
-            '&:hover': { color: theme.palette.text.primary },
-          }}
-        >
+        <PageBackLink to="/">
           <ArrowBackIcon sx={{ width: 20, height: 20 }} />
           На главную
-        </Link>
+        </PageBackLink>
       </Box>
 
-      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Paper
-          elevation={3}
-          sx={{
-            maxWidth: 450,
-            width: 'calc(100% - 32px)',
-            p: 4,
-            borderRadius: 3,
-            border: `1px solid ${theme.custom.border.light}`,
-          }}
-        >
+      <AuthFormContent>
+        <AuthFormCard elevation={3}>
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <Typography variant="h5" color={theme.palette.text.primary}>
               {pageTitle}
@@ -142,52 +122,22 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
               required
             />
 
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                py: 1.5,
-                borderRadius: 2,
-                fontWeight: 600,
-                boxShadow: 2,
-                color: theme.palette.text.primary,
-              }}
-            >
+            <AuthSubmitButton type="submit" variant="contained" fullWidth>
               {submitLabel}
-            </Button>
+            </AuthSubmitButton>
           </form>
 
-          <Box
-            sx={{
-              mt: 4,
-              pt: 3,
-              borderTop: `1px solid ${theme.custom.border.light}`,
-              textAlign: 'center',
-            }}
-          >
-            <Button
+          <RegistrationToggleSection>
+            <RegistrationToggleButton
               variant="text"
               onClick={() => setIsLogin(!isLogin)}
-              sx={{
-                color: theme.palette.text.secondary,
-                fontWeight: 500,
-                textTransform: 'none',
-                '&:hover': { color: theme.palette.text.primary },
-              }}
-              startIcon={
-                !isLogin ? (
-                  <UserIcon sx={{ width: 18, height: 18 }} />
-                ) : (
-                  <PersonAddAlt1 sx={{ width: 18, height: 18 }} />
-                )
-              }
+              startIcon={!isLogin ? <UserIcon sx={{ width: 18, height: 18 }} /> : <PersonAddAlt1 sx={{ width: 18, height: 18 }} />}
             >
               {isLogin ? 'Создать аккаунт' : 'Войти как пользователь'}
-            </Button>
-          </Box>
-        </Paper>
-      </Box>
+            </RegistrationToggleButton>
+          </RegistrationToggleSection>
+        </AuthFormCard>
+      </AuthFormContent>
       {loading && <Loader size={80} />}
     </Box>
   );

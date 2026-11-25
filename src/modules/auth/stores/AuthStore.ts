@@ -14,11 +14,7 @@ export default class AuthStore {
   private requestId = 0;
 
   constructor(private readonly showError: ShowError) {
-    makeAutoObservable<AuthStore, 'showError' | 'requestId'>(
-      this,
-      { showError: false, requestId: false },
-      { autoBind: true },
-    );
+    makeAutoObservable<AuthStore, 'showError' | 'requestId'>(this, { showError: false, requestId: false }, { autoBind: true });
   }
 
   setUser(user: UserModel): void {
@@ -27,11 +23,16 @@ export default class AuthStore {
     this.user = user;
   }
 
-  logout(): void {
-    this.requestId += 1;
+  private resetSession(isAuthChecked: boolean): number {
+    ++this.requestId;
     this.token = '';
     this.user = initialUser;
-    this.isAuthChecked = true;
+    this.isAuthChecked = isAuthChecked;
+    return this.requestId;
+  }
+
+  logout(): void {
+    this.resetSession(true);
     setTokenInStorage(null);
   }
 
@@ -41,14 +42,10 @@ export default class AuthStore {
       return;
     }
 
-    const requestId = ++this.requestId;
-    this.token = '';
-    this.user = initialUser;
-    this.isAuthChecked = false;
-    setTokenInStorage(null);
+    const requestId = this.resetSession(false);
 
     try {
-      const user = userData ? userData : await authMe(token);
+      const user = userData ?? (await authMe(token));
       if (requestId !== this.requestId) return;
 
       if (!user) {
@@ -63,6 +60,7 @@ export default class AuthStore {
       }
 
       setTokenInStorage(token);
+
       runInAction(() => {
         this.token = token;
         this.user = user;

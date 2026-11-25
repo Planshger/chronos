@@ -1,4 +1,3 @@
-// prettier-ignore
 import { Box, CSSObject, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { memo } from 'react';
 
@@ -12,15 +11,7 @@ interface DropdownListProps {
   sx?: CSSObject;
 }
 
-function DropdownList({
-  id,
-  label,
-  onChange,
-  menuItems,
-  value,
-  variant = 'outlined',
-  sx,
-}: DropdownListProps) {
+function DropdownList({ id, label, onChange, menuItems, value, variant = 'outlined', sx }: DropdownListProps) {
   return (
     <Box sx={sx}>
       <FormControl fullWidth variant={variant}>

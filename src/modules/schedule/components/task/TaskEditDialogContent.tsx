@@ -15,11 +15,7 @@ function TaskEditDialogContent({ task, scheduleStore }: TaskEditDialogContentPro
 
   return (
     <Stack spacing={3}>
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}
-      >
+      <Stack direction="row" spacing={1} sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}>
         <Button
           fullWidth
           variant={newTask.type === TaskType.Task ? 'contained' : 'text'}
@@ -54,12 +50,7 @@ function TaskEditDialogContent({ task, scheduleStore }: TaskEditDialogContentPro
         variant="outlined"
       />
 
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={() => scheduleStore.handleEditTask(newTask)}
-        sx={{ borderRadius: 3 }}
-      >
+      <Button variant="contained" fullWidth onClick={() => scheduleStore.handleEditTask(newTask)} sx={{ borderRadius: 3 }}>
         Сохранить
       </Button>
     </Stack>

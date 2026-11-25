@@ -1,10 +1,11 @@
 import { Add, CalendarToday, DirectionsCar, Hotel, ListAlt, Restaurant } from '@mui/icons-material';
-import { Box, Button, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 import { ScheduleModal } from '../stores/ScheduleStore';
 import ScheduleStore from '../stores/ScheduleStore';
 import { ru } from 'date-fns/locale';
 import { format } from 'date-fns';
+import { EmptySchedulePanel, ScheduleActionButton, ScheduleActionIcon, SelectedDayPanel } from './style/Scheduling.style';
 
 interface SchedulingProps {
   scheduleStore: ScheduleStore;
@@ -20,16 +21,7 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
   return (
     <Box sx={{ width: { xs: '100%', md: 'min(320px, 30%)' }, minWidth: 0, flexShrink: 0 }}>
       {selectedDate ? (
-        <Paper
-          sx={{
-            position: 'sticky',
-            top: 80,
-            p: 3,
-            borderRadius: 4,
-            border: `1px solid ${theme.custom.border.light}`,
-            bgcolor: theme.palette.background.paper,
-          }}
-        >
+        <SelectedDayPanel>
           <Typography variant="h6" sx={{ mb: 2, textTransform: 'capitalize' }}>
             {format(selectedDate, 'd MMMM', { locale: ru })}
           </Typography>
@@ -65,67 +57,29 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
                 bg: `${theme.custom.accent.pink}15`,
               },
             ].map((action) => (
-              <Button
+              <ScheduleActionButton
                 key={action.id}
                 variant="outlined"
                 fullWidth
                 onClick={() => scheduleStore.setActiveModal(action.id)}
-                sx={{
-                  justifyContent: 'flex-start',
-                  borderRadius: 3,
-                  borderColor: theme.custom.border.light,
-                  color: theme.palette.text.primary,
-                  textTransform: 'none',
-                  py: 1.5,
-                  '&:hover': { bgcolor: theme.palette.action.hover },
-                }}
               >
                 <Stack spacing={1.7} direction="row" sx={{ alignItems: 'center', minWidth: 0 }}>
-                  <Box
-                    sx={{
-                      width: 35,
-                      height: 35,
-                      borderRadius: 2,
-                      bgcolor: action.bg,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: action.color,
-                    }}
-                  >
+                  <ScheduleActionIcon accent={action.color} iconBackground={action.bg}>
                     {<action.icon sx={{ width: 21, height: 21 }} />}
-                  </Box>
+                  </ScheduleActionIcon>
 
                   <Typography sx={{ textAlign: 'left' }}>{action.label}</Typography>
                 </Stack>
-              </Button>
+              </ScheduleActionButton>
             ))}
           </Stack>
-        </Paper>
+        </SelectedDayPanel>
       ) : (
-        <Paper
-          variant="outlined"
-          sx={{
-            position: 'sticky',
-            top: 80,
-            p: 4,
-            borderRadius: 4,
-            borderStyle: 'dashed',
-            borderColor: theme.custom.border.medium,
-            textAlign: 'center',
-            color: theme.palette.text.secondary,
-            bgcolor: 'transparent',
-            minHeight: 300,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <EmptySchedulePanel variant="outlined">
           <CalendarToday sx={{ fontSize: 40, opacity: 0.2, mb: 2 }} />
 
           <Typography variant="body2">Выберите день в календаре для планирования.</Typography>
-        </Paper>
+        </EmptySchedulePanel>
       )}
     </Box>
   );

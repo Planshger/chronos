@@ -1,12 +1,20 @@
-// prettier-ignore
 import { eachDayOfInterval, endOfMonth, endOfWeek, format, isSameMonth, startOfMonth, startOfWeek } from 'date-fns';
-// prettier-ignore
-import { Box, Chip, IconButton, Paper, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Chip, IconButton, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { CalendarToday, ChevronLeft, ChevronRight } from '@mui/icons-material';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 import ScheduleStore from '../stores/ScheduleStore';
 import { TaskType } from '../models/task_model';
 import { ru } from 'date-fns/locale';
+import {
+  CalendarDay,
+  CalendarHeader,
+  CalendarRoot,
+  CalendarTitleIconWrapper,
+  DayNumber,
+  DayTaskChip,
+  DayTaskList,
+  WeekdayLabel,
+} from './style/Calendar.style';
 
 interface CalendarProps {
   scheduleStore: ScheduleStore;
@@ -26,32 +34,12 @@ function Calendar({ scheduleStore }: CalendarProps) {
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
   return (
-    <Paper
-      sx={{
-        width: '100%',
-        flex: '1 1 0',
-        minWidth: 0,
-        p: 3,
-        borderRadius: 7,
-        bgcolor: theme.palette.background.default,
-        border: `1px solid ${theme.custom.border.light}`,
-        boxShadow: theme.custom.shadows.sm,
-      }}
-    >
-      <Stack
-        direction="row"
-        sx={{
-          mb: 3,
-          position: 'relative',
-          zIndex: 1,
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
+    <CalendarRoot>
+      <CalendarHeader direction="row">
         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ p: 0.8, bgcolor: 'primary.main', borderRadius: 2, display: 'flex' }}>
+          <CalendarTitleIconWrapper>
             <CalendarToday sx={{ fontSize: 20, color: '#fff' }} />
-          </Box>
+          </CalendarTitleIconWrapper>
           Расписание
         </Typography>
 
@@ -60,10 +48,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
             <ChevronLeft sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
 
-          <Typography
-            variant="body1"
-            sx={{ width: 120, textAlign: 'center', textTransform: 'capitalize' }}
-          >
+          <Typography variant="body1" sx={{ width: 120, textAlign: 'center', textTransform: 'capitalize' }}>
             {format(currentMonth, 'LLLL yyyy', { locale: ru })}
           </Typography>
 
@@ -71,7 +56,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
             <ChevronRight sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
         </Stack>
-      </Stack>
+      </CalendarHeader>
 
       <Stack spacing={{ xs: 1, sm: 2 }}>
         <Box
@@ -82,21 +67,9 @@ function Calendar({ scheduleStore }: CalendarProps) {
           }}
         >
           {['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => (
-            <Typography
-              key={day}
-              variant="caption"
-              sx={{
-                minWidth: 0,
-                textTransform: 'uppercase',
-                letterSpacing: { xs: 0, sm: 0.5 },
-                py: 0.5,
-                fontWeight: 'bold',
-                color: theme.palette.text.secondary,
-                textAlign: 'center',
-              }}
-            >
+            <WeekdayLabel key={day} variant="caption">
               {day}
-            </Typography>
+            </WeekdayLabel>
           ))}
         </Box>
 
@@ -115,50 +88,17 @@ function Calendar({ scheduleStore }: CalendarProps) {
             const isCurrentMonth = isSameMonth(date, monthStart);
 
             return (
-              <Box
+              <CalendarDay
                 key={dateKey}
                 onClick={() => scheduleStore.selectDate(date, isMobile)}
-                sx={{
-                  minWidth: 0,
-                  minHeight: { xs: 68, sm: 92, md: 105 },
-                  p: { xs: 0.5, sm: 1 },
-                  borderRadius: { xs: 1.5, sm: 3 },
-                  cursor: 'pointer',
-                  border: '1px solid transparent',
-                  bgcolor: isSelected ? theme.custom.accent.amber : 'transparent',
-                  color: isSelected ? 'primary.contrastText' : 'text.primary',
-                  opacity: isCurrentMonth ? 1 : 0.4,
-                  filter: isCurrentMonth ? 'none' : 'grayscale(0.5)',
-                  '&:hover': {
-                    bgcolor: isSelected ? theme.custom.accent.amber : theme.palette.action.hover,
-                  },
-                }}
+                isSelected={isSelected}
+                isCurrentMonth={isCurrentMonth}
               >
-                <Typography
-                  variant="body1"
-                  sx={{
-                    fontWeight: 600,
-                    borderRadius: '50%',
-                    bgcolor: isToday && !isSelected ? 'primary.main' : 'transparent',
-                    color: isToday && !isSelected ? 'primary.contrastText' : 'inherit',
-                    width: 32,
-                    height: 32,
-                    textAlign: 'center',
-                    lineHeight: '32px',
-                    mx: 'auto',
-                  }}
-                >
+                <DayNumber variant="body1" isToday={isToday} isSelected={isSelected}>
                   {format(date, 'd')}
-                </Typography>
+                </DayNumber>
 
-                <Box
-                  sx={{
-                    mt: { xs: 0.25, sm: 1 },
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 0.5,
-                  }}
-                >
+                <DayTaskList>
                   {dayTasks.slice(0, 2).map((task) =>
                     isMobile ? (
                       <Chip
@@ -166,36 +106,18 @@ function Calendar({ scheduleStore }: CalendarProps) {
                         size="small"
                         variant="outlined"
                         sx={{
-                          bgcolor:
-                            task.type === TaskType.Meeting ? 'secondary.light' : 'primary.light',
+                          bgcolor: task.type === TaskType.Meeting ? 'secondary.light' : 'primary.light',
                           height: 20,
                           width: 20,
                         }}
                       />
                     ) : (
-                      <Chip
+                      <DayTaskChip
                         key={task.id}
                         label={task.title}
                         size="small"
                         variant="outlined"
-                        sx={{
-                          fontSize: '0.6rem',
-                          height: 20,
-                          maxWidth: '100%',
-                          bgcolor:
-                            task.type === TaskType.Meeting ? 'secondary.light' : 'primary.light',
-                          color:
-                            task.type === TaskType.Meeting
-                              ? 'secondary.contrastText'
-                              : 'primary.contrastText',
-                          border: 'none',
-                          '& .MuiChip-label': {
-                            px: 1,
-                            fontWeight: 500,
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                          },
-                        }}
+                        isMeeting={task.type === TaskType.Meeting}
                       />
                     ),
                   )}
@@ -204,13 +126,13 @@ function Calendar({ scheduleStore }: CalendarProps) {
                       +{dayTasks.length - 2} ещё
                     </Typography>
                   )}
-                </Box>
-              </Box>
+                </DayTaskList>
+              </CalendarDay>
             );
           })}
         </Box>
       </Stack>
-    </Paper>
+    </CalendarRoot>
   );
 }
 

@@ -1,14 +1,14 @@
-// prettier-ignore
-import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, Typography, useTheme } from '@mui/material';
-import { ADMIN_PLAN_OPTIONS } from '../../constants/adminTableOptions';
-import { PaginationModel } from '../../models/user_pagination_model';
-import { getFilterData } from '../../datasources/admin_data_source';
-import { UserStatus } from '../../../../shared/models/user_model';
-import { useApiError } from '../../../../shared/errors/ApiError';
+import { Button, Modal, SelectChangeEvent, Stack, Typography, useTheme } from '@mui/material';
+import { PaginationModel } from '../../../models/user_pagination_model';
+import { UserStatus } from '../../../../../shared/models/user_model';
+import { ADMIN_PLAN_OPTIONS } from '../../../constants/adminTableOptions';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { headCells } from './AdminTableHead';
+import { useApiError } from '../../../../../shared/errors/ApiError';
+import { getFilterData } from '../../../datasources/admin_data_source';
 import { Close } from '@mui/icons-material';
-import DropdownList from '../DropdownList';
+import DropdownList from '../../DropdownList';
+import { headCells } from '../AdminTableHead';
+import { CloseButton, ModalContent } from './AdminTableMenu.style';
 
 export interface FilterValuesProps {
   id: string;
@@ -37,14 +37,7 @@ const menuItems = new Map<string, string[]>([
   ['role', ['user', 'admin']],
 ]);
 
-function AdminTableFilterMenu({
-  onClose,
-  open,
-  setData,
-  perPage,
-  currentPage,
-  searchProp,
-}: AdminTableFilterMenuProps) {
+function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, searchProp }: AdminTableFilterMenuProps) {
   const [filterValues, setFilterValues] = useState<FilterValuesProps[]>(initialprops);
   const { showError } = useApiError();
   const theme = useTheme();
@@ -82,30 +75,10 @@ function AdminTableFilterMenu({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 'min(400px, calc(100vw - 32px))',
-          maxHeight: 'calc(100dvh - 32px)',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          bgcolor: 'background.paper',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: 24,
-          borderRadius: '20px',
-          p: { xs: 3, sm: 5 },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500] }}
-        >
+      <ModalContent>
+        <CloseButton aria-label="close" onClick={onClose}>
           <Close />
-        </IconButton>
+        </CloseButton>
 
         <Typography variant="h6" align="center" sx={{ mt: 2, mb: 2 }}>
           Фильтр пользователей
@@ -128,17 +101,8 @@ function AdminTableFilterMenu({
           return null;
         })}
 
-        <Stack
-          direction={{ xs: 'column-reverse', sm: 'row' }}
-          spacing={2}
-          sx={{ mt: 3, justifyContent: 'center' }}
-        >
-          <Button
-            variant="contained"
-            onClick={loadDataFromFilter}
-            color="primary"
-            sx={{ color: theme.palette.text.primary }}
-          >
+        <Stack direction={{ xs: 'column-reverse', sm: 'row' }} spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+          <Button variant="contained" onClick={loadDataFromFilter} color="primary" sx={{ color: theme.palette.text.primary }}>
             Сохранить
           </Button>
 
@@ -152,7 +116,7 @@ function AdminTableFilterMenu({
             Очистить
           </Button>
         </Stack>
-      </Box>
+      </ModalContent>
     </Modal>
   );
 }

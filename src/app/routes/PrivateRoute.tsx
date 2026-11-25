@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { AuthStore } from '../../modules/auth';
 import Loader from '../../shared/ui/Loader';
+import { NO_PLAN_LABEL } from '../../modules/admin';
 
 interface PrivateRouteProps {
   roles?: Role[];
@@ -24,7 +25,7 @@ function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
     return <Navigate to="/register" state={{ from: location }} replace />;
   }
 
-  if (user?.plan === '' && user.role === Role.User && user.status === UserStatus.PendingPayment) {
+  if (user?.plan === NO_PLAN_LABEL && user.role === Role.User && user.status === UserStatus.PendingPayment) {
     return <Navigate to="/plans" state={{ from: location }} replace />;
   }
 

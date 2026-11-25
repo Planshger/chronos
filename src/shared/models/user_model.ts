@@ -21,7 +21,7 @@ export default interface UserModel {
 }
 
 export const initialUser: UserModel = {
-  id: 0,
+  id: -1,
   name: '',
   email: '',
   plan: '',
@@ -30,3 +30,9 @@ export const initialUser: UserModel = {
   role: Role.User,
   tgLinked: false,
 };
+
+export function isAuthorizedUser(user: UserModel): user is UserModel {
+  return Boolean(
+    user && user.id !== initialUser.id && user.id > 0 && user.name !== initialUser.name && user.email !== initialUser.email,
+  );
+}

@@ -23,11 +23,7 @@ function Schedule({ scheduleStore }: ScheduleProps) {
       <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen} />
 
       <Container maxWidth={false} sx={{ py: { xs: 2, md: 3 }, px: { xs: 1.5, sm: 3 } }}>
-        <Stack
-          spacing={{ xs: 2, md: 3 }}
-          direction={{ xs: 'column', md: 'row' }}
-          sx={{ alignItems: 'stretch', minWidth: 0 }}
-        >
+        <Stack spacing={{ xs: 2, md: 3 }} direction={{ xs: 'column', md: 'row' }} sx={{ alignItems: 'stretch', minWidth: 0 }}>
           <Calendar />
           {!isMobile && <Scheduling />}
         </Stack>

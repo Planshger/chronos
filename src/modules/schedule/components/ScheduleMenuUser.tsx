@@ -1,4 +1,3 @@
-// prettier-ignore
 import { Box, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useTheme } from '@mui/material';
 import injectMobxStore from '../../../shared/utils/injectMobxStore';
 import { SettingId } from '../../settings/models/settings_model';

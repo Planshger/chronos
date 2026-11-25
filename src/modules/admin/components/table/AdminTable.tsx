@@ -1,6 +1,4 @@
-// prettier-ignore
 import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination } from '../../datasources/admin_data_source';
-import AdminTableFilterMenu, { FilterValuesProps } from './AdminTableFilterMenu';
 import { IconButton, Stack, Switch, TextField, useTheme } from '@mui/material';
 import UserModel, { initialUser } from '../../../../shared/models/user_model';
 import { PaginationModel } from '../../models/user_pagination_model';
@@ -9,7 +7,7 @@ import { useApiError } from '../../../../shared/errors/ApiError';
 import { updateUserData } from '../../../../shared/api/userApi';
 import TableContainer from '@mui/material/TableContainer';
 import AdminTablePagination from './AdminTablePagination';
-import AdminTableEditMenu from './AdminTableEditMenu';
+import AdminTableEditMenu from './menu/AdminTableEditMenu';
 import AdminTableToolbar from './AdminTableToolbar';
 import AutocompleteList from '../AutocompleteList';
 import Loader from '../../../../shared/ui/Loader';
@@ -22,7 +20,9 @@ import { Edit } from '@mui/icons-material';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import * as React from 'react';
+import React from 'react';
+import AdminTableFilterMenu, { FilterValuesProps } from './menu/AdminTableFilterMenu';
+import { SearchFields, SearchRow } from './AdminTable.style';
 
 const initialUsersProps: PaginationModel = {
   items: [],
@@ -63,10 +63,7 @@ export default function AdminTable() {
     (value: string, id: string) => {
       setInput({ id: id, value: value });
       withLoading(
-        () =>
-          getFilterData(data.meta.current_page, data.meta.per_page, [
-            { id: id, value: value },
-          ]).then((res) => setData(res)),
+        () => getFilterData(data.meta.current_page, data.meta.per_page, [{ id: id, value: value }]).then((res) => setData(res)),
         setLoading,
       ).catch(showError);
     },
@@ -76,10 +73,7 @@ export default function AdminTable() {
   const searchWithEmail = React.useCallback(
     (value: string) => {
       withLoading(
-        () =>
-          getFilterData(data.meta.current_page, data.meta.per_page, [
-            { id: 'email', value: value },
-          ]).then((res) => setData(res)),
+        () => getFilterData(data.meta.current_page, data.meta.per_page, [{ id: 'email', value: value }]).then((res) => setData(res)),
         setLoading,
       ).catch(showError);
     },
@@ -103,10 +97,7 @@ export default function AdminTable() {
 
   const loadDataWithPagination = React.useCallback(
     (page: number, limit: number) => {
-      withLoading(
-        () => getUsersWithPagination(page, limit).then((res) => setData(res)),
-        setLoading,
-      ).catch(showError);
+      withLoading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading).catch(showError);
     },
     [showError],
   );
@@ -114,10 +105,7 @@ export default function AdminTable() {
   const loadDataSortBy = React.useCallback(
     (sortName: string, order?: 'asc' | 'desc') => {
       withLoading(
-        () =>
-          getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then((res) =>
-            setData(res),
-          ),
+        () => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then((res) => setData(res)),
         setLoading,
       ).catch(showError);
     },
@@ -184,17 +172,8 @@ export default function AdminTable() {
 
   return (
     <Box sx={{ width: '100%', p: { xs: 1.5, lg: 10 } }}>
-      <Box sx={{ pb: 2, display: 'flex', justifyContent: 'center', minWidth: 0 }}>
-        <Stack
-          direction={{ xs: 'column', sm: 'row' }}
-          spacing={1}
-          sx={{
-            alignItems: { xs: 'stretch', sm: 'center' },
-            width: '100%',
-            maxWidth: 960,
-            minWidth: 0,
-          }}
-        >
+      <SearchRow>
+        <SearchFields direction={{ xs: 'column', sm: 'row' }} spacing={1}>
           <AutocompleteList
             key={editDomain ? 'email' : 'name'}
             id={editDomain ? 'email' : 'name'}
@@ -232,19 +211,13 @@ export default function AdminTable() {
               size="small"
             />
           </Stack>
-        </Stack>
-      </Box>
+        </SearchFields>
+      </SearchRow>
 
       <Paper sx={{ width: '100%', mb: 2, borderRadius: '20px' }}>
-        <AdminTableToolbar
-          numSelected={selected.length}
-          openFilterMenu={switchFilterMenu}
-          deleteUserData={loadDataWithDeleteUser}
-        />
+        <AdminTableToolbar numSelected={selected.length} openFilterMenu={switchFilterMenu} deleteUserData={loadDataWithDeleteUser} />
 
-        <TableContainer
-          sx={{ bgcolor: theme.palette.background.default, maxWidth: '100%', overflowX: 'auto' }}
-        >
+        <TableContainer sx={{ bgcolor: theme.palette.background.default, maxWidth: '100%', overflowX: 'auto' }}>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <AdminTableHead
               numSelected={selected.length}
@@ -274,11 +247,7 @@ export default function AdminTable() {
                     }}
                   >
                     <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        slotProps={{ input: { 'aria-labelledby': labelId } }}
-                      />
+                      <Checkbox color="primary" checked={isItemSelected} slotProps={{ input: { 'aria-labelledby': labelId } }} />
                     </TableCell>
 
                     <TableCell component="th" id={labelId} scope="row" padding="none">
@@ -323,12 +292,7 @@ export default function AdminTable() {
           searchProp={input.value}
         />
 
-        <AdminTableEditMenu
-          onClose={switchEditMenu}
-          open={openEdit.open}
-          user={openEdit.user}
-          onClick={loadDataWithEditUser}
-        />
+        <AdminTableEditMenu onClose={switchEditMenu} open={openEdit.open} user={openEdit.user} onClick={loadDataWithEditUser} />
 
         {loading && <Loader size={80} />}
       </Paper>

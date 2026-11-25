@@ -20,11 +20,7 @@ function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps
       }}
     >
       <Stack spacing={3}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}
-        >
+        <Stack direction="row" spacing={1} sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}>
           <Button
             type="button"
             fullWidth

@@ -1,8 +1,9 @@
 import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { AuthStore } from '../../../../auth';
 import TelegramIcon from '../TelegramIcon';
 import { QRCodeSVG } from 'qrcode.react';
+import { QRCodePanel, QRPageContent } from './style/PageWithQR.style';
 
 interface PageWithQRProps {
   authStore: AuthStore;
@@ -14,29 +15,18 @@ function PageWithQR({ authStore }: PageWithQRProps) {
   const deepLink = `https://t.me/${botUsername}?start=${encodeURIComponent(user?.id ?? '')}`;
 
   return (
-    <Box sx={{ maxWidth: 480, mx: 'auto', p: 3, textAlign: 'center' }}>
+    <QRPageContent>
       <Typography variant="h5" sx={{ fontWeight: 600 }} gutterBottom>
         Связать с Telegram
       </Typography>
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-        Отсканируйте QR-код или перейдите по ссылке, чтобы получать и отправлять задачи через
-        Telegram.
+        Отсканируйте QR-код или перейдите по ссылке, чтобы получать и отправлять задачи через Telegram.
       </Typography>
 
-      <Paper
-        elevation={0}
-        sx={{
-          display: 'inline-block',
-          p: 2,
-          borderRadius: 3,
-          bgcolor: 'background.paper',
-          border: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
+      <QRCodePanel elevation={0}>
         <QRCodeSVG value={deepLink} size={220} />
-      </Paper>
+      </QRCodePanel>
 
       <Box sx={{ mt: 3, wordBreak: 'break-all' }}>
         <Button
@@ -51,7 +41,7 @@ function PageWithQR({ authStore }: PageWithQRProps) {
           Открыть в Telegram
         </Button>
       </Box>
-    </Box>
+    </QRPageContent>
   );
 }
 

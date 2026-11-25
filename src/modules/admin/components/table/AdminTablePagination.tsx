@@ -16,9 +16,7 @@ function AdminTablePagination({ loadDataWithPagination, meta }: AdminTablePagina
     loadDataWithPagination(newPage + 1, rowsPerPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     loadDataWithPagination(
       parseInt(event.target.value) === meta.meta.total_items ? 1 : meta.meta.current_page,
       parseInt(event.target.value),

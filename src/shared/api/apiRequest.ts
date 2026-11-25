@@ -1,4 +1,3 @@
-// prettier-ignore
 import { EmptyResponseError, HttpError, NetworkError, ResponseParseError } from '../errors/AppError';
 import { getToken } from './authToken';
 

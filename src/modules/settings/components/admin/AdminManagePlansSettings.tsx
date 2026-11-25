@@ -1,4 +1,3 @@
-// prettier-ignore
 import { addPlan, getAllPlans, initialPlan, PlanCard, PlanModel, updatePlanData } from '../../../plans';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
@@ -6,15 +5,15 @@ import { withLoading } from '../../../../shared/utils/withLoading';
 import { useApiError } from '../../../../shared/errors/ApiError';
 import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
-import { Box, Button, useTheme } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import { AdminPlansGrid, AdminPlansSettingsRoot } from './style/AdminManagePlansSettings.style';
 
 interface AdminManagePlansSettingsProps {
   settingsStore: SettingsStore;
 }
 
 function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsProps) {
-  const theme = useTheme();
   const { showError } = useApiError();
   const [plans, setPlans] = useState<PlanModel[]>([]);
   const [changePlans, setChangePlans] = useState<{
@@ -24,9 +23,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
   }>({ openEdit: false, openCreate: false, plan: initialPlan });
 
   const loadData = useCallback(() => {
-    withLoading(() => getAllPlans().then((res) => setPlans(res)), settingsStore.setLoading).catch(
-      showError,
-    );
+    withLoading(() => getAllPlans().then((res) => setPlans(res)), settingsStore.setLoading).catch(showError);
   }, [settingsStore, showError]);
 
   const loadAddPlan = useCallback(
@@ -63,17 +60,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
   }, [loadData]);
 
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        pb: 2,
-        '&::-webkit-scrollbar': { width: 8 },
-        '&::-webkit-scrollbar-thumb': { bgcolor: theme.custom.border.light, borderRadius: 4 },
-      }}
-    >
+    <AdminPlansSettingsRoot>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Button
           variant="text"
@@ -86,19 +73,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
         </Button>
       </Box>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 4,
-          justifyContent: 'center',
-          gridTemplateColumns: {
-            xs: '1fr',
-            sm: 'repeat(2, minmax(0, 1fr))',
-            md: 'repeat(3, minmax(0, 1fr))',
-          },
-          width: '100%',
-        }}
-      >
+      <AdminPlansGrid>
         {plans.map((p) => (
           <PlanCard
             key={p.name}
@@ -109,7 +84,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
             outlinePopular
           />
         ))}
-      </Box>
+      </AdminPlansGrid>
 
       <AdminEditManagePlansSettings
         isCreate={changePlans.openCreate}
@@ -120,7 +95,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
         open={changePlans.openCreate ? changePlans.openCreate : changePlans.openEdit}
         plan={changePlans.plan}
       />
-    </Box>
+    </AdminPlansSettingsRoot>
   );
 }
 

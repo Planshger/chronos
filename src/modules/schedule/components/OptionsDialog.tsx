@@ -17,10 +17,8 @@ function OptionsDialog({ scheduleStore }: OptionsDialogProps) {
   return (
     <div>
       {activeModal === ScheduleModal.TaskCreate ||
-      activeModal === ScheduleModal.TasksList ||
-      activeModal === ScheduleModal.TaskEdit ? (
-        <TaskDialogContent dayTasks={dayTasks} />
-      ) : null}
+        activeModal === ScheduleModal.TasksList ||
+        (activeModal === ScheduleModal.TaskEdit && <TaskDialogContent dayTasks={dayTasks} />)}
     </div>
   );
 }

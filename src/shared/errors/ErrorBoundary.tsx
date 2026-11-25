@@ -23,16 +23,11 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
   render() {
     if (this.state.hasError) {
       return (
-        <Stack
-          spacing={2}
-          sx={{ minHeight: '100vh', p: 3, alignItems: 'center', justifyContent: 'center' }}
-        >
+        <Stack spacing={2} sx={{ minHeight: '100vh', p: 3, alignItems: 'center', justifyContent: 'center' }}>
           <Typography variant="h2" component="h1">
             Что-то пошло не так
           </Typography>
-          <Typography color="text.secondary">
-            Произошла непредвиденная ошибка. Перезагрузите страницу и попробуйте ещё раз.
-          </Typography>
+          <Typography color="text.secondary">Произошла непредвиденная ошибка. Перезагрузите страницу и попробуйте ещё раз.</Typography>
           <Button variant="contained" onClick={() => window.location.reload()}>
             Перезагрузить страницу
           </Button>

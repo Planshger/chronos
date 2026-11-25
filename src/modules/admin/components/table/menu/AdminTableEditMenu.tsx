@@ -1,9 +1,9 @@
-// prettier-ignore
-import { Box, Button, IconButton, Modal, SelectChangeEvent, Stack, TextField, Typography, useTheme } from '@mui/material';
-import { ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL } from '../../constants/adminTableOptions';
-import UserModel, { UserStatus } from '../../../../shared/models/user_model';
+import { Button, Modal, SelectChangeEvent, Stack, TextField, Typography, useTheme } from '@mui/material';
+import { ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL } from '../../../constants/adminTableOptions';
+import UserModel, { UserStatus } from '../../../../../shared/models/user_model';
+import { CloseButton, ModalContent } from './AdminTableMenu.style';
 import { Close } from '@mui/icons-material';
-import DropdownList from '../DropdownList';
+import DropdownList from '../../DropdownList';
 import { memo, useCallback } from 'react';
 import React from 'react';
 
@@ -29,15 +29,14 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
     setEditedUser((prev) => {
       return {
         ...prev,
-        [id as keyof UserModel]: event.target.value === NO_PLAN_LABEL ? '' : event.target.value,
+        [id as keyof UserModel]: event.target.value === NO_PLAN_LABEL ? NO_PLAN_LABEL : event.target.value,
+        status: event.target.value === NO_PLAN_LABEL ? UserStatus.PendingPayment : prev.status,
       };
     });
   }, []);
 
   const handleSave = useCallback(() => {
-    const isChanged = (Object.keys(user) as (keyof UserModel)[]).some(
-      (key) => editedUser[key] !== user[key],
-    );
+    const isChanged = (Object.keys(user) as (keyof UserModel)[]).some((key) => editedUser[key] !== user[key]);
 
     if (isChanged) {
       onClick(editedUser);
@@ -59,30 +58,10 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 'min(400px, calc(100vw - 32px))',
-          maxHeight: 'calc(100dvh - 32px)',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          bgcolor: 'background.paper',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: 24,
-          borderRadius: '20px',
-          p: { xs: 3, sm: 5 },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500] }}
-        >
+      <ModalContent>
+        <CloseButton aria-label="close" onClick={onClose}>
           <Close />
-        </IconButton>
+        </CloseButton>
 
         <Typography variant="h6" align="center" sx={{ mt: 2, mb: 2 }}>
           Редактировать пользователя
@@ -128,17 +107,8 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
           />
         </Stack>
 
-        <Stack
-          direction={{ xs: 'column-reverse', sm: 'row' }}
-          spacing={2}
-          sx={{ mt: 3, justifyContent: 'center' }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            sx={{ color: theme.palette.text.primary }}
-          >
+        <Stack direction={{ xs: 'column-reverse', sm: 'row' }} spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+          <Button variant="contained" color="primary" onClick={handleSave} sx={{ color: theme.palette.text.primary }}>
             Сохранить
           </Button>
 
@@ -146,7 +116,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
             Отмена
           </Button>
         </Stack>
-      </Box>
+      </ModalContent>
     </Modal>
   );
 }

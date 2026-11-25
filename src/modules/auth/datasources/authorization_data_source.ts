@@ -1,11 +1,10 @@
-// prettier-ignore
 import { HttpError, InvalidCredentialsError, InvalidUserRoleError } from '../../../shared/errors/AppError';
 import UserModel, { Role } from '../../../shared/models/user_model';
 import { RegisterUserModel } from '../models/register_user_model';
 import { apiRequest } from '../../../shared/api/apiRequest';
 import { queryClient } from '../../../shared/queryClient';
 
-export async function register(user: UserModel, role: string = 'user'): Promise<RegisterUserModel> {
+export async function register(user: UserModel, role: Role = Role.User): Promise<RegisterUserModel> {
   return apiRequest<RegisterUserModel>('/register', {
     method: 'POST',
     body: JSON.stringify({ ...user, role }),

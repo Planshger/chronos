@@ -18,21 +18,15 @@ function ProfileSettings({ authStore, settingsStore }: ProfileSettingsProps) {
   const { showError } = useApiError();
   const [editUser, setEditUser] = useState<UserModel>(user ?? initialUser);
 
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
-      const { name, value } = e.target;
-      setEditUser((prev) => ({ ...prev, [name]: value }));
-    },
-    [],
-  );
+  const onChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement, Element>) => {
+    const { name, value } = e.target;
+    setEditUser((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback(async () => {
     if (user?.email !== editUser.email || user?.name !== editUser.name) {
       try {
-        withLoading(
-          () => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)),
-          settingsStore.setLoading,
-        );
+        await withLoading(() => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)), settingsStore.setLoading);
       } catch (error) {
         showError(error);
       }
@@ -40,10 +34,7 @@ function ProfileSettings({ authStore, settingsStore }: ProfileSettingsProps) {
   }, [editUser, user, settingsStore, showError, authStore]);
 
   return (
-    <Stack
-      spacing={6}
-      sx={{ width: { xs: '100%', sm: '80%', md: '60%' }, mx: 'auto', mt: { xs: 4, sm: 6, md: 8 } }}
-    >
+    <Stack spacing={6} sx={{ width: { xs: '100%', sm: '80%', md: '60%' }, mx: 'auto', mt: { xs: 4, sm: 6, md: 8 } }}>
       <TextField
         name="name"
         value={editUser.name}
@@ -64,12 +55,7 @@ function ProfileSettings({ authStore, settingsStore }: ProfileSettingsProps) {
         sx={{ '& fieldset': { borderColor: 'background.paper' } }}
       />
 
-      <Button
-        variant="contained"
-        fullWidth
-        onClick={onClick}
-        sx={{ borderRadius: 3, color: 'text.primary' }}
-      >
+      <Button variant="contained" fullWidth onClick={onClick} sx={{ borderRadius: 3, color: 'text.primary' }}>
         Сохранить изменения
       </Button>
     </Stack>

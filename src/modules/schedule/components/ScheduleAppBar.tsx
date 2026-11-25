@@ -1,9 +1,9 @@
-// prettier-ignore
-import { AppBar, Avatar, Box, Button, IconButton, Stack, Toolbar, Typography, useTheme } from '@mui/material';
+import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, useTheme } from '@mui/material';
 import { AccessTime, Chat, Person } from '@mui/icons-material';
 import { appName } from '../../../shared/constants/name';
 import ScheduleMenuUser from './ScheduleMenuUser';
 import { useState } from 'react';
+import { ScheduleAiButton, ScheduleTitle } from './style/ScheduleAppBar.style';
 
 interface MainAppBarProps {
   isAiOpen: boolean;
@@ -17,6 +17,7 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
   function openUserMenu(event: React.MouseEvent<HTMLElement>) {
     setOpenMenu(event.currentTarget);
   }
+
   function closeUserMenu() {
     setOpenMenu(null);
   }
@@ -24,40 +25,17 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
   return (
     <AppBar position="sticky">
       <Toolbar sx={{ justifyContent: 'space-between' }}>
-        <Typography
-          variant="h6"
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            fontSize: { xs: '1rem', sm: '1.25rem' },
-          }}
-        >
+        <ScheduleTitle variant="h6">
           <AccessTime sx={{ fontSize: { xs: 28, sm: 38 }, color: theme.palette.primary.main }} />
           {appName}
-        </Typography>
+        </ScheduleTitle>
 
         <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
-          <Button
-            variant="outlined"
-            startIcon={<Chat />}
-            onClick={() => setIsAiOpen(!isAiOpen)}
-            sx={{
-              minWidth: { xs: 40, sm: 'auto' },
-              px: { xs: 0, sm: 2 },
-              pl: { xs: 1.5, sm: 2 },
-              color: theme.palette.primary.main,
-              bgcolor: `${theme.palette.primary.main}15`,
-              '&:hover': {
-                borderColor: theme.palette.primary.main,
-                bgcolor: `${theme.palette.primary.main}15`,
-              },
-            }}
-          >
+          <ScheduleAiButton variant="outlined" startIcon={<Chat />} onClick={() => setIsAiOpen(!isAiOpen)}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               ИИ-ассистент
             </Box>
-          </Button>
+          </ScheduleAiButton>
 
           <IconButton
             onClick={openUserMenu}

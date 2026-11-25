@@ -34,11 +34,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
     <Box sx={{ p: 4 }}>
       <AppBar position="fixed" sx={{ backdropFilter: 'blur(10px)' }}>
         <Toolbar sx={{ px: { xs: 2, sm: 3 } }}>
-          <Typography
-            variant="h3"
-            component="div"
-            sx={{ flexGrow: 1, minWidth: 0, fontSize: { xs: '1.75rem', sm: '2rem' } }}
-          >
+          <Typography variant="h3" component="div" sx={{ flexGrow: 1, minWidth: 0, fontSize: { xs: '1.75rem', sm: '2rem' } }}>
             Chronos
           </Typography>
 
@@ -47,10 +43,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
               Выход
             </Button>
           ) : (
-            <Button
-              onClick={() => onClick(user.role === Role.Admin ? '/admin' : '/schedule')}
-              sx={{ color: 'text.primary' }}
-            >
+            <Button onClick={() => onClick(user.role === Role.Admin ? '/admin' : '/schedule')} sx={{ color: 'text.primary' }}>
               Регистрация
             </Button>
           )}

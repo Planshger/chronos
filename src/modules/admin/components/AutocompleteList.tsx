@@ -12,15 +12,7 @@ interface AutocompleteListProps {
   disableClearable: boolean;
 }
 
-function AutocompleteList({
-  id,
-  label,
-  onChange,
-  options,
-  value,
-  variant = 'standard',
-  disableClearable,
-}: AutocompleteListProps) {
+function AutocompleteList({ id, label, onChange, options, value, variant = 'standard', disableClearable }: AutocompleteListProps) {
   const theme = useTheme();
 
   return (

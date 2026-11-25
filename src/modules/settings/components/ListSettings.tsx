@@ -1,4 +1,3 @@
-// prettier-ignore
 import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
 import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
 import { SettingsModel, SettingId } from '../models/settings_model';
@@ -105,10 +104,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
                     <Icon />
                   </ListItemIcon>
 
-                  <ListItemText
-                    primary={messenger.label}
-                    sx={{ display: { xs: 'none', md: 'block' } }}
-                  />
+                  <ListItemText primary={messenger.label} sx={{ display: { xs: 'none', md: 'block' } }} />
                 </ListItemButton>
               );
             })}

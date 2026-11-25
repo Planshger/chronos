@@ -1,6 +1,6 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material';
 import AdminTable from './components/table/AdminTable';
-import AdminAppBar from './components/AdminAppBar';
+import AdminAppBar from './components/appBar/AdminAppBar';
 
 export default function Admin() {
   const theme = useTheme();
@@ -13,10 +13,7 @@ export default function Admin() {
           Пользователи
         </Typography>
 
-        <Typography
-          variant="h6"
-          sx={{ color: theme.palette.text.secondary, maxWidth: 672, fontSize: '15px' }}
-        >
+        <Typography variant="h6" sx={{ color: theme.palette.text.secondary, maxWidth: 672, fontSize: '15px' }}>
           Управление пользователями, их статусами и тарифными планами.
         </Typography>
       </Stack>
