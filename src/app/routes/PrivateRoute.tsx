@@ -29,6 +29,10 @@ function PrivateRoute({ roles, authStore }: PrivateRouteProps) {
     return <Navigate to="/plans" state={{ from: location }} replace />;
   }
 
+  if (user.status === UserStatus.NotActive) {
+    return <Navigate to="/register" replace />;
+  }
+
   if (roles && !roles.includes(user?.role)) {
     return <Navigate to="/" replace />;
   }

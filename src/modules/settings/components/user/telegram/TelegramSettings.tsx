@@ -55,7 +55,7 @@ function TelegramSettings({ authStore }: TelegramSettingsProps) {
     return (
       <TelegramStatusError>
         <Typography>Не удалось загрузить статус Telegram. Попробуйте ещё раз.</Typography>
-        <Button variant="contained" onClick={() => loadTelegramStatus()}>
+        <Button variant="contained" onClick={loadTelegramStatus}>
           Повторить
         </Button>
       </TelegramStatusError>

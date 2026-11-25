@@ -69,18 +69,15 @@ function Settings({ authStore, settingsStore }: SettingsProps) {
                 const messenger = item.messenger?.find((m) => m.id === currentSettingId);
                 const IconComponent = SettingIcons.get(item.id) ?? TouchApp;
 
-                return (
-                  item.id === currentSettingId ||
-                  (messenger && (
-                    <SettingsSectionTitle key={item.id} variant="h6">
-                      <SettingsTitleIconWrapper>
-                        <IconComponent />
-                      </SettingsTitleIconWrapper>
+                return item.id === currentSettingId || messenger ? (
+                  <SettingsSectionTitle key={item.id} variant="h6">
+                    <SettingsTitleIconWrapper>
+                      <IconComponent />
+                    </SettingsTitleIconWrapper>
 
-                      {messenger?.label || item.label}
-                    </SettingsSectionTitle>
-                  ))
-                );
+                    {messenger?.label || item.label}
+                  </SettingsSectionTitle>
+                ) : null;
               })}
             </Stack>
 

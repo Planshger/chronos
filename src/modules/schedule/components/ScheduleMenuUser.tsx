@@ -5,6 +5,7 @@ import { SettingIcons, SettingsData } from '../../settings';
 import { Logout, TouchApp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../auth';
+import { useCallback } from 'react';
 
 interface ScheduleMenuUserProps {
   openMenu: null | HTMLElement;
@@ -24,6 +25,11 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
       navigate(`/settings/${id}`);
     }
   }
+
+  const handleSettingClick = useCallback((id: SettingId) => {
+    onClick(id === SettingId.Messengers ? SettingId.Telegram : id);
+    closeUserMenu();
+  }, [closeUserMenu]);
 
   return (
     <Menu
@@ -46,10 +52,7 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
           <MenuItem
             key={item.id}
             sx={{ py: 1 }}
-            onClick={() => {
-              onClick(item.id === SettingId.Messengers ? SettingId.Telegram : item.id);
-              closeUserMenu();
-            }}
+            onClick={() => handleSettingClick(item.id)}
           >
             <ListItemIcon sx={{ minWidth: 36 }}>
               <Icon fontSize="small" sx={{ color: theme.palette.text.primary }} />

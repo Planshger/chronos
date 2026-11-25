@@ -1,5 +1,6 @@
 import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { registerUnauthorizedHandler } from '../../shared/api/apiRequest';
 import { Role } from '../../shared/models/user_model';
 import { AuthStore } from '../../modules/auth';
 import { useEffect } from 'react';
@@ -13,17 +14,13 @@ function AuthSessionHandler({ authStore }: AuthSessionHandlerProps) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const handleUnauthorized = (event: Event) => {
-      const { token } = (event as CustomEvent<{ token: string }>).detail;
-      if (token !== authStore.token) return;
+    return registerUnauthorizedHandler((token) => {
+      const role = authStore.handleUnauthorized(token);
+      if (role === null) return;
 
-      const loginPath = authStore.user.role === Role.Admin ? '/admin/login' : '/register';
-      authStore.logout();
+      const loginPath = role === Role.Admin ? '/admin/login' : '/register';
       navigate(loginPath, { replace: true, state: { from: location } });
-    };
-
-    window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    });
   }, [authStore, location, navigate]);
 
   return null;

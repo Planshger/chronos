@@ -18,6 +18,10 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
   const selectedDayTasks = selectedDateKey ? (tasks[selectedDateKey] ?? []) : [];
   const hasTasks = selectedDayTasks.length > 0;
 
+  const handleActionClick = (id: ScheduleModal) => {
+    scheduleStore.setActiveModal(id);
+  };
+
   return (
     <Box sx={{ width: { xs: '100%', md: 'min(320px, 30%)' }, minWidth: 0, flexShrink: 0 }}>
       {selectedDate ? (
@@ -57,12 +61,7 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
                 bg: `${theme.custom.accent.pink}15`,
               },
             ].map((action) => (
-              <ScheduleActionButton
-                key={action.id}
-                variant="outlined"
-                fullWidth
-                onClick={() => scheduleStore.setActiveModal(action.id)}
-              >
+              <ScheduleActionButton key={action.id} variant="outlined" fullWidth onClick={() => handleActionClick(action.id)}>
                 <Stack spacing={1.7} direction="row" sx={{ alignItems: 'center', minWidth: 0 }}>
                   <ScheduleActionIcon accent={action.color} iconBackground={action.bg}>
                     {<action.icon sx={{ width: 21, height: 21 }} />}

@@ -34,21 +34,35 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
     setSelectedIds((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
   };
 
+  const changeActiveModal = (modal: ScheduleModal) => {
+    scheduleStore.setActiveModal(modal);
+  };
+
+  const setEditModal = (taskId: string) => {
+    changeActiveModal(ScheduleModal.TaskEdit);
+    setEditedTask(taskId);
+  };
+
+  const closeModal = () => {
+    scheduleStore.setActiveModal(null);
+  };
+
+  const deleteTaskButton = () => {
+    scheduleStore.onDeleteTasks(selectedIds);
+    setSelectedIds([]);
+
+    if (selectedIds.length === dayTasks.length) {
+      closeModal();
+    }
+  };
+
   useEffect(() => {
     setSelectedIds([]);
     setExpandedTaskId(undefined);
   }, [activeModal]);
 
   return (
-    <Dialog
-      open={activeModal !== null}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        scheduleStore.setActiveModal(null);
-      }}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog open={activeModal !== null} maxWidth="sm" fullWidth>
       <TaskDialogTitle>
         {activeModal === ScheduleModal.TaskCreate && 'Новое событие'}
 
@@ -58,26 +72,18 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
 
         <Stack direction="row" spacing={1}>
           {activeModal === ScheduleModal.TasksList && selectedIds.length > 0 && (
-            <Button
-              size="small"
-              color="error"
-              startIcon={<Delete fontSize="small" />}
-              onClick={() => {
-                scheduleStore.onDeleteTasks(selectedIds);
-                setSelectedIds([]);
-              }}
-            >
+            <Button size="small" color="error" startIcon={<Delete fontSize="small" />} onClick={deleteTaskButton}>
               Удалить ({selectedIds.length})
             </Button>
           )}
 
           {activeModal === ScheduleModal.TasksList && (
-            <IconButton size="small" onClick={() => scheduleStore.setActiveModal(ScheduleModal.TaskCreate)}>
+            <IconButton size="small" onClick={() => changeActiveModal(ScheduleModal.TaskCreate)}>
               <Add fontSize="small" color="primary" />
             </IconButton>
           )}
 
-          <IconButton size="small" onClick={() => scheduleStore.setActiveModal(null)}>
+          <IconButton size="small" onClick={closeModal}>
             <Close fontSize="small" sx={{ color: 'grey.500' }} />
           </IconButton>
         </Stack>
@@ -89,7 +95,7 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
             {dayTasks.length > 0 && (
               <FormControlLabel
                 label={allSelected || someSelected ? 'Снять выделение' : 'Выбрать все'}
-                control={<Checkbox size="small" checked={allSelected} indeterminate={someSelected} onChange={() => toggleAll()} />}
+                control={<Checkbox size="small" checked={allSelected} indeterminate={someSelected} onChange={toggleAll} />}
               />
             )}
 
@@ -125,10 +131,7 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
                   <IconButton
                     className="edit-button"
                     size="small"
-                    onClick={(e) => {
-                      scheduleStore.setActiveModal(ScheduleModal.TaskEdit);
-                      setEditedTask(task.id);
-                    }}
+                    onClick={() => setEditModal(task.id)}
                     sx={{ position: 'absolute', right: 50 }}
                   >
                     <Edit fontSize="small" sx={{ color: theme.palette.text.primary }} />

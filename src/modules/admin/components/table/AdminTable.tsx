@@ -20,9 +20,9 @@ import { Edit } from '@mui/icons-material';
 import Table from '@mui/material/Table';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import React from 'react';
 import AdminTableFilterMenu, { FilterValuesProps } from './menu/AdminTableFilterMenu';
 import { SearchFields, SearchRow } from './AdminTable.style';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 const initialUsersProps: PaginationModel = {
   items: [],
@@ -31,35 +31,35 @@ const initialUsersProps: PaginationModel = {
 
 export default function AdminTable() {
   const theme = useTheme();
-  const [data, setData] = React.useState<PaginationModel>(initialUsersProps);
-  const [selected, setSelected] = React.useState<number[]>([]);
-  const [openFilter, setOpenFilter] = React.useState<boolean>(false);
-  const [loading, setLoading] = React.useState(false);
+  const [data, setData] = useState<PaginationModel>(initialUsersProps);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const { showError } = useApiError();
-  const [editDomain, setEditDomain] = React.useState(false);
-  const [domain, setDomain] = React.useState('@example.com');
-  const [openEdit, setOpenEdit] = React.useState<{ open: boolean; user: UserModel }>({
+  const [editDomain, setEditDomain] = useState(false);
+  const [domain, setDomain] = useState('@example.com');
+  const [openEdit, setOpenEdit] = useState<{ open: boolean; user: UserModel }>({
     open: false,
     user: initialUser,
   });
-  const [input, setInput] = React.useState<FilterValuesProps>({
+  const [input, setInput] = useState<FilterValuesProps>({
     id: 'name',
     value: '',
   } as FilterValuesProps);
-  const timeout = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const switchFilterMenu = React.useCallback(() => {
+  const switchFilterMenu = useCallback(() => {
     setOpenFilter((prev) => !prev);
   }, []);
 
-  const switchEditMenu = React.useCallback((user?: UserModel) => {
+  const switchEditMenu = useCallback((user?: UserModel) => {
     setOpenEdit((prev) => {
       if (user) return { open: !prev.open, user };
       return { open: !prev.open, user: prev.user };
     });
   }, []);
 
-  const handleInput = React.useCallback(
+  const handleInput = useCallback(
     (value: string, id: string) => {
       setInput({ id: id, value: value });
       withLoading(
@@ -70,7 +70,7 @@ export default function AdminTable() {
     [data, showError],
   );
 
-  const searchWithEmail = React.useCallback(
+  const searchWithEmail = useCallback(
     (value: string) => {
       withLoading(
         () => getFilterData(data.meta.current_page, data.meta.per_page, [{ id: 'email', value: value }]).then((res) => setData(res)),
@@ -80,8 +80,8 @@ export default function AdminTable() {
     [data.meta.current_page, data.meta.per_page, showError],
   );
 
-  const switchSearchWithDomain = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement, Element>) => {
+  const switchSearchWithDomain = useCallback(
+    (e: ChangeEvent<HTMLInputElement, Element>) => {
       const isON = e.target.checked;
       setEditDomain(isON);
       if (input.value !== '') {
@@ -95,14 +95,14 @@ export default function AdminTable() {
     [input.value, domain, handleInput, searchWithEmail],
   );
 
-  const loadDataWithPagination = React.useCallback(
+  const loadDataWithPagination = useCallback(
     (page: number, limit: number) => {
       withLoading(() => getUsersWithPagination(page, limit).then((res) => setData(res)), setLoading).catch(showError);
     },
     [showError],
   );
 
-  const loadDataSortBy = React.useCallback(
+  const loadDataSortBy = useCallback(
     (sortName: string, order?: 'asc' | 'desc') => {
       withLoading(
         () => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then((res) => setData(res)),
@@ -112,7 +112,7 @@ export default function AdminTable() {
     [data.meta.current_page, data.meta.per_page, showError],
   );
 
-  const loadDataWithDeleteUser = React.useCallback(async () => {
+  const loadDataWithDeleteUser = useCallback(async () => {
     try {
       await deleteUserData(selected);
       setSelected([]);
@@ -122,7 +122,7 @@ export default function AdminTable() {
     }
   }, [selected, data.meta.current_page, data.meta.per_page, loadDataWithPagination, showError]);
 
-  const loadDataWithEditUser = React.useCallback(
+  const loadDataWithEditUser = useCallback(
     async (user: UserModel) => {
       try {
         await updateUserData(user);
@@ -134,8 +134,8 @@ export default function AdminTable() {
     [data.meta.current_page, data.meta.per_page, loadDataWithPagination, showError],
   );
 
-  const handleSelectAllClick = React.useCallback(
-    ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectAllClick = useCallback(
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
       if (target.checked) {
         const newSelected = data.items.map((n) => n.id);
         setSelected(newSelected);
@@ -146,7 +146,7 @@ export default function AdminTable() {
     [data.items],
   );
 
-  const handleClick = React.useCallback((id: number) => {
+  const handleClick = useCallback((id: number) => {
     setSelected((prev) => {
       const selectedIndex = prev.indexOf(id);
       if (selectedIndex === -1) {
@@ -156,7 +156,7 @@ export default function AdminTable() {
     });
   }, []);
 
-  const debouncedSearch = React.useCallback(
+  const debouncedSearch = useCallback(
     (searchWithEmailValue: string) => {
       if (timeout.current) clearTimeout(timeout.current);
       timeout.current = setTimeout(() => {
@@ -166,9 +166,20 @@ export default function AdminTable() {
     [searchWithEmail],
   );
 
-  React.useEffect(() => {
+  const openEditMenu = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: UserModel) => {
+    e.stopPropagation();
+    switchEditMenu(user);
+  };
+
+  useEffect(() => {
     loadDataWithPagination(initialUsersProps.meta.current_page, initialUsersProps.meta.per_page);
   }, [loadDataWithPagination]);
+
+  useEffect(() => {
+    return () => {
+      if (timeout.current !== null) clearTimeout(timeout.current);
+    };
+  }, []);
 
   return (
     <Box sx={{ width: '100%', p: { xs: 1.5, lg: 10 } }}>
@@ -203,13 +214,7 @@ export default function AdminTable() {
               }}
             />
 
-            <Switch
-              checked={editDomain}
-              onChange={(e) => {
-                switchSearchWithDomain(e);
-              }}
-              size="small"
-            />
+            <Switch checked={editDomain} onChange={(e) => switchSearchWithDomain(e)} size="small" />
           </Stack>
         </SearchFields>
       </SearchRow>
@@ -263,14 +268,7 @@ export default function AdminTable() {
                     <TableCell align="center">{row.role}</TableCell>
 
                     <TableCell align="left" padding="none">
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          switchEditMenu(row);
-                        }}
-                      >
+                      <IconButton className="edit-button" size="small" onClick={(e) => openEditMenu(e, row)}>
                         <Edit fontSize="small" sx={{ color: theme.palette.text.primary }} />
                       </IconButton>
                     </TableCell>

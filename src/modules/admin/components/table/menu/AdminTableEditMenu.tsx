@@ -4,8 +4,7 @@ import UserModel, { UserStatus } from '../../../../../shared/models/user_model';
 import { CloseButton, ModalContent } from './AdminTableMenu.style';
 import { Close } from '@mui/icons-material';
 import DropdownList from '../../DropdownList';
-import { memo, useCallback } from 'react';
-import React from 'react';
+import { ChangeEvent, memo, useCallback, useEffect, useState } from 'react';
 
 interface AdminTableEditMenuProps {
   onClick: (user: UserModel) => void;
@@ -15,22 +14,31 @@ interface AdminTableEditMenuProps {
 }
 
 function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenuProps) {
-  const [editedUser, setEditedUser] = React.useState<UserModel>(user);
+  const [editedUser, setEditedUser] = useState<UserModel>(user);
   const theme = useTheme();
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedUser((prev) => {
       return { ...prev, [name]: value };
     });
   }, []);
 
-  const handleSelectChange = useCallback((event: SelectChangeEvent<string>, id: string) => {
+  const handleSelectChangePlan = useCallback((plan: string) => {
     setEditedUser((prev) => {
       return {
         ...prev,
-        [id as keyof UserModel]: event.target.value === NO_PLAN_LABEL ? NO_PLAN_LABEL : event.target.value,
-        status: event.target.value === NO_PLAN_LABEL ? UserStatus.PendingPayment : prev.status,
+        plan: plan === NO_PLAN_LABEL ? NO_PLAN_LABEL : plan,
+        status: plan === NO_PLAN_LABEL ? UserStatus.PendingPayment : prev.status,
+      };
+    });
+  }, []);
+
+  const handleSelectChangeStatus = useCallback((status: UserStatus) => {
+    setEditedUser((prev) => {
+      return {
+        ...prev,
+        status: status,
       };
     });
   }, []);
@@ -44,7 +52,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
     onClose();
   }, [user, editedUser, onClick, onClose]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setEditedUser(user);
   }, [user]);
 
@@ -94,7 +102,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
             menuItems={[...ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL]}
             value={editedUser.plan}
             variant="standard"
-            onChange={(event) => handleSelectChange(event, 'plan')}
+            onChange={(event) => handleSelectChangePlan(event.target.value)}
           />
 
           <DropdownList
@@ -103,7 +111,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
             menuItems={Object.values(UserStatus)}
             value={editedUser.status}
             variant="standard"
-            onChange={(event) => handleSelectChange(event, 'status')}
+            onChange={(event) => handleSelectChangeStatus(event.target.value as UserStatus)}
           />
         </Stack>
 

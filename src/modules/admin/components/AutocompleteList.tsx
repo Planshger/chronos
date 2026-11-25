@@ -27,7 +27,7 @@ function AutocompleteList({ id, label, onChange, options, value, variant = 'stan
         freeSolo
         options={options}
         value={value}
-        onChange={(event, newValue) => {
+        onChange={(_, newValue) => {
           onChange(newValue ?? '', id);
         }}
         slotProps={{

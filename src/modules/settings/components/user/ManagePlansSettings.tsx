@@ -9,6 +9,7 @@ import { AutoAwesome } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../../auth';
 import { CurrentPlanAvatar } from './style/ManagePlansSettings.style';
+import { useCallback } from 'react';
 
 interface ManagePlansSettingsProps {
   authStore: AuthStore;
@@ -20,7 +21,9 @@ function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsPr
   const { showError } = useApiError();
   const navigate = useNavigate();
 
-  const cancelPlan = async () => {
+  const handleNavigateToPlans = useCallback(() => navigate('/plans'), [navigate]);
+
+  const cancelPlan = useCallback(async () => {
     if (!user) return;
     try {
       await withLoading(
@@ -30,7 +33,8 @@ function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsPr
     } catch (error) {
       showError(error);
     }
-  };
+  }, [user, settingsStore, authStore, showError]);
+
   if (!user) return null;
 
   return (
@@ -50,7 +54,7 @@ function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsPr
           Продлить подписку
         </Button>
 
-        <Button variant="outlined" onClick={() => navigate('/plans')} fullWidth sx={{ borderRadius: 3, color: 'text.primary' }}>
+        <Button variant="outlined" onClick={handleNavigateToPlans} fullWidth sx={{ borderRadius: 3, color: 'text.primary' }}>
           Сменить тарифный план
         </Button>
 

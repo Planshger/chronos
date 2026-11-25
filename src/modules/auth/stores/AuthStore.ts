@@ -1,4 +1,4 @@
-import UserModel, { initialUser, UserStatus } from '../../../shared/models/user_model';
+import UserModel, { initialUser, Role, UserStatus } from '../../../shared/models/user_model';
 import { getToken, setTokenInStorage } from '../../../shared/api/authToken';
 import { BlockedUserError } from '../../../shared/errors/AppError';
 import { authMe } from '../datasources/authorization_data_source';
@@ -36,6 +36,14 @@ export default class AuthStore {
     setTokenInStorage(null);
   }
 
+  handleUnauthorized(token: string): Role | null {
+    if (token !== this.token) return null;
+
+    const role = this.user.role;
+    this.logout();
+    return role;
+  }
+
   async authenticate(token = this.token, userData?: UserModel): Promise<void> {
     if (!token) {
       this.logout();
@@ -54,9 +62,7 @@ export default class AuthStore {
       }
 
       if (user.status === UserStatus.Blocked) {
-        this.showError(new BlockedUserError());
-        this.logout();
-        return;
+        throw new BlockedUserError();
       }
 
       setTokenInStorage(token);

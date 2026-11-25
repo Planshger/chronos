@@ -7,6 +7,7 @@ export enum UserStatus {
   Active = 'Активен',
   Blocked = 'Заблокирован',
   PendingPayment = 'Ожидание оплаты',
+  NotActive = 'Не активен',
 }
 
 export default interface UserModel {
@@ -14,7 +15,7 @@ export default interface UserModel {
   name: string;
   email: string;
   plan: string;
-  status: UserStatus | '';
+  status: UserStatus;
   password?: string;
   tgLinked: boolean;
   role: Role;
@@ -25,7 +26,7 @@ export const initialUser: UserModel = {
   name: '',
   email: '',
   plan: '',
-  status: '',
+  status: UserStatus.NotActive,
   password: '',
   role: Role.User,
   tgLinked: false,

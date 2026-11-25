@@ -114,6 +114,8 @@ function AdminEditManagePlansSettings({
     [settingsStore, setPlans, onClose, showError],
   );
 
+  const handleDeleteEditedPlan = useCallback(() => handleDeletePlan(editedPlan.id ?? 0), [handleDeletePlan, editedPlan.id]);
+
   const handleSave = useCallback(async () => {
     const planToSend: PlanModel = {
       ...editedPlan,
@@ -155,17 +157,9 @@ function AdminEditManagePlansSettings({
   }, [plan]);
 
   return (
-    <Modal
-      open={open}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        onClose();
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <AdminPlanModalContent>
-        <AdminPlanModalCloseButton aria-label="close" onClick={() => onClose()}>
+        <AdminPlanModalCloseButton aria-label="close" onClick={onClose}>
           <Close />
         </AdminPlanModalCloseButton>
 
@@ -257,7 +251,7 @@ function AdminEditManagePlansSettings({
               <Button
                 variant="text"
                 color="error"
-                onClick={() => handleDeletePlan(editedPlan.id ?? 0)}
+                onClick={handleDeleteEditedPlan}
                 sx={{ alignSelf: { xs: 'flex-start', sm: 'center' }, ml: { sm: 'auto' } }}
               >
                 Удалить

@@ -100,43 +100,45 @@ function PageWithChat({ authStore }: PageWithChatProps) {
 
       <ChatPanel variant="outlined">
         <ChatMessagesViewport>
-          {loading ? (
+          {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <CircularProgress size={24} />
             </Box>
-          ) : messages.length === 0 ? (
+          )}
+
+          {messages.length === 0 && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 6, textAlign: 'center' }}>
               Пока сообщений нет. Напишите боту в Telegram или отправьте первое сообщение ниже.
             </Typography>
-          ) : (
-            <Stack spacing={1}>
-              {messages.map((m) => {
-                const isUser = m.source === 'web' || m.source === 'telegram';
-                return (
-                  <Box key={m.id} sx={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
-                    <ChatMessageBubble elevation={0} isUser={isUser}>
-                      <Typography variant="caption" sx={{ opacity: 0.7, display: 'block', mb: 0.25 }}>
-                        {isUser ? 'Вы' : 'Бот'}
-                      </Typography>
-
-                      <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
-                        {m.text}
-                      </Typography>
-
-                      <ChatMessageTime variant="caption" isUser={isUser}>
-                        {new Date(m.createdAt).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </ChatMessageTime>
-                    </ChatMessageBubble>
-                  </Box>
-                );
-              })}
-
-              <div ref={bottomRef} />
-            </Stack>
           )}
+
+          <Stack spacing={1}>
+            {messages.map((m) => {
+              const isUser = m.source === 'web' || m.source === 'telegram';
+              return (
+                <Box key={m.id} sx={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
+                  <ChatMessageBubble elevation={0} isUser={isUser}>
+                    <Typography variant="caption" sx={{ opacity: 0.7, display: 'block', mb: 0.25 }}>
+                      {isUser ? 'Вы' : 'Бот'}
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                      {m.text}
+                    </Typography>
+
+                    <ChatMessageTime variant="caption" isUser={isUser}>
+                      {new Date(m.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </ChatMessageTime>
+                  </ChatMessageBubble>
+                </Box>
+              );
+            })}
+
+            <div ref={bottomRef} />
+          </Stack>
         </ChatMessagesViewport>
 
         <Divider />

@@ -1,9 +1,9 @@
-import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
+import { Collapse, List, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import { ArrowBack, ExpandLess, ExpandMore, TouchApp } from '@mui/icons-material';
 import { SettingsModel, SettingId } from '../models/settings_model';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingIcons } from '../constants/SettingIcons';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface ListSettingsProps {
   onSelect: (id: SettingId) => void;
@@ -16,15 +16,23 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
   const location = useLocation();
   const backPath = location.pathname.startsWith('/settings/admin_') ? '/admin' : '/schedule';
   const initialOpen = location.state?.open;
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [open, setOpen] = useState(false);
+  const [messOpen, setMessOpen] = useState(false);
 
-  function handleSelect(id: SettingId) {
-    if (id === SettingId.Messengers) {
-      setOpen(!open);
-    } else {
-      onSelect(id);
-    }
-  }
+  const handleBack = useCallback(() => navigate(backPath), [navigate, backPath]);
+
+  const handleSelect = useCallback(
+    (id: SettingId) => {
+      if (id === SettingId.Messengers) {
+        setOpen(!open);
+        setMessOpen(!messOpen);
+      } else {
+        onSelect(id);
+      }
+    },
+    [open, onSelect, messOpen],
+  );
 
   useEffect(() => {
     setOpen(Boolean(initialOpen));
@@ -33,7 +41,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
   return (
     <List
       sx={{
-        width: { xs: '100%', md: 340, sm: 200 },
+        width: { xs: messOpen ? '50%' : '100%', md: '27%', lg: '20%' },
         display: { xs: 'flex', md: 'block', lg: 'block' },
         flexDirection: { xs: 'row', md: 'column', lg: 'column' },
       }}
@@ -41,11 +49,10 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
     >
       <ListItemButton
         key="back"
-        onClick={() => navigate(backPath)}
+        onClick={handleBack}
         sx={{
           '&:hover': { transform: 'translateY(-4px)' },
           backgroundColor: 'transparent',
-          backgroundImage: 'none',
         }}
       >
         <ListItemIcon>
@@ -62,11 +69,10 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
             key={item.id}
             onClick={() => handleSelect(item.id)}
             sx={{
-              position: 'relative',
-              zIndex: 1,
+              display: messOpen && item.id !== SettingId.Messengers && isMobile ? { xs: 'none' } : null,
               '&:hover': {
                 transform: 'translateY(-4px)',
-                background: theme.palette.background.paper,
+                backgroundColor: 'transparent',
               },
             }}
           >
@@ -96,7 +102,7 @@ export default function ListSettings({ onSelect, settingsData }: ListSettingsPro
                     pl: 4,
                     '&:hover': {
                       transform: 'translateY(-4px)',
-                      background: theme.palette.background.paper,
+                      background: 'transparent',
                     },
                   }}
                 >

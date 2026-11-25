@@ -18,6 +18,10 @@ function Schedule({ scheduleStore }: ScheduleProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const handleCloseScheduling = () => {
+    scheduleStore.closeScheduling();
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
       <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen} />
@@ -32,7 +36,7 @@ function Schedule({ scheduleStore }: ScheduleProps) {
       {isMobile && (
         <Dialog
           open={scheduleStore.isSchedulingOpen}
-          onClose={scheduleStore.closeScheduling}
+          onClose={handleCloseScheduling}
           fullWidth
           maxWidth="sm"
           slotProps={{

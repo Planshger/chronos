@@ -1,4 +1,4 @@
-import { AppBar, Stack, Toolbar, useTheme } from '@mui/material';
+import { AppBar, Stack, Toolbar } from '@mui/material';
 import { CreditCard, Logout, Settings } from '@mui/icons-material';
 import injectMobxStore from '../../../../shared/utils/injectMobxStore';
 import { SettingId } from '../../../settings/models/settings_model';
@@ -11,8 +11,11 @@ interface AdminAppBarProps {
 }
 
 function AdminAppBar({ authStore }: AdminAppBarProps) {
-  const theme = useTheme();
-  const navigate = useNavigate();
+  const navigator = useNavigate();
+
+  const navigate = (props: SettingId) => {
+    navigator(`/settings/${props}`);
+  };
 
   return (
     <AppBar position="sticky">
@@ -28,7 +31,7 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
             aria-label="Профиль"
             title="Профиль"
             tone="profile"
-            onClick={() => navigate(`/settings/${SettingId.AdminProfile}`)}
+            onClick={() => navigate(SettingId.AdminProfile)}
           >
             <Settings sx={{ mr: { xs: 0, sm: 1 } }} />
             <Label>Профиль</Label>
@@ -39,7 +42,7 @@ function AdminAppBar({ authStore }: AdminAppBarProps) {
             aria-label="Тарифы"
             title="Тарифы"
             tone="plans"
-            onClick={() => navigate(`/settings/${SettingId.AdminManagePlans}`)}
+            onClick={() => navigate(SettingId.AdminManagePlans)}
           >
             <CreditCard sx={{ mr: { xs: 0, sm: 1 } }} />
             <Label>Тарифы</Label>

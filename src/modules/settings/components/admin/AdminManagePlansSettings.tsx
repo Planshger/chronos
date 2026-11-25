@@ -34,6 +34,14 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
     [loadData],
   );
 
+  const handleCreatePlan = useCallback(() => {
+    setChangePlans({ plan: initialPlan, openEdit: false, openCreate: true });
+  }, []);
+
+  const handleEditPlan = useCallback((plan: PlanModel) => {
+    setChangePlans({ plan, openEdit: true, openCreate: false });
+  }, []);
+
   const switchEditMenu = useCallback(
     (plan?: PlanModel) => {
       setChangePlans((prev) => {
@@ -67,7 +75,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
           size="small"
           sx={{ mb: 4, position: 'relative' }}
           startIcon={<Add />}
-          onClick={() => setChangePlans({ plan: initialPlan, openEdit: false, openCreate: true })}
+          onClick={handleCreatePlan}
         >
           Создать
         </Button>
@@ -79,7 +87,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
             key={p.name}
             plan={p}
             actionLabel="Редактировать"
-            onAction={() => setChangePlans({ plan: p, openEdit: true, openCreate: false })}
+            onAction={() => handleEditPlan(p)}
             highlightInactive
             outlinePopular
           />

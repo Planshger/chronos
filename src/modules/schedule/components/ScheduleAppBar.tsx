@@ -14,13 +14,17 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
   const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
   const theme = useTheme();
 
-  function openUserMenu(event: React.MouseEvent<HTMLElement>) {
+  const openUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setOpenMenu(event.currentTarget);
-  }
+  };
 
-  function closeUserMenu() {
+  const closeUserMenu = () => {
     setOpenMenu(null);
-  }
+  };
+
+  const openAIWindow = () => {
+    setIsAiOpen(!isAiOpen);
+  };
 
   return (
     <AppBar position="sticky">
@@ -31,7 +35,7 @@ export default function ScheduleAppBar({ isAiOpen, setIsAiOpen }: MainAppBarProp
         </ScheduleTitle>
 
         <Stack direction="row" spacing={{ xs: 0.5, sm: 2 }} sx={{ alignItems: 'center' }}>
-          <ScheduleAiButton variant="outlined" startIcon={<Chat />} onClick={() => setIsAiOpen(!isAiOpen)}>
+          <ScheduleAiButton variant="outlined" startIcon={<Chat />} onClick={openAIWindow}>
             <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
               ИИ-ассистент
             </Box>

@@ -27,7 +27,7 @@ export default function AdminTableToolbar({ numSelected, openFilterMenu, deleteU
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Фильтр" followCursor onClick={() => openFilterMenu()}>
+        <Tooltip title="Фильтр" followCursor onClick={openFilterMenu}>
           <IconButton sx={{ ml: 'auto' }}>
             <FilterListIcon sx={{ color: theme.palette.text.primary }} />
           </IconButton>

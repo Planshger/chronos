@@ -33,6 +33,18 @@ function Calendar({ scheduleStore }: CalendarProps) {
   const endDate = endOfWeek(monthEnd, { weekStartsOn: 1 });
   const days = eachDayOfInterval({ start: startDate, end: endDate });
 
+  const nextMonthButton = () => {
+    scheduleStore.nextMonth();
+  };
+
+  const prevMonthButton = () => {
+    scheduleStore.prevMonth();
+  };
+
+  const sectedDateHandler = (date: Date) => {
+    scheduleStore.selectDate(date, isMobile);
+  };
+
   return (
     <CalendarRoot>
       <CalendarHeader direction="row">
@@ -44,7 +56,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
         </Typography>
 
         <Stack direction="row" spacing={{ xs: 0, sm: 1 }} sx={{ alignItems: 'center' }}>
-          <IconButton onClick={scheduleStore.prevMonth} size="small">
+          <IconButton onClick={prevMonthButton} size="small">
             <ChevronLeft sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
 
@@ -52,7 +64,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
             {format(currentMonth, 'LLLL yyyy', { locale: ru })}
           </Typography>
 
-          <IconButton onClick={scheduleStore.nextMonth} size="small">
+          <IconButton onClick={nextMonthButton} size="small">
             <ChevronRight sx={{ color: theme.custom.accent.amber }} />
           </IconButton>
         </Stack>
@@ -90,7 +102,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
             return (
               <CalendarDay
                 key={dateKey}
-                onClick={() => scheduleStore.selectDate(date, isMobile)}
+                onClick={() => sectedDateHandler(date)}
                 isSelected={isSelected}
                 isCurrentMonth={isCurrentMonth}
               >
