@@ -1,33 +1,35 @@
 import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { memo, useState } from 'react';
+import { AdminTableField, SortOrder } from '../../models/sort_model';
+import type { SortField } from '../../models/sort_model';
 
 export interface HeadCell {
-  id: string;
+  id: SortField;
   label: string;
 }
 
 export const headCells: readonly HeadCell[] = [
-  { id: 'name', label: 'Пользователь' },
-  { id: 'email', label: 'Почта' },
-  { id: 'plan', label: 'Тариф' },
-  { id: 'status', label: 'Статус' },
-  { id: 'role', label: 'Роль' },
+  { id: AdminTableField.Name, label: 'Пользователь' },
+  { id: AdminTableField.Email, label: 'Почта' },
+  { id: AdminTableField.Plan, label: 'Тариф' },
+  { id: AdminTableField.Status, label: 'Статус' },
+  { id: AdminTableField.Role, label: 'Роль' },
 ];
 
 interface AdminTableProps {
   numSelected: number;
-  onSort: (id: string, order: 'asc' | 'desc') => void;
+  onSort: (id: SortField, order: SortOrder) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   rowCount: number;
 }
 
 function AdminTableHead({ onSelectAllClick, numSelected, rowCount, onSort }: AdminTableProps) {
-  const [orderBy, setOrderBy] = useState<string>('');
-  const [order, setOrder] = useState<'asc' | 'desc'>('desc');
+  const [orderBy, setOrderBy] = useState<SortField | ''>('');
+  const [order, setOrder] = useState<SortOrder>(SortOrder.Desc);
 
-  const handleSort = (id: string) => {
-    const isAsc = orderBy === id && order === 'asc';
-    const newOrder: 'asc' | 'desc' = isAsc ? 'desc' : 'asc';
+  const handleSort = (id: SortField) => {
+    const isAsc = orderBy === id && order === SortOrder.Asc;
+    const newOrder: SortOrder = isAsc ? SortOrder.Desc : SortOrder.Asc;
 
     setOrder(newOrder);
     setOrderBy(id);
@@ -50,13 +52,13 @@ function AdminTableHead({ onSelectAllClick, numSelected, rowCount, onSort }: Adm
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.id === 'name' ? 'left' : 'center'}
-            padding={headCell.id === 'name' ? 'none' : 'normal'}
+            align={headCell.id === AdminTableField.Name ? 'left' : 'center'}
+            padding={headCell.id === AdminTableField.Name ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : SortOrder.Asc}
               onClick={() => handleSort(headCell.id)}
             >
               {headCell.label.toUpperCase()}

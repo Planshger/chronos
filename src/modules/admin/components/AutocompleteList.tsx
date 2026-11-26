@@ -1,11 +1,12 @@
 import { Autocomplete, Stack, TextField, useTheme } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { memo } from 'react';
+import { AdminTableField } from '../models/sort_model';
 
 interface AutocompleteListProps {
-  id: string;
+  id: AdminTableField;
   label?: string;
-  onChange: (value: string, id: string) => void;
+  onChange: (value: string, id: AdminTableField) => void;
   options: string[];
   value: string | undefined;
   variant?: 'standard' | 'outlined' | 'filled';

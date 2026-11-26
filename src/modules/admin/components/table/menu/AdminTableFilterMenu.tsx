@@ -1,6 +1,6 @@
 import { Button, Modal, SelectChangeEvent, Stack, Typography, useTheme } from '@mui/material';
 import { PaginationModel } from '../../../models/user_pagination_model';
-import { UserStatus, useApiError } from '../../../../../shared';
+import { Role, UserStatus, useApiError } from '../../../../../shared';
 import { ADMIN_PLAN_OPTIONS } from '../../../constants/adminTableOptions';
 import { memo, useCallback, useEffect, useState } from 'react';
 import { getFilterData } from '../../../datasources/admin_data_source';
@@ -8,9 +8,10 @@ import { Close } from '@mui/icons-material';
 import DropdownList from '../../DropdownList';
 import { headCells } from '../AdminTableHead';
 import { CloseButton, ModalContent } from './AdminTableMenu.style';
+import { AdminTableField } from '../../../models/sort_model';
 
 export interface FilterValuesProps {
-  id: string;
+  id: AdminTableField;
   value: string;
 }
 
@@ -24,16 +25,16 @@ interface AdminTableFilterMenuProps {
 }
 
 const initialprops = [
-  { id: 'email', value: '' },
-  { id: 'plan', value: '' },
-  { id: 'status', value: '' },
-  { id: 'role', value: '' },
+  { id: AdminTableField.Email, value: '' },
+  { id: AdminTableField.Plan, value: '' },
+  { id: AdminTableField.Status, value: '' },
+  { id: AdminTableField.Role, value: '' },
 ];
 
-const menuItems = new Map<string, string[]>([
-  ['status', Object.values(UserStatus)],
-  ['plan', ADMIN_PLAN_OPTIONS],
-  ['role', ['user', 'admin']],
+const menuItems = new Map<AdminTableField, string[]>([
+  [AdminTableField.Status, Object.values(UserStatus)],
+  [AdminTableField.Plan, ADMIN_PLAN_OPTIONS],
+  [AdminTableField.Role, Object.values(Role)],
 ]);
 
 function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, searchProp }: AdminTableFilterMenuProps) {
@@ -41,7 +42,7 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
   const { showError } = useApiError();
   const theme = useTheme();
 
-  const handleChange = useCallback((e: SelectChangeEvent<string>, id: string) => {
+  const handleChange = useCallback((e: SelectChangeEvent<string>, id: AdminTableField) => {
     setFilterValues((prev) =>
       prev.map((f) => {
         if (f.id === id) return { ...f, value: e.target.value };
@@ -61,7 +62,10 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
   }, [filterValues, currentPage, perPage, onClose, setData, showError]);
 
   useEffect(() => {
-    setFilterValues((prev) => [...prev.filter((filter) => filter.id !== 'name'), { id: 'name', value: searchProp }]);
+    setFilterValues((prev) => [
+      ...prev.filter((filter) => filter.id !== AdminTableField.Name),
+      { id: AdminTableField.Name, value: searchProp },
+    ]);
   }, [searchProp]);
 
   return (
@@ -83,7 +87,7 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
                 id={item.id}
                 label={item.label}
                 menuItems={menuItems.get(item.id) ?? []}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, item.id)}
                 value={filterValues.find((i) => i.id === item.id)?.value}
                 sx={{ p: 1 }}
               />
@@ -100,7 +104,7 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() => setFilterValues([...initialprops, { id: 'name', value: searchProp }])}
+            onClick={() => setFilterValues([...initialprops, { id: AdminTableField.Name, value: searchProp }])}
           >
             Очистить
           </Button>

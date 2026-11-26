@@ -13,21 +13,17 @@ interface LandingAppBarProps {
 }
 
 const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
-  const token = authStore.token;
+  const { logout, user, token } = authStore;
   const navigate = useNavigate();
 
-  const onClick = useCallback(
-    (url: string) => {
-      if (!token) {
-        navigate('/register');
-      } else {
-        navigate(url);
-      }
-    },
-    [navigate, token],
-  );
-
-  const { logout, user } = authStore;
+  const onClick = useCallback(() => {
+    let url = user.role === Role.Admin ? '/admin' : '/schedule';
+    if (!token) {
+      navigate('/register');
+    } else {
+      navigate(url);
+    }
+  }, [navigate, token, user.role]);
 
   return (
     <Box sx={{ p: 4 }}>
@@ -42,7 +38,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
               Выход
             </Button>
           ) : (
-            <Button onClick={() => onClick(user.role === Role.Admin ? '/admin' : '/schedule')} sx={{ color: 'text.primary' }}>
+            <Button onClick={onClick} sx={{ color: 'text.primary' }}>
               Регистрация
             </Button>
           )}

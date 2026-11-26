@@ -74,7 +74,7 @@ function RegistrationModule({ authStore, apiErrorStore }: RegistrationModuleProp
             </Typography>
           </Box>
 
-          <form onSubmit={(e) => handleSubmit(e)}>
+          <form onSubmit={handleSubmit}>
             <TextField
               name="email"
               label="Эл. почта"

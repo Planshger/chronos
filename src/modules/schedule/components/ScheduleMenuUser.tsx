@@ -42,7 +42,7 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
       id="menu-appbar"
       anchorEl={openMenu}
       open={Boolean(openMenu)}
-      onClose={() => closeUserMenu()}
+      onClose={closeUserMenu}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >

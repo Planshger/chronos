@@ -19,6 +19,8 @@ import Box from '@mui/material/Box';
 import AdminTableFilterMenu, { FilterValuesProps } from './menu/AdminTableFilterMenu';
 import { SearchFields, SearchRow } from './AdminTable.style';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { AdminTableField } from '../../models/sort_model';
+import type { SortField, SortOrder } from '../../models/sort_model';
 
 const initialUsersProps: PaginationModel = {
   items: [],
@@ -39,9 +41,9 @@ export default function AdminTable() {
     user: initialUser,
   });
   const [nameSearchInput, setNameSearchInput] = useState<FilterValuesProps>({
-    id: 'name',
+    id: AdminTableField.Name,
     value: '',
-  } as FilterValuesProps);
+  });
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRequestId = useRef(0);
 
@@ -65,7 +67,7 @@ export default function AdminTable() {
 
       const requestId = ++searchRequestId.current;
       const filterValue = searchByEmail && value !== '' && !value.includes('@') ? `${value}${emailDomain}` : value;
-      const id = searchByEmail ? 'email' : 'name';
+      const id = searchByEmail ? AdminTableField.Email : AdminTableField.Name;
       withLoading(
         () =>
           getFilterData(data.meta.current_page, data.meta.per_page, [{ id, value: filterValue }]).then((res) => {
@@ -78,9 +80,9 @@ export default function AdminTable() {
   );
 
   const handleInput = useCallback(
-    (value: string, id: string) => {
+    (value: string, id: AdminTableField) => {
       setNameSearchInput({ id, value });
-      searchUsers(value, id === 'email');
+      searchUsers(value, id === AdminTableField.Email);
     },
     [searchUsers],
   );
@@ -102,7 +104,7 @@ export default function AdminTable() {
   );
 
   const loadDataSortBy = useCallback(
-    (sortName: string, order?: 'asc' | 'desc') => {
+    (sortName: SortField, order?: SortOrder) => {
       withLoading(
         () => getSortBy(sortName, data.meta.current_page, data.meta.per_page, order).then((res) => setData(res)),
         setLoading,
@@ -193,8 +195,8 @@ export default function AdminTable() {
       <SearchRow>
         <SearchFields direction={{ xs: 'column', sm: 'row' }} spacing={1}>
           <AutocompleteList
-            key={editDomain ? 'email' : 'name'}
-            id={editDomain ? 'email' : 'name'}
+            key={editDomain ? AdminTableField.Email : AdminTableField.Name}
+            id={editDomain ? AdminTableField.Email : AdminTableField.Name}
             label="Поиск"
             disableClearable={false}
             options={data.items.map((i) => i.name)}
@@ -218,7 +220,7 @@ export default function AdminTable() {
               }}
             />
 
-            <Switch checked={editDomain} onChange={(e) => switchSearchWithDomain(e)} size="small" />
+            <Switch checked={editDomain} onChange={switchSearchWithDomain} size="small" />
           </Stack>
         </SearchFields>
       </SearchRow>

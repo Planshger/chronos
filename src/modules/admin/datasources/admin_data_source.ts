@@ -1,6 +1,8 @@
 import { PaginationModel } from '../models/user_pagination_model';
 import { apiRequest, UserModel, queryClient } from '../../../shared';
 import { FilterValuesProps } from '../components/table/menu/AdminTableFilterMenu';
+import { SortOrder } from '../models/sort_model';
+import type { SortField } from '../models/sort_model';
 
 export function getAllUsers(): Promise<UserModel[]> {
   return apiRequest<UserModel[]>('/users');
@@ -14,8 +16,8 @@ export async function getUsersWithPagination(page: number, limit: number): Promi
   });
 }
 
-export async function getSortBy(sortBy: string, page: number, limit: number, order?: 'asc' | 'desc'): Promise<PaginationModel> {
-  const sortParam = order === 'desc' ? `-${sortBy}` : sortBy;
+export async function getSortBy(sortBy: SortField, page: number, limit: number, order?: SortOrder): Promise<PaginationModel> {
+  const sortParam = order === SortOrder.Desc ? `-${sortBy}` : sortBy;
   const params = new URLSearchParams({
     page: String(page),
     limit: String(limit),
