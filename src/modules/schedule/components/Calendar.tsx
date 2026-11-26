@@ -15,6 +15,7 @@ import {
   DayTaskList,
   WeekdayLabel,
 } from './style/Calendar.style';
+import { useEffect } from 'react';
 
 interface CalendarProps {
   scheduleStore: ScheduleStore;
@@ -44,6 +45,10 @@ function Calendar({ scheduleStore }: CalendarProps) {
   const sectedDateHandler = (date: Date) => {
     scheduleStore.selectDate(date, isMobile);
   };
+
+  useEffect(() => {
+    scheduleStore.loadTasks();
+  }, []);
 
   return (
     <CalendarRoot>

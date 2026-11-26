@@ -53,10 +53,6 @@ export default class ScheduleStore {
     this.selectedDate = null;
     this.activeModal = null;
     this.isSchedulingOpen = false;
-
-    if (userId !== null) {
-      this.loadTasks();
-    }
   }
 
   setActiveModal(name: ScheduleModal | null): void {
