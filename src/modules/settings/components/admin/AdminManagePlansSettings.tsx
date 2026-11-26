@@ -68,13 +68,7 @@ function AdminManagePlansSettings({ settingsStore }: AdminManagePlansSettingsPro
   return (
     <AdminPlansSettingsRoot>
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Button
-          variant="text"
-          size="small"
-          sx={{ mb: 4, position: 'relative' }}
-          startIcon={<Add />}
-          onClick={handleCreatePlan}
-        >
+        <Button variant="text" size="small" sx={{ mb: 4, position: 'relative' }} startIcon={<Add />} onClick={handleCreatePlan}>
           Создать
         </Button>
       </Box>

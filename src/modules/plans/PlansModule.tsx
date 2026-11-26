@@ -1,6 +1,16 @@
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { injectMobxStore, withLoading, isAuthorizedUser, UserStatus, useApiError, updateUserData, Role, Loader, PageBackLink } from '../../shared';
+import {
+  injectMobxStore,
+  withLoading,
+  isAuthorizedUser,
+  UserStatus,
+  useApiError,
+  updateUserData,
+  Role,
+  Loader,
+  PageBackLink,
+} from '../../shared';
 import { getAllPlans } from './datasources/plans_data_source';
 import { useCallback, useEffect, useState } from 'react';
 import { ArrowBack } from '@mui/icons-material';

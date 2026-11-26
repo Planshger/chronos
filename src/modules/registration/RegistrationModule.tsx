@@ -1,6 +1,19 @@
 import { Person as UserIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
 import { Box, Typography, TextField, useTheme } from '@mui/material';
-import { UserModel, initialUser, Role, UserStatus, injectMobxStore, ApiErrorStore, withLoading, Loader, AuthFormCard, AuthFormContent, AuthSubmitButton, PageBackLink } from '../../shared';
+import {
+  UserModel,
+  initialUser,
+  Role,
+  UserStatus,
+  injectMobxStore,
+  ApiErrorStore,
+  withLoading,
+  Loader,
+  AuthFormCard,
+  AuthFormContent,
+  AuthSubmitButton,
+  PageBackLink,
+} from '../../shared';
 import { useNavigate } from 'react-router-dom';
 import { auth, AuthStore, register } from '../auth';
 import { useCallback, useState } from 'react';

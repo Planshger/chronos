@@ -34,30 +34,20 @@ function App() {
             <Route path="/admin/login" element={<AdminLoginPage />} />
 
             <Route
-              element={
-                <PrivateRoute
-                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User], location)}
-                />
-              }
+              element={<PrivateRoute fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User], location)} />}
             >
               <Route path="/schedule" element={<Schedule />} />
             </Route>
 
             <Route
-              element={
-                <PrivateRoute
-                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)}
-                />
-              }
+              element={<PrivateRoute fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)} />}
             >
               <Route path="/admin" element={<Admin />} />
             </Route>
 
             <Route
               element={
-                <PrivateRoute
-                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User, Role.Admin], location)}
-                />
+                <PrivateRoute fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User, Role.Admin], location)} />
               }
             >
               <Route path="/settings" element={<Settings />}>
@@ -70,11 +60,7 @@ function App() {
                 <Route path={SettingId.Map} element={<MapSettings />} />
 
                 <Route
-                  element={
-                    <PrivateRoute
-                      fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)}
-                    />
-                  }
+                  element={<PrivateRoute fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)} />}
                 >
                   <Route path={SettingId.AdminProfile} element={<ProfileSettings />} />
                   <Route path={SettingId.AdminManagePlans} element={<ManagePlansSettings />} />

@@ -22,7 +22,10 @@ function ProfileSettings({ authStore, settingsStore }: ProfileSettingsProps) {
   const onClick = useCallback(async () => {
     if (user?.email !== editUser.email || user?.name !== editUser.name) {
       try {
-        await withLoading(() => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)), settingsStore.setLoading);
+        await withLoading(
+          () => updateUserData(editUser).then((updatedUser) => authStore.setUser(updatedUser)),
+          settingsStore.setLoading,
+        );
       } catch (error) {
         showError(error);
       }

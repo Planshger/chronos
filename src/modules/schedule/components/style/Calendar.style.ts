@@ -83,10 +83,7 @@ export const DayNumber = styled(Typography, {
   fontWeight: 600,
   borderRadius: '50%',
   backgroundColor: isToday && !isSelected ? theme.palette.primary.main : 'transparent',
-  color:
-    isToday && !isSelected
-      ? theme.palette.primary.contrastText
-      : 'inherit',
+  color: isToday && !isSelected ? theme.palette.primary.contrastText : 'inherit',
   width: 32,
   height: 32,
   textAlign: 'center',
