@@ -3,11 +3,11 @@ import { theme, appName } from '../../../../shared';
 import { ClosingButton } from './LandingSection.style';
 import { CheckCircle } from '@mui/icons-material';
 
-interface LandingProposalSection {
+interface LandingProposalSectionProps {
   continueOrRegistrationButton: () => void;
 }
 
-function LandingProposalSection({ continueOrRegistrationButton }: LandingProposalSection) {
+function LandingProposalSection({ continueOrRegistrationButton }: LandingProposalSectionProps) {
   return (
     <Box sx={{ py: 12, borderTop: `1px solid ${theme.custom.border.light}` }}>
       <Container maxWidth="md" sx={{ textAlign: 'center' }}>

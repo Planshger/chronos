@@ -48,7 +48,7 @@ function Calendar({ scheduleStore }: CalendarProps) {
 
   useEffect(() => {
     scheduleStore.loadTasks();
-  }, []);
+  }, [scheduleStore]);
 
   return (
     <CalendarRoot>
