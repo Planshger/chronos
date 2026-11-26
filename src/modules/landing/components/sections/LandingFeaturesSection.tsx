@@ -1,6 +1,5 @@
 import { Box, CardContent, Container, Grid, Typography } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
-import { appName } from '../../../../shared/constants/name';
+import { theme, appName } from '../../../../shared';
 import { FeatureCard, FeatureIconWrapper } from './LandingSection.style';
 import { CalendarToday, Chat, LocationOn } from '@mui/icons-material';
 

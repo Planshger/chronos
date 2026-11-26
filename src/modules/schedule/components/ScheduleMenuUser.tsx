@@ -1,5 +1,5 @@
 import { Box, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useTheme } from '@mui/material';
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../shared';
 import { SettingId } from '../../settings/models/settings_model';
 import { SettingIcons, SettingsData } from '../../settings';
 import { Logout, TouchApp } from '@mui/icons-material';
@@ -18,18 +18,24 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
   const navigate = useNavigate();
   const { user, logout } = authStore;
 
-  function onClick(id: SettingId) {
-    if (id === SettingId.Telegram || id === SettingId.WhatsApp) {
-      navigate(`/settings/${id}`, { state: { open: true } });
-    } else {
-      navigate(`/settings/${id}`);
-    }
-  }
+  const onClick = useCallback(
+    (id: SettingId) => {
+      if (id === SettingId.Telegram || id === SettingId.WhatsApp) {
+        navigate(`/settings/${id}`, { state: { open: true } });
+      } else {
+        navigate(`/settings/${id}`);
+      }
+    },
+    [navigate],
+  );
 
-  const handleSettingClick = useCallback((id: SettingId) => {
-    onClick(id === SettingId.Messengers ? SettingId.Telegram : id);
-    closeUserMenu();
-  }, [closeUserMenu]);
+  const handleSettingClick = useCallback(
+    (id: SettingId) => {
+      onClick(id === SettingId.Messengers ? SettingId.Telegram : id);
+      closeUserMenu();
+    },
+    [closeUserMenu, onClick],
+  );
 
   return (
     <Menu
@@ -49,11 +55,7 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
       {SettingsData.map((item) => {
         const Icon = SettingIcons.get(item.id) ?? TouchApp;
         return (
-          <MenuItem
-            key={item.id}
-            sx={{ py: 1 }}
-            onClick={() => handleSettingClick(item.id)}
-          >
+          <MenuItem key={item.id} sx={{ py: 1 }} onClick={() => handleSettingClick(item.id)}>
             <ListItemIcon sx={{ minWidth: 36 }}>
               <Icon fontSize="small" sx={{ color: theme.palette.text.primary }} />
             </ListItemIcon>

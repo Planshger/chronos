@@ -1,19 +1,12 @@
 import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { injectMobxStore, withLoading, isAuthorizedUser, UserStatus, useApiError, updateUserData, Role, Loader, PageBackLink } from '../../shared';
 import { getAllPlans } from './datasources/plans_data_source';
-import { withLoading } from '../../shared/utils/withLoading';
-import { isAuthorizedUser, UserStatus } from '../../shared/models/user_model';
-import { useApiError } from '../../shared/errors/ApiError';
-import { updateUserData } from '../../shared/api/userApi';
 import { useCallback, useEffect, useState } from 'react';
-import { Role } from '../../shared/models/user_model';
 import { ArrowBack } from '@mui/icons-material';
 import PlanCard from './components/PlanCard';
-import Loader from '../../shared/ui/Loader';
 import PlanModel from './models/plan_model';
 import { AuthStore } from '../auth';
-import { PageBackLink } from '../../shared/ui/style/PageBackLink.style';
 import { PlansBackLinkContainer, PlansDescription, PlansGrid, PlansHeader, PlansPageRoot } from './PlansModule.style';
 
 interface PlansPageProps {

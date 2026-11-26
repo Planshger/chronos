@@ -1,12 +1,8 @@
 import { Box, Button, Modal, Stack, Switch, TextField, Typography, useTheme } from '@mui/material';
 import { deletePlans, getAllPlans, initialPlan, PlanModel } from '../../../plans';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import NumberField from '../../../../shared/ui/NumberField';
+import { injectMobxStore, withLoading, useApiError, NumberField, Loader } from '../../../../shared';
 import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
-import Loader from '../../../../shared/ui/Loader';
 import { Close } from '@mui/icons-material';
 import { AdminPlanModalContent, AdminPlanModalCloseButton } from './style/AdminEditManagePlansSettings.style';
 

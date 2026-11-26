@@ -1,7 +1,6 @@
 import { Box, useTheme } from '@mui/material';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { injectMobxStore, Role } from '../../shared';
 import LandingAppBar from './components/LandingAppBar';
-import { Role } from '../../shared/models/user_model';
 import { useNavigate } from 'react-router-dom';
 import { useCallback } from 'react';
 import { AuthStore } from '../auth';

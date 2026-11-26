@@ -1,5 +1,5 @@
 import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
-import { apiRequest } from '../../../shared/api/apiRequest';
+import { apiRequest } from '../../../shared';
 
 export function emptyDays(tasks: Task): Task {
   return Object.fromEntries(Object.entries(tasks).filter(([, list]) => Array.isArray(list) && list.length > 0));

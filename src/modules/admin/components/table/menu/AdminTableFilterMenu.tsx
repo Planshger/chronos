@@ -1,9 +1,8 @@
 import { Button, Modal, SelectChangeEvent, Stack, Typography, useTheme } from '@mui/material';
 import { PaginationModel } from '../../../models/user_pagination_model';
-import { UserStatus } from '../../../../../shared/models/user_model';
+import { UserStatus, useApiError } from '../../../../../shared';
 import { ADMIN_PLAN_OPTIONS } from '../../../constants/adminTableOptions';
 import { memo, useCallback, useEffect, useState } from 'react';
-import { useApiError } from '../../../../../shared/errors/ApiError';
 import { getFilterData } from '../../../datasources/admin_data_source';
 import { Close } from '@mui/icons-material';
 import DropdownList from '../../DropdownList';
@@ -62,19 +61,11 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
   }, [filterValues, currentPage, perPage, onClose, setData, showError]);
 
   useEffect(() => {
-    setFilterValues((prev) => [...prev, { id: 'name', value: searchProp }]);
+    setFilterValues((prev) => [...prev.filter((filter) => filter.id !== 'name'), { id: 'name', value: searchProp }]);
   }, [searchProp]);
 
   return (
-    <Modal
-      open={open}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        onClose();
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalContent>
         <CloseButton aria-label="close" onClick={onClose}>
           <Close />
@@ -109,9 +100,7 @@ function AdminTableFilterMenu({ onClose, open, setData, perPage, currentPage, se
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() => {
-              setFilterValues([...initialprops, { id: 'name', value: searchProp }]);
-            }}
+            onClick={() => setFilterValues([...initialprops, { id: 'name', value: searchProp }])}
           >
             Очистить
           </Button>

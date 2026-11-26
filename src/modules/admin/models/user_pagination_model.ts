@@ -1,4 +1,4 @@
-import UserModel from '../../../shared/models/user_model';
+import { UserModel } from '../../../shared';
 
 export interface PaginationModel {
   meta: {

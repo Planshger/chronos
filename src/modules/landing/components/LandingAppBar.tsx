@@ -1,5 +1,4 @@
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
-import { Role } from '../../../shared/models/user_model';
+import { injectMobxStore, Role } from '../../../shared';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import Toolbar from '@mui/material/Toolbar';

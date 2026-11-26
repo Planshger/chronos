@@ -1,8 +1,7 @@
 import { Box, CircularProgress, Divider, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
-import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
-import { useApiError } from '../../../../../shared/errors/ApiError';
+import { injectMobxStore, useApiError } from '../../../../../shared';
 import { MessageModel } from '../../../models/message_model';
 import SendIcon from '@mui/icons-material/Send';
 import { AuthStore } from '../../../../auth';

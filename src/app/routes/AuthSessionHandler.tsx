@@ -1,7 +1,5 @@
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { injectMobxStore, registerUnauthorizedHandler, Role } from '../../shared';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { registerUnauthorizedHandler } from '../../shared/api/apiRequest';
-import { Role } from '../../shared/models/user_model';
 import { AuthStore } from '../../modules/auth';
 import { useEffect } from 'react';
 

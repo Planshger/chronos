@@ -1,8 +1,4 @@
-import UserModel, { initialUser } from '../../../../shared/models/user_model';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import { updateUserData } from '../../../../shared/api/userApi';
+import { UserModel, initialUser, injectMobxStore, withLoading, useApiError, updateUserData } from '../../../../shared';
 import { ChangeEvent, useCallback, useState } from 'react';
 import { Button, Stack, TextField } from '@mui/material';
 import SettingsStore from '../../stores/SettingsStore';

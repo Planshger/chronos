@@ -1,7 +1,5 @@
 import { PaginationModel } from '../models/user_pagination_model';
-import { apiRequest } from '../../../shared/api/apiRequest';
-import UserModel from '../../../shared/models/user_model';
-import { queryClient } from '../../../shared/queryClient';
+import { apiRequest, UserModel, queryClient } from '../../../shared';
 import { FilterValuesProps } from '../components/table/menu/AdminTableFilterMenu';
 
 export function getAllUsers(): Promise<UserModel[]> {

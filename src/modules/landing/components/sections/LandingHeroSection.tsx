@@ -9,7 +9,7 @@ import {
   SecondaryHeroButton,
 } from './LandingSection.style';
 import { FlashOn } from '@mui/icons-material';
-import theme from '../../../../shared/ui/theme/darkTheme';
+import { theme } from '../../../../shared';
 import { useNavigate } from 'react-router-dom';
 
 interface LandingHeroSectionProps {

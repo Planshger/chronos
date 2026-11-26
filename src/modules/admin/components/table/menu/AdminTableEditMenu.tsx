@@ -1,6 +1,6 @@
-import { Button, Modal, SelectChangeEvent, Stack, TextField, Typography, useTheme } from '@mui/material';
+import { Button, Modal, Stack, TextField, Typography, useTheme } from '@mui/material';
 import { ADMIN_PLAN_OPTIONS, NO_PLAN_LABEL } from '../../../constants/adminTableOptions';
-import UserModel, { UserStatus } from '../../../../../shared/models/user_model';
+import { UserModel, UserStatus } from '../../../../../shared';
 import { CloseButton, ModalContent } from './AdminTableMenu.style';
 import { Close } from '@mui/icons-material';
 import DropdownList from '../../DropdownList';
@@ -57,15 +57,7 @@ function AdminTableEditMenu({ onClick, onClose, open, user }: AdminTableEditMenu
   }, [user]);
 
   return (
-    <Modal
-      open={open}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        onClose();
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
+    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalContent>
         <CloseButton aria-label="close" onClick={onClose}>
           <Close />

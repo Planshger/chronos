@@ -1,6 +1,6 @@
 import { AppBar, Avatar, Box, IconButton, Stack, Toolbar, useTheme } from '@mui/material';
 import { AccessTime, Chat, Person } from '@mui/icons-material';
-import { appName } from '../../../shared/constants/name';
+import { appName } from '../../../shared';
 import ScheduleMenuUser from './ScheduleMenuUser';
 import { useState } from 'react';
 import { ScheduleAiButton, ScheduleTitle } from './style/ScheduleAppBar.style';

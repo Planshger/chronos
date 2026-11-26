@@ -1,7 +1,6 @@
 import { Typography } from '@mui/material';
 import { LandingFooter } from './LandingSection.style';
-import { appName } from '../../../../shared/constants/name';
-import theme from '../../../../shared/ui/theme/darkTheme';
+import { appName, theme } from '../../../../shared';
 
 function LandingFooterSection() {
   return (

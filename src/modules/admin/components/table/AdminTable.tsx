@@ -1,16 +1,12 @@
 import { deleteUserData, getFilterData, getSortBy, getUsersWithPagination } from '../../datasources/admin_data_source';
 import { IconButton, Stack, Switch, TextField, useTheme } from '@mui/material';
-import UserModel, { initialUser } from '../../../../shared/models/user_model';
+import { UserModel, initialUser, withLoading, useApiError, updateUserData, Loader } from '../../../../shared';
 import { PaginationModel } from '../../models/user_pagination_model';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import { updateUserData } from '../../../../shared/api/userApi';
 import TableContainer from '@mui/material/TableContainer';
 import AdminTablePagination from './AdminTablePagination';
 import AdminTableEditMenu from './menu/AdminTableEditMenu';
 import AdminTableToolbar from './AdminTableToolbar';
 import AutocompleteList from '../AutocompleteList';
-import Loader from '../../../../shared/ui/Loader';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
@@ -37,16 +33,17 @@ export default function AdminTable() {
   const [loading, setLoading] = useState(false);
   const { showError } = useApiError();
   const [editDomain, setEditDomain] = useState(false);
-  const [domain, setDomain] = useState('@example.com');
+  const [domain, setDomain] = useState('@gmail.com');
   const [openEdit, setOpenEdit] = useState<{ open: boolean; user: UserModel }>({
     open: false,
     user: initialUser,
   });
-  const [input, setInput] = useState<FilterValuesProps>({
+  const [nameSearchInput, setNameSearchInput] = useState<FilterValuesProps>({
     id: 'name',
     value: '',
   } as FilterValuesProps);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const searchRequestId = useRef(0);
 
   const switchFilterMenu = useCallback(() => {
     setOpenFilter((prev) => !prev);
@@ -59,40 +56,42 @@ export default function AdminTable() {
     });
   }, []);
 
-  const handleInput = useCallback(
-    (value: string, id: string) => {
-      setInput({ id: id, value: value });
+  const searchUsers = useCallback(
+    (value: string, searchByEmail: boolean, emailDomain = domain) => {
+      if (timeout.current !== null) {
+        clearTimeout(timeout.current);
+        timeout.current = null;
+      }
+
+      const requestId = ++searchRequestId.current;
+      const filterValue = searchByEmail && value !== '' && !value.includes('@') ? `${value}${emailDomain}` : value;
+      const id = searchByEmail ? 'email' : 'name';
       withLoading(
-        () => getFilterData(data.meta.current_page, data.meta.per_page, [{ id: id, value: value }]).then((res) => setData(res)),
+        () =>
+          getFilterData(data.meta.current_page, data.meta.per_page, [{ id, value: filterValue }]).then((res) => {
+            if (requestId === searchRequestId.current) setData(res);
+          }),
         setLoading,
       ).catch(showError);
     },
-    [data, showError],
+    [data.meta.current_page, data.meta.per_page, domain, showError],
   );
 
-  const searchWithEmail = useCallback(
-    (value: string) => {
-      withLoading(
-        () => getFilterData(data.meta.current_page, data.meta.per_page, [{ id: 'email', value: value }]).then((res) => setData(res)),
-        setLoading,
-      ).catch(showError);
+  const handleInput = useCallback(
+    (value: string, id: string) => {
+      setNameSearchInput({ id, value });
+      searchUsers(value, id === 'email');
     },
-    [data.meta.current_page, data.meta.per_page, showError],
+    [searchUsers],
   );
 
   const switchSearchWithDomain = useCallback(
     (e: ChangeEvent<HTMLInputElement, Element>) => {
       const isON = e.target.checked;
       setEditDomain(isON);
-      if (input.value !== '') {
-        if (isON) {
-          searchWithEmail(input.value + domain);
-        } else {
-          handleInput(input.value, 'name');
-        }
-      }
+      searchUsers(nameSearchInput.value, isON);
     },
-    [input.value, domain, handleInput, searchWithEmail],
+    [nameSearchInput.value, searchUsers],
   );
 
   const loadDataWithPagination = useCallback(
@@ -157,13 +156,21 @@ export default function AdminTable() {
   }, []);
 
   const debouncedSearch = useCallback(
-    (searchWithEmailValue: string) => {
+    (value: string, emailDomain: string) => {
       if (timeout.current) clearTimeout(timeout.current);
       timeout.current = setTimeout(() => {
-        searchWithEmail(searchWithEmailValue);
+        searchUsers(value, true, emailDomain);
       }, 800);
     },
-    [searchWithEmail],
+    [searchUsers],
+  );
+
+  const setDomainWithdebouncedSearch = useCallback(
+    (valueDomain: string) => {
+      setDomain(valueDomain);
+      debouncedSearch(nameSearchInput.value, valueDomain);
+    },
+    [nameSearchInput.value, debouncedSearch],
   );
 
   const openEditMenu = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, user: UserModel) => {
@@ -192,23 +199,20 @@ export default function AdminTable() {
             disableClearable={false}
             options={data.items.map((i) => i.name)}
             onChange={handleInput}
-            value={input.value}
+            value={nameSearchInput.value}
           />
 
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexShrink: 0 }}>
             <TextField
               value={domain}
-              onChange={(e) => {
-                setDomain(e.target.value);
-                debouncedSearch(input.value + e.target.value);
-              }}
+              onChange={(e) => setDomainWithdebouncedSearch(e.target.value)}
               disabled={!editDomain}
               size="small"
               variant="standard"
               sx={{
                 width: { xs: '100%', sm: 160 },
                 flex: { xs: 1, sm: 'none' },
-                '& .MuiInputBase-input.Mui-disabled': {
+                '& .MuiInputBase-nameSearchInput.Mui-disabled': {
                   WebkitTextFillColor: theme.palette.text.secondary,
                 },
               }}
@@ -287,7 +291,7 @@ export default function AdminTable() {
           setData={setData}
           currentPage={data.meta.current_page}
           perPage={data.meta.per_page}
-          searchProp={input.value}
+          searchProp={nameSearchInput.value}
         />
 
         <AdminTableEditMenu onClose={switchEditMenu} open={openEdit.open} user={openEdit.user} onClick={loadDataWithEditUser} />

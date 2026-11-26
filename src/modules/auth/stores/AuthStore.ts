@@ -1,6 +1,4 @@
-import UserModel, { initialUser, Role, UserStatus } from '../../../shared/models/user_model';
-import { getToken, setTokenInStorage } from '../../../shared/api/authToken';
-import { BlockedUserError } from '../../../shared/errors/AppError';
+import { UserModel, initialUser, Role, UserStatus, getToken, setTokenInStorage, BlockedUserError } from '../../../shared';
 import { authMe } from '../datasources/authorization_data_source';
 import { makeAutoObservable, runInAction } from 'mobx';
 

@@ -1,8 +1,6 @@
 import { addPlan, getAllPlans, initialPlan, PlanCard, PlanModel, updatePlanData } from '../../../plans';
 import AdminEditManagePlansSettings from './AdminEditManagePlansSettings';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
+import { injectMobxStore, withLoading, useApiError } from '../../../../shared';
 import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
 import { Box, Button } from '@mui/material';

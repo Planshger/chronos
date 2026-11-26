@@ -1,4 +1,4 @@
-import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../../../shared';
 import { Box, Button, Typography } from '@mui/material';
 import { AuthStore } from '../../../../auth';
 import TelegramIcon from '../TelegramIcon';

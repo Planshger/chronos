@@ -2,12 +2,11 @@
 import { Box, Button, Checkbox, Chip, Dialog, DialogContent, FormControlLabel, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
 import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { injectMobxStore, Loader } from '../../../../shared';
 import TaskCreateDialogContent from './TaskCreateDialogContent';
 import TaskEditDialogContent from './TaskEditDialogContent';
 import { ScheduleModal } from '../../stores/ScheduleStore';
 import ScheduleStore from '../../stores/ScheduleStore';
-import Loader from '../../../../shared/ui/Loader';
 import { useEffect, useState } from 'react';
 import { TaskDialogTitle } from './TaskDialogContent.style';
 

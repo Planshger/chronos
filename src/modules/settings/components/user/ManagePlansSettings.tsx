@@ -1,9 +1,5 @@
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { UserStatus } from '../../../../shared/models/user_model';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import { updateUserData } from '../../../../shared/api/userApi';
+import { injectMobxStore, withLoading, UserStatus, useApiError, updateUserData } from '../../../../shared';
 import SettingsStore from '../../stores/SettingsStore';
 import { AutoAwesome } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';

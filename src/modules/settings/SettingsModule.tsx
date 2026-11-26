@@ -5,16 +5,14 @@ import ManagePlansSettings from './components/user/ManagePlansSettings';
 import { AdminSettingsData, SettingsData } from './data/SettingsData';
 import AnalyticsSettings from './components/user/AnalyticsSettings';
 import { SettingsModel, SettingId } from './models/settings_model';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { injectMobxStore, Role, Loader } from '../../shared';
 import ProfileSettings from './components/user/ProfileSettings';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SettingIcons } from './constants/SettingIcons';
 import MapSettings from './components/user/MapSettings';
-import { Role } from '../../shared/models/user_model';
 import ListSettings from './components/ListSettings';
 import SettingsStore from './stores/SettingsStore';
 import { TouchApp } from '@mui/icons-material';
-import Loader from '../../shared/ui/Loader';
 import { AuthStore } from '../auth';
 import React from 'react';
 import {

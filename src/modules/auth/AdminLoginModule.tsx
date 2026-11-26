@@ -1,16 +1,22 @@
 import { ArrowBack as ArrowBackIcon, ShieldTwoTone as ShieldIcon } from '@mui/icons-material';
 import { Box, TextField, Typography, useTheme } from '@mui/material';
-import UserModel, { initialUser, Role } from '../../shared/models/user_model';
+import {
+  UserModel,
+  initialUser,
+  Role,
+  injectMobxStore,
+  ApiErrorStore,
+  withLoading,
+  Loader,
+  AuthFormCard,
+  AuthFormContent,
+  AuthSubmitButton,
+  PageBackLink,
+} from '../../shared';
 import { useNavigate } from 'react-router-dom';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
 import { auth } from './datasources/authorization_data_source';
-import ApiErrorStore from '../../shared/errors/ApiErrorStore';
-import { withLoading } from '../../shared/utils/withLoading';
 import { useCallback, useState } from 'react';
-import Loader from '../../shared/ui/Loader';
 import AuthStore from './stores/AuthStore';
-import { AuthFormCard, AuthFormContent, AuthSubmitButton } from '../../shared/ui/style/AuthForm.style';
-import { PageBackLink } from '../../shared/ui/style/PageBackLink.style';
 
 interface AdminLoginModuleProps {
   authStore: AuthStore;

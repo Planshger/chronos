@@ -1,8 +1,7 @@
 import { Box, Container, Stack, Typography } from '@mui/material';
-import theme from '../../../../shared/ui/theme/darkTheme';
+import { theme, appName } from '../../../../shared';
 import { ClosingButton } from './LandingSection.style';
 import { CheckCircle } from '@mui/icons-material';
-import { appName } from '../../../../shared/constants/name';
 
 interface LandingProposalSection {
   continueOrRegistrationButton: () => void;

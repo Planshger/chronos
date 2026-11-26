@@ -1,6 +1,6 @@
 import { AppBar, Stack, Toolbar } from '@mui/material';
 import { CreditCard, Logout, Settings } from '@mui/icons-material';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../../shared';
 import { SettingId } from '../../../settings/models/settings_model';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../../auth';

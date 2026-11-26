@@ -1,6 +1,6 @@
 import { Add, CalendarToday, DirectionsCar, Hotel, ListAlt, Restaurant } from '@mui/icons-material';
 import { Box, Stack, Typography, useTheme } from '@mui/material';
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../shared';
 import { ScheduleModal } from '../stores/ScheduleStore';
 import ScheduleStore from '../stores/ScheduleStore';
 import { ru } from 'date-fns/locale';
@@ -24,7 +24,7 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
 
   return (
     <Box sx={{ width: { xs: '100%', md: 'min(320px, 30%)' }, minWidth: 0, flexShrink: 0 }}>
-      {selectedDate ? (
+      {selectedDate && (
         <SelectedDayPanel>
           <Typography variant="h6" sx={{ mb: 2, textTransform: 'capitalize' }}>
             {format(selectedDate, 'd MMMM', { locale: ru })}
@@ -73,7 +73,9 @@ function Scheduling({ scheduleStore }: SchedulingProps) {
             ))}
           </Stack>
         </SelectedDayPanel>
-      ) : (
+      )}
+
+      {!selectedDate && (
         <EmptySchedulePanel variant="outlined">
           <CalendarToday sx={{ fontSize: 40, opacity: 0.2, mb: 2 }} />
 

@@ -1,15 +1,9 @@
 import { Person as UserIcon, ArrowBack as ArrowBackIcon, PersonAddAlt1 } from '@mui/icons-material';
 import { Box, Typography, TextField, useTheme } from '@mui/material';
-import UserModel, { initialUser, Role, UserStatus } from '../../shared/models/user_model';
+import { UserModel, initialUser, Role, UserStatus, injectMobxStore, ApiErrorStore, withLoading, Loader, AuthFormCard, AuthFormContent, AuthSubmitButton, PageBackLink } from '../../shared';
 import { useNavigate } from 'react-router-dom';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
-import ApiErrorStore from '../../shared/errors/ApiErrorStore';
-import { withLoading } from '../../shared/utils/withLoading';
 import { auth, AuthStore, register } from '../auth';
 import { useCallback, useState } from 'react';
-import Loader from '../../shared/ui/Loader';
-import { AuthFormCard, AuthFormContent, AuthSubmitButton } from '../../shared/ui/style/AuthForm.style';
-import { PageBackLink } from '../../shared/ui/style/PageBackLink.style';
 import { RegistrationToggleButton, RegistrationToggleSection } from './RegistrationModule.style';
 
 interface RegistrationModuleProps {

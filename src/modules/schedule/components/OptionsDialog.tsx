@@ -1,4 +1,4 @@
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../shared';
 import TaskDialogContent from './task/TaskDialogContent';
 import { ScheduleModal } from '../stores/ScheduleStore';
 import ScheduleStore from '../stores/ScheduleStore';
