@@ -1,4 +1,13 @@
-import { UserModel, initialUser, Role, UserStatus, getToken, setTokenInStorage, BlockedUserError } from '../../../shared';
+import {
+  UserModel,
+  initialUser,
+  Role,
+  UserStatus,
+  getToken,
+  setTokenInStorage,
+  BlockedUserError,
+  NotActiveUserError,
+} from '../../../shared';
 import { authMe } from '../datasources/authorization_data_source';
 import { makeAutoObservable, runInAction } from 'mobx';
 
@@ -61,6 +70,10 @@ export default class AuthStore {
 
       if (user.status === UserStatus.Blocked) {
         throw new BlockedUserError();
+      }
+
+      if (user.status === UserStatus.NotActive) {
+        throw new NotActiveUserError();
       }
 
       setTokenInStorage(token);

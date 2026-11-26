@@ -77,3 +77,9 @@ export class BlockedUserError extends AppError {
     super('User account is blocked', 'USER_STATUS_ERROR', 'Пользователь заблокирован');
   }
 }
+
+export class NotActiveUserError extends AppError {
+  constructor() {
+    super('User account is blocked', 'USER_STATUS_ERROR', 'Пользователь не активен');
+  }
+}
