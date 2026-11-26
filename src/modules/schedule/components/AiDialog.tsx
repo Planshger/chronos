@@ -1,5 +1,6 @@
-import { Box, IconButton, Paper, Stack, TextField, Typography, useTheme } from '@mui/material';
+import { Box, IconButton, Stack, TextField, Typography, useTheme } from '@mui/material';
 import { AutoAwesome, Close } from '@mui/icons-material';
+import { AiDialogHeader, AiDialogMessages, AiDialogPanel, AiMessage } from './style/AiDialog.style';
 
 interface AiDialogProps {
   setIsAiOpen: (isAiOpen: boolean) => void;
@@ -9,34 +10,8 @@ export default function AiDialog({ setIsAiOpen }: AiDialogProps) {
   const theme = useTheme();
 
   return (
-    <Paper
-      elevation={8}
-      sx={{
-        position: 'fixed',
-        bottom: { xs: 16, sm: 24 },
-        right: { xs: 16, sm: 24 },
-        width: 'min(320px, calc(100vw - 32px))',
-        height: 'min(450px, calc(100dvh - 32px))',
-        maxHeight: 'calc(100dvh - 32px)',
-        borderRadius: 4,
-        bgcolor: theme.palette.background.paper,
-        border: `1px solid ${theme.custom.border.light}`,
-        display: 'flex',
-        flexDirection: 'column',
-        zIndex: 1300,
-        overflow: 'hidden',
-      }}
-    >
-      <Box
-        sx={{
-          p: 2,
-          bgcolor: theme.palette.primary.main + '10',
-          borderBottom: `1px solid ${theme.custom.border.light}`,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
+    <AiDialogPanel elevation={8}>
+      <AiDialogHeader>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
           <AutoAwesome sx={{ fontSize: 18, color: theme.palette.primary.main }} />
           <Typography variant="subtitle2">ИИ-ассистент</Typography>
@@ -45,28 +20,17 @@ export default function AiDialog({ setIsAiOpen }: AiDialogProps) {
         <IconButton size="small" onClick={() => setIsAiOpen(false)}>
           <Close fontSize="small" />
         </IconButton>
-      </Box>
+      </AiDialogHeader>
 
-      <Box sx={{ flex: 1, p: 2, overflowY: 'auto', bgcolor: theme.palette.action.hover }}>
-        <Paper
-          variant="outlined"
-          sx={{
-            p: 1.5,
-            borderRadius: 3,
-            maxWidth: '85%',
-            bgcolor: theme.palette.background.paper,
-            borderColor: theme.custom.border.light,
-            fontSize: '0.875rem',
-          }}
-        >
-          Привет! Я ваш ИИ-помощник. Помогу проанализировать расписание, добавить встречу или найти
-          нужную информацию. Чем займемся?
-        </Paper>
-      </Box>
+      <AiDialogMessages>
+        <AiMessage variant="outlined">
+          Привет! Я ваш ИИ-помощник. Помогу проанализировать расписание, добавить встречу или найти нужную информацию. Чем займемся?
+        </AiMessage>
+      </AiDialogMessages>
 
       <Box sx={{ p: 2, borderTop: `1px solid ${theme.custom.border.light}` }}>
         <TextField fullWidth size="small" placeholder="Спросите меня о чем угодно..." />
       </Box>
-    </Paper>
+    </AiDialogPanel>
   );
 }

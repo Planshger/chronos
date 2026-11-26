@@ -1,4 +1,3 @@
-// prettier-ignore
 import { addTask, editTask, getUserTasksByUserId, updateTasksData } from '../datasources/task_data_source';
 import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
 import { addMonths, format, subMonths } from 'date-fns';
@@ -54,10 +53,6 @@ export default class ScheduleStore {
     this.selectedDate = null;
     this.activeModal = null;
     this.isSchedulingOpen = false;
-
-    if (userId !== null) {
-      this.loadTasks();
-    }
   }
 
   setActiveModal(name: ScheduleModal | null): void {
@@ -147,11 +142,7 @@ export default class ScheduleStore {
     );
   }
 
-  private async runRequest<T>(
-    request: () => Promise<T>,
-    onSuccess: (result: T) => void,
-    userId: number,
-  ): Promise<void> {
+  private async runRequest<T>(request: () => Promise<T>, onSuccess: (result: T) => void, userId: number): Promise<void> {
     const requestId = ++this.requestId;
     this.loading = true;
 

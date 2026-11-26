@@ -1,5 +1,5 @@
 import { MessageModel, NewMessageModel } from '../../models/message_model';
-import { apiRequest } from '../../../../shared/api/apiRequest';
+import { apiRequest } from '../../../../shared';
 
 export function getMessages(userId: number): Promise<MessageModel[]> {
   const params = new URLSearchParams({ userId: String(userId), sortBy: '-createdAt' });

@@ -1,13 +1,21 @@
 import { ArrowBack as ArrowBackIcon, ShieldTwoTone as ShieldIcon } from '@mui/icons-material';
-import { Box, Button, Link, Paper, TextField, Typography, useTheme } from '@mui/material';
-import UserModel, { initialUser, Role } from '../../shared/models/user_model';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { Box, TextField, Typography, useTheme } from '@mui/material';
+import {
+  UserModel,
+  initialUser,
+  Role,
+  injectMobxStore,
+  ApiErrorStore,
+  withLoading,
+  Loader,
+  AuthFormCard,
+  AuthFormContent,
+  AuthSubmitButton,
+  PageBackLink,
+} from '../../shared';
+import { useNavigate } from 'react-router-dom';
 import { auth } from './datasources/authorization_data_source';
-import ApiErrorStore from '../../shared/errors/ApiErrorStore';
-import { withLoading } from '../../shared/utils/withLoading';
 import { useCallback, useState } from 'react';
-import Loader from '../../shared/ui/Loader';
 import AuthStore from './stores/AuthStore';
 
 interface AdminLoginModuleProps {
@@ -42,36 +50,14 @@ function AdminLoginModule({ authStore, apiErrorStore }: AdminLoginModuleProps) {
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ p: 3 }}>
-        <Link
-          component={RouterLink}
-          to="/"
-          sx={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 1,
-            fontSize: '15px',
-            fontWeight: 500,
-            color: theme.palette.text.secondary,
-            textDecoration: 'none',
-            '&:hover': { color: theme.palette.text.primary },
-          }}
-        >
+        <PageBackLink to="/">
           <ArrowBackIcon sx={{ width: 20, height: 20 }} />
           На главную
-        </Link>
+        </PageBackLink>
       </Box>
 
-      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Paper
-          elevation={3}
-          sx={{
-            maxWidth: 450,
-            width: 'calc(100% - 32px)',
-            p: 4,
-            borderRadius: 3,
-            border: `1px solid ${theme.custom.border.light}`,
-          }}
-        >
+      <AuthFormContent>
+        <AuthFormCard elevation={3}>
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <ShieldIcon sx={{ fontSize: 44, color: theme.palette.primary.main, mb: 1 }} />
             <Typography variant="h5" color={theme.palette.text.primary}>
@@ -110,23 +96,12 @@ function AdminLoginModule({ authStore, apiErrorStore }: AdminLoginModuleProps) {
               required
             />
 
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              sx={{
-                py: 1.5,
-                borderRadius: 2,
-                fontWeight: 600,
-                boxShadow: 2,
-                color: theme.palette.text.primary,
-              }}
-            >
+            <AuthSubmitButton type="submit" variant="contained" fullWidth>
               Войти в админ-панель
-            </Button>
+            </AuthSubmitButton>
           </form>
-        </Paper>
-      </Box>
+        </AuthFormCard>
+      </AuthFormContent>
       {loading && <Loader size={80} />}
     </Box>
   );

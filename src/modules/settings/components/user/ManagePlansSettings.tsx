@@ -1,13 +1,11 @@
-import { Avatar, Button, Grid, Stack, Typography } from '@mui/material';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { UserStatus } from '../../../../shared/models/user_model';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import { updateUserData } from '../../../../shared/api/userApi';
+import { Button, Grid, Stack, Typography } from '@mui/material';
+import { injectMobxStore, withLoading, UserStatus, useApiError, updateUserData } from '../../../../shared';
 import SettingsStore from '../../stores/SettingsStore';
 import { AutoAwesome } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../../auth';
+import { CurrentPlanAvatar } from './style/ManagePlansSettings.style';
+import { useCallback } from 'react';
 
 interface ManagePlansSettingsProps {
   authStore: AuthStore;
@@ -19,34 +17,27 @@ function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsPr
   const { showError } = useApiError();
   const navigate = useNavigate();
 
-  const cancelPlan = () => {
+  const handleNavigateToPlans = useCallback(() => navigate('/plans'), [navigate]);
+
+  const cancelPlan = useCallback(async () => {
     if (!user) return;
     try {
-      withLoading(
-        () =>
-          updateUserData({ ...user, plan: '', status: UserStatus.PendingPayment }).then((res) =>
-            authStore.setUser(res),
-          ),
+      await withLoading(
+        () => updateUserData({ ...user, plan: '', status: UserStatus.PendingPayment }).then((res) => authStore.setUser(res)),
         settingsStore.setLoading,
       );
     } catch (error) {
       showError(error);
     }
-  };
+  }, [user, settingsStore, authStore, showError]);
+
   if (!user) return null;
 
   return (
     <Stack spacing={3} sx={{ alignItems: 'center' }}>
-      <Avatar
-        sx={{
-          width: 64,
-          height: 64,
-          bgcolor: 'warning.main',
-          background: 'linear-gradient(135deg, #f59e0b, #f97316)',
-        }}
-      >
+      <CurrentPlanAvatar>
         <AutoAwesome fontSize="large" sx={{ color: '#fff' }} />
-      </Avatar>
+      </CurrentPlanAvatar>
 
       <Typography variant="h5">{user.plan}</Typography>
 
@@ -59,22 +50,11 @@ function ManagePlansSettings({ authStore, settingsStore }: ManagePlansSettingsPr
           Продлить подписку
         </Button>
 
-        <Button
-          variant="outlined"
-          onClick={() => navigate('/plans')}
-          fullWidth
-          sx={{ borderRadius: 3, color: 'text.primary' }}
-        >
+        <Button variant="outlined" onClick={handleNavigateToPlans} fullWidth sx={{ borderRadius: 3, color: 'text.primary' }}>
           Сменить тарифный план
         </Button>
 
-        <Button
-          variant="outlined"
-          color="error"
-          fullWidth
-          sx={{ borderRadius: 3 }}
-          onClick={cancelPlan}
-        >
+        <Button variant="outlined" color="error" fullWidth sx={{ borderRadius: 3 }} onClick={cancelPlan}>
           Отменить подписку
         </Button>
       </Grid>

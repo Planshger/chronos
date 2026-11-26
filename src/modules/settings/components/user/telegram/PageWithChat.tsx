@@ -1,13 +1,12 @@
-// prettier-ignore
-import { Box, CircularProgress, Divider, IconButton, Paper, Stack, TextField, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Divider, IconButton, Stack, TextField, Typography } from '@mui/material';
 import { getMessages, sendMessage } from '../../../data/datasources/messages_data_source';
 import { ComponentProps, useCallback, useEffect, useRef, useState } from 'react';
-import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
-import { useApiError } from '../../../../../shared/errors/ApiError';
+import { injectMobxStore, useApiError } from '../../../../../shared';
 import { MessageModel } from '../../../models/message_model';
 import SendIcon from '@mui/icons-material/Send';
 import { AuthStore } from '../../../../auth';
 import TelegramIcon from '../TelegramIcon';
+import { ChatMessageBubble, ChatMessageTime, ChatMessagesViewport, ChatPageContent, ChatPanel } from './style/PageWithChat.style';
 
 const POLL_INTERVAL = 3000;
 const MAX_MESSAGES = 10;
@@ -17,7 +16,6 @@ interface PageWithChatProps {
 }
 
 function PageWithChat({ authStore }: PageWithChatProps) {
-  const theme = useTheme();
   const user = authStore.user;
   const [messages, setMessages] = useState<MessageModel[]>([]);
   const [input, setInput] = useState('');
@@ -90,7 +88,7 @@ function PageWithChat({ authStore }: PageWithChatProps) {
   if (!user) return null;
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 560, mx: 'auto', p: { xs: 0, sm: 2 } }}>
+    <ChatPageContent>
       <Stack direction="row" spacing={1} sx={{ mb: 2, alignItems: 'center' }}>
         <TelegramIcon />
 
@@ -99,81 +97,48 @@ function PageWithChat({ authStore }: PageWithChatProps) {
         </Typography>
       </Stack>
 
-      <Paper
-        variant="outlined"
-        sx={{
-          height: 'clamp(240px, 60dvh, 420px)',
-          display: 'flex',
-          flexDirection: 'column',
-          borderRadius: 3,
-          overflow: 'hidden',
-        }}
-      >
-        <Box sx={{ flex: 1, overflowY: 'auto', p: 2, bgcolor: 'background.default' }}>
-          {loading ? (
+      <ChatPanel variant="outlined">
+        <ChatMessagesViewport>
+          {loading && (
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <CircularProgress size={24} />
             </Box>
-          ) : messages.length === 0 ? (
+          )}
+
+          {messages.length === 0 && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 6, textAlign: 'center' }}>
               Пока сообщений нет. Напишите боту в Telegram или отправьте первое сообщение ниже.
             </Typography>
-          ) : (
-            <Stack spacing={1}>
-              {messages.map((m) => {
-                const isUser = m.source === 'web' || m.source === 'telegram';
-                return (
-                  <Box
-                    key={m.id}
-                    sx={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}
-                  >
-                    <Paper
-                      elevation={0}
-                      sx={{
-                        p: 1.25,
-                        px: 1.75,
-                        maxWidth: '75%',
-                        borderRadius: 2,
-                        bgcolor: theme.custom.background.muted,
-                        color: theme.palette.text.primary,
-                        borderBottomRightRadius: isUser ? 0 : 2,
-                        borderBottomLeftRadius: isUser ? 2 : 0,
-                      }}
-                    >
-                      <Typography
-                        variant="caption"
-                        sx={{ opacity: 0.7, display: 'block', mb: 0.25 }}
-                      >
-                        {isUser ? 'Вы' : 'Бот'}
-                      </Typography>
-
-                      <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
-                        {m.text}
-                      </Typography>
-
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          opacity: 0.6,
-                          display: 'block',
-                          mt: 0.25,
-                          textAlign: isUser ? 'right' : 'left',
-                        }}
-                      >
-                        {new Date(m.createdAt).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })}
-                      </Typography>
-                    </Paper>
-                  </Box>
-                );
-              })}
-
-              <div ref={bottomRef} />
-            </Stack>
           )}
-        </Box>
+
+          <Stack spacing={1}>
+            {messages.map((m) => {
+              const isUser = m.source === 'web' || m.source === 'telegram';
+              return (
+                <Box key={m.id} sx={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
+                  <ChatMessageBubble elevation={0} isUser={isUser}>
+                    <Typography variant="caption" sx={{ opacity: 0.7, display: 'block', mb: 0.25 }}>
+                      {isUser ? 'Вы' : 'Бот'}
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                      {m.text}
+                    </Typography>
+
+                    <ChatMessageTime variant="caption" isUser={isUser}>
+                      {new Date(m.createdAt).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </ChatMessageTime>
+                  </ChatMessageBubble>
+                </Box>
+              );
+            })}
+
+            <div ref={bottomRef} />
+          </Stack>
+        </ChatMessagesViewport>
 
         <Divider />
 
@@ -191,18 +156,13 @@ function PageWithChat({ authStore }: PageWithChatProps) {
               disabled={sending}
             />
 
-            <IconButton
-              color="primary"
-              onClick={handleSend}
-              disabled={!input.trim() || sending}
-              sx={{ alignSelf: 'flex-end' }}
-            >
+            <IconButton color="primary" onClick={handleSend} disabled={!input.trim() || sending} sx={{ alignSelf: 'flex-end' }}>
               {sending ? <CircularProgress size={20} /> : <SendIcon />}
             </IconButton>
           </Stack>
         </Box>
-      </Paper>
-    </Box>
+      </ChatPanel>
+    </ChatPageContent>
   );
 }
 

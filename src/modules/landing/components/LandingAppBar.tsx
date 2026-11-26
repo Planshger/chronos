@@ -1,5 +1,4 @@
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
-import { Role } from '../../../shared/models/user_model';
+import { injectMobxStore, Role } from '../../../shared';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import Toolbar from '@mui/material/Toolbar';
@@ -14,31 +13,23 @@ interface LandingAppBarProps {
 }
 
 const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
-  const token = authStore.token;
+  const { logout, user, token } = authStore;
   const navigate = useNavigate();
 
-  const onClick = useCallback(
-    (url: string) => {
-      if (!token) {
-        navigate('/register');
-      } else {
-        navigate(url);
-      }
-    },
-    [navigate, token],
-  );
-
-  const { logout, user } = authStore;
+  const onClick = useCallback(() => {
+    let url = user.role === Role.Admin ? '/admin' : '/schedule';
+    if (!token) {
+      navigate('/register');
+    } else {
+      navigate(url);
+    }
+  }, [navigate, token, user.role]);
 
   return (
     <Box sx={{ p: 4 }}>
       <AppBar position="fixed" sx={{ backdropFilter: 'blur(10px)' }}>
         <Toolbar sx={{ px: { xs: 2, sm: 3 } }}>
-          <Typography
-            variant="h3"
-            component="div"
-            sx={{ flexGrow: 1, minWidth: 0, fontSize: { xs: '1.75rem', sm: '2rem' } }}
-          >
+          <Typography variant="h3" component="div" sx={{ flexGrow: 1, minWidth: 0, fontSize: { xs: '1.75rem', sm: '2rem' } }}>
             Chronos
           </Typography>
 
@@ -47,10 +38,7 @@ const LandingAppBar = ({ authStore }: LandingAppBarProps) => {
               Выход
             </Button>
           ) : (
-            <Button
-              onClick={() => onClick(user.role === Role.Admin ? '/admin' : '/schedule')}
-              sx={{ color: 'text.primary' }}
-            >
+            <Button onClick={onClick} sx={{ color: 'text.primary' }}>
               Регистрация
             </Button>
           )}

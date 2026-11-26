@@ -1,5 +1,4 @@
-import { apiRequest } from '../../../shared/api/apiRequest';
-import { queryClient } from '../../../shared/queryClient';
+import { apiRequest, queryClient } from '../../../shared';
 import PlanModel from '../models/plan_model';
 
 export function getAllPlans(): Promise<PlanModel[]> {

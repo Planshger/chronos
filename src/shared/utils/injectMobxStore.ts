@@ -1,10 +1,7 @@
 import { inject, observer } from 'mobx-react';
 import { ComponentType } from 'react';
 
-export default function injectMobxStore<
-  StoreKey extends string,
-  Props extends Record<StoreKey, unknown>,
->(
+export default function injectMobxStore<StoreKey extends string, Props extends Record<StoreKey, unknown>>(
   storeKeys: StoreKey | readonly StoreKey[],
   component: ComponentType<Props>,
 ): ComponentType<Omit<Props, StoreKey>> {

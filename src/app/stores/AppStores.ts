@@ -1,7 +1,6 @@
-import ApiErrorStore from '../../shared/errors/ApiErrorStore';
+import { ApiErrorStore, Role } from '../../shared';
 import { ScheduleStore } from '../../modules/schedule';
 import { SettingsStore } from '../../modules/settings';
-import { Role } from '../../shared/models/user_model';
 import { AuthStore } from '../../modules/auth';
 import { reaction } from 'mobx';
 

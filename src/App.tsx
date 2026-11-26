@@ -7,18 +7,16 @@ import AuthSessionHandler from './app/routes/AuthSessionHandler';
 import TelegramSettings from './pages/settings/TelegramSettings';
 import ProfileSettings from './pages/settings/ProfileSettings';
 import AdminLoginPage from './pages/admin/AdminLoginPage';
-import ErrorBoundary from './shared/errors/ErrorBoundary';
+import { ErrorBoundary, Role, theme, renderRouteFallback } from './shared';
 import NotFoundPage from './pages/notFound/NotFoundPage';
 import MapSettings from './pages/settings/MapSettings';
 import LandingPage from './pages/landing/LandingPage';
 import { ThemeProvider } from '@mui/material/styles';
 import PrivateRoute from './app/routes/PrivateRoute';
 import CssBaseline from '@mui/material/CssBaseline';
-import { Role } from './shared/models/user_model';
 import Schedule from './pages/schedule/Schedule';
 import Settings from './pages/settings/Settings';
 import PlansPage from './pages/plans/PlansPage';
-import theme from './shared/ui/theme/darkTheme';
 import Admin from './pages/admin/Admin';
 
 function App() {
@@ -35,15 +33,33 @@ function App() {
             <Route path="/plans" element={<PlansPage />} />
             <Route path="/admin/login" element={<AdminLoginPage />} />
 
-            <Route element={<PrivateRoute roles={[Role.User]} />}>
+            <Route
+              element={
+                <PrivateRoute
+                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User], location)}
+                />
+              }
+            >
               <Route path="/schedule" element={<Schedule />} />
             </Route>
 
-            <Route element={<PrivateRoute roles={[Role.Admin]} />}>
+            <Route
+              element={
+                <PrivateRoute
+                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)}
+                />
+              }
+            >
               <Route path="/admin" element={<Admin />} />
             </Route>
 
-            <Route element={<PrivateRoute roles={[Role.User, Role.Admin]} />}>
+            <Route
+              element={
+                <PrivateRoute
+                  fallback={(authStore, location) => renderRouteFallback(authStore, [Role.User, Role.Admin], location)}
+                />
+              }
+            >
               <Route path="/settings" element={<Settings />}>
                 <Route index element={<Navigate to={SettingId.Profile} replace />} />
 
@@ -53,7 +69,13 @@ function App() {
                 <Route path={SettingId.Telegram} element={<TelegramSettings />} />
                 <Route path={SettingId.Map} element={<MapSettings />} />
 
-                <Route element={<PrivateRoute roles={[Role.Admin]} />}>
+                <Route
+                  element={
+                    <PrivateRoute
+                      fallback={(authStore, location) => renderRouteFallback(authStore, [Role.Admin], location)}
+                    />
+                  }
+                >
                   <Route path={SettingId.AdminProfile} element={<ProfileSettings />} />
                   <Route path={SettingId.AdminManagePlans} element={<ManagePlansSettings />} />
                 </Route>

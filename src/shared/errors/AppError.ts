@@ -1,10 +1,5 @@
 export type AppErrorCode =
-  | 'NETWORK_ERROR'
-  | 'HTTP_ERROR'
-  | 'EMPTY_RESPONSE'
-  | 'INVALID_RESPONSE'
-  | 'INVALID_CREDENTIALS'
-  | 'USER_STATUS_ERROR';
+  'NETWORK_ERROR' | 'HTTP_ERROR' | 'EMPTY_RESPONSE' | 'INVALID_RESPONSE' | 'INVALID_CREDENTIALS' | 'USER_STATUS_ERROR';
 
 export class AppError extends Error {
   constructor(
@@ -39,9 +34,7 @@ export class HttpError extends AppError {
     super(
       `${method} ${path} failed with status ${status}${statusText ? ` ${statusText}` : ''}`,
       'HTTP_ERROR',
-      status >= 500
-        ? 'На сервере произошла ошибка. Попробуйте позже.'
-        : 'Не удалось выполнить запрос. Попробуйте ещё раз.',
+      status >= 500 ? 'На сервере произошла ошибка. Попробуйте позже.' : 'Не удалось выполнить запрос. Попробуйте ещё раз.',
     );
   }
 }

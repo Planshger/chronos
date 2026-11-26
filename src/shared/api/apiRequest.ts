@@ -1,9 +1,20 @@
-// prettier-ignore
 import { EmptyResponseError, HttpError, NetworkError, ResponseParseError } from '../errors/AppError';
 import { getToken } from './authToken';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const AUTH_ENDPOINTS = new Set(['/auth', '/register', '/auth_me']);
+
+type UnauthorizedHandler = (token: string) => void;
+
+let unauthorizedHandler: UnauthorizedHandler | null = null;
+
+export function registerUnauthorizedHandler(handler: UnauthorizedHandler): () => void {
+  unauthorizedHandler = handler;
+
+  return () => {
+    if (unauthorizedHandler === handler) unauthorizedHandler = null;
+  };
+}
 
 export async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers = new Headers(options.headers);
@@ -36,7 +47,7 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
 
   if (!response.ok) {
     if (response.status === 401 && token) {
-      window.dispatchEvent(new CustomEvent('auth:unauthorized', { detail: { token } }));
+      unauthorizedHandler?.(token);
     }
     throw new HttpError(method, path, response.status, response.statusText);
   }

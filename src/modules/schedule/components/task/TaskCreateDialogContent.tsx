@@ -1,8 +1,8 @@
 import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../../shared';
 import { Button, Stack, TextField, useTheme } from '@mui/material';
 import ScheduleStore from '../../stores/ScheduleStore';
-import { useState } from 'react';
+import { SubmitEventHandler, useState } from 'react';
 
 interface TaskCreateDialogContentProps {
   scheduleStore: ScheduleStore;
@@ -12,24 +12,31 @@ function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps
   const theme = useTheme();
   const [newTask, setNewTask] = useState<TaskItem>(initialTaskItem);
 
+  const setTypeTask = (type: TaskType) => {
+    setNewTask((prev) => ({ ...prev, type: type }));
+  };
+
+  const setTitleTask = (title: string) => {
+    setNewTask((prev) => ({ ...prev, title: title }));
+  };
+
+  const setDescriptionTask = (description: string) => {
+    setNewTask((prev) => ({ ...prev, description: description }));
+  };
+  const saveTask: SubmitEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    scheduleStore.handleSaveTask(newTask);
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        scheduleStore.handleSaveTask(newTask);
-      }}
-    >
+    <form onSubmit={saveTask}>
       <Stack spacing={3}>
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}
-        >
+        <Stack direction="row" spacing={1} sx={{ bgcolor: theme.palette.action.hover, p: 0.5, borderRadius: 3 }}>
           <Button
             type="button"
             fullWidth
             variant={newTask.type === TaskType.Task ? 'contained' : 'text'}
-            onClick={() => setNewTask((prev) => ({ ...prev, type: TaskType.Task }))}
+            onClick={() => setTypeTask(TaskType.Task)}
             sx={{ borderRadius: 2, textTransform: 'none' }}
           >
             Задача
@@ -39,7 +46,7 @@ function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps
             type="button"
             fullWidth
             variant={newTask.type === TaskType.Meeting ? 'contained' : 'text'}
-            onClick={() => setNewTask((prev) => ({ ...prev, type: TaskType.Meeting }))}
+            onClick={() => setTypeTask(TaskType.Meeting)}
             sx={{ borderRadius: 2, textTransform: 'none' }}
           >
             Встреча
@@ -49,7 +56,7 @@ function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps
         <TextField
           label={newTask.type === TaskType.Task ? 'Название задачи' : 'Тема встречи'}
           value={newTask.title}
-          onChange={(e) => setNewTask((prev) => ({ ...prev, title: e.target.value }))}
+          onChange={(e) => setTitleTask(e.target.value)}
           variant="outlined"
           required
         />
@@ -58,7 +65,7 @@ function TaskCreateDialogContent({ scheduleStore }: TaskCreateDialogContentProps
           label="Описание или заметки (необязательно)"
           rows={3}
           value={newTask.description}
-          onChange={(e) => setNewTask((prev) => ({ ...prev, description: e.target.value }))}
+          onChange={(e) => setDescriptionTask(e.target.value)}
           variant="outlined"
         />
 

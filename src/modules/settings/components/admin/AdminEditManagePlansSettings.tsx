@@ -1,14 +1,10 @@
-// prettier-ignore
-import { Box, Button, IconButton, Modal, Stack, Switch, TextField, Typography, useTheme } from '@mui/material';
+import { Box, Button, Modal, Stack, Switch, TextField, Typography, useTheme } from '@mui/material';
 import { deletePlans, getAllPlans, initialPlan, PlanModel } from '../../../plans';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
-import { withLoading } from '../../../../shared/utils/withLoading';
-import { useApiError } from '../../../../shared/errors/ApiError';
-import NumberField from '../../../../shared/ui/NumberField';
+import { injectMobxStore, withLoading, useApiError, NumberField, Loader } from '../../../../shared';
 import { useCallback, useEffect, useState } from 'react';
 import SettingsStore from '../../stores/SettingsStore';
-import Loader from '../../../../shared/ui/Loader';
 import { Close } from '@mui/icons-material';
+import { AdminPlanModalContent, AdminPlanModalCloseButton } from './style/AdminEditManagePlansSettings.style';
 
 interface AdminEditManagePlansSettingsProps {
   settingsStore: SettingsStore;
@@ -114,6 +110,8 @@ function AdminEditManagePlansSettings({
     [settingsStore, setPlans, onClose, showError],
   );
 
+  const handleDeleteEditedPlan = useCallback(() => handleDeletePlan(editedPlan.id ?? 0), [handleDeletePlan, editedPlan.id]);
+
   const handleSave = useCallback(async () => {
     const planToSend: PlanModel = {
       ...editedPlan,
@@ -155,39 +153,11 @@ function AdminEditManagePlansSettings({
   }, [plan]);
 
   return (
-    <Modal
-      open={open}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        onClose();
-      }}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: 'min(640px, calc(100vw - 32px))',
-          maxHeight: 'calc(100dvh - 32px)',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          bgcolor: 'background.paper',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: 24,
-          borderRadius: '20px',
-          p: { xs: 3, sm: 5 },
-        }}
-      >
-        <IconButton
-          aria-label="close"
-          onClick={() => onClose()}
-          sx={{ position: 'absolute', top: 8, right: 8, color: (theme) => theme.palette.grey[500] }}
-        >
+    <Modal open={open} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+      <AdminPlanModalContent>
+        <AdminPlanModalCloseButton aria-label="close" onClick={onClose}>
           <Close />
-        </IconButton>
+        </AdminPlanModalCloseButton>
 
         <Typography variant="h6" align="center" sx={{ mt: 2, mb: 2 }}>
           {isCreate ? 'Создать тарифный план' : 'Редактировать тарифный план'}{' '}
@@ -254,11 +224,7 @@ function AdminEditManagePlansSettings({
                 Пробный
               </Typography>
 
-              <Switch
-                checked={editedPlan.trial ?? false}
-                onChange={handleTrialChange}
-                color="secondary"
-              />
+              <Switch checked={editedPlan.trial ?? false} onChange={handleTrialChange} color="secondary" />
             </Stack>
 
             <Stack direction="row">
@@ -266,11 +232,7 @@ function AdminEditManagePlansSettings({
                 Популярный
               </Typography>
 
-              <Switch
-                checked={editedPlan.popular ?? false}
-                onChange={handlePopularChange}
-                color="secondary"
-              />
+              <Switch checked={editedPlan.popular ?? false} onChange={handlePopularChange} color="secondary" />
             </Stack>
 
             <Stack direction="row">
@@ -278,18 +240,14 @@ function AdminEditManagePlansSettings({
                 Активный
               </Typography>
 
-              <Switch
-                checked={editedPlan.active ?? false}
-                onChange={handleActiveChange}
-                color="secondary"
-              />
+              <Switch checked={editedPlan.active ?? false} onChange={handleActiveChange} color="secondary" />
             </Stack>
 
             {!isCreate && (
               <Button
                 variant="text"
                 color="error"
-                onClick={() => handleDeletePlan(editedPlan.id ?? 0)}
+                onClick={handleDeleteEditedPlan}
                 sx={{ alignSelf: { xs: 'flex-start', sm: 'center' }, ml: { sm: 'auto' } }}
               >
                 Удалить
@@ -298,17 +256,8 @@ function AdminEditManagePlansSettings({
           </Stack>
         </Stack>
 
-        <Stack
-          direction={{ xs: 'column-reverse', sm: 'row' }}
-          spacing={2}
-          sx={{ mt: 3, justifyContent: 'center' }}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSave}
-            sx={{ color: theme.palette.text.primary }}
-          >
+        <Stack direction={{ xs: 'column-reverse', sm: 'row' }} spacing={2} sx={{ mt: 3, justifyContent: 'center' }}>
+          <Button variant="contained" color="primary" onClick={handleSave} sx={{ color: theme.palette.text.primary }}>
             {isCreate ? 'Создать' : 'Сохранить'}
           </Button>
 
@@ -318,7 +267,7 @@ function AdminEditManagePlansSettings({
         </Stack>
 
         {settingsStore.loading && <Loader size={80} />}
-      </Box>
+      </AdminPlanModalContent>
     </Modal>
   );
 }

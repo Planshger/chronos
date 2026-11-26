@@ -1,7 +1,6 @@
 import { AppStores, createStores, initializeStores } from './app/stores/AppStores';
 import { QueryClientProvider } from '@tanstack/react-query';
-import ApiErrorSnackbar from './shared/errors/ApiError';
-import { queryClient } from './shared/queryClient';
+import { ApiErrorSnackbar, queryClient } from './shared';
 import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'mobx-react';

@@ -1,10 +1,8 @@
 import { initialTaskModel, Task, TaskItem, TaskModel } from '../models/task_model';
-import { apiRequest } from '../../../shared/api/apiRequest';
+import { apiRequest } from '../../../shared';
 
 export function emptyDays(tasks: Task): Task {
-  return Object.fromEntries(
-    Object.entries(tasks).filter(([, list]) => Array.isArray(list) && list.length > 0),
-  );
+  return Object.fromEntries(Object.entries(tasks).filter(([, list]) => Array.isArray(list) && list.length > 0));
 }
 
 export async function getUserTasksByUserId(userId: number): Promise<TaskModel> {
@@ -13,12 +11,7 @@ export async function getUserTasksByUserId(userId: number): Promise<TaskModel> {
   return data[0] ?? { ...initialTaskModel, userId };
 }
 
-export async function addTask(
-  dateKey: string,
-  newTask: TaskItem,
-  taskData: TaskModel,
-  userId: number,
-): Promise<TaskModel> {
+export async function addTask(dateKey: string, newTask: TaskItem, taskData: TaskModel, userId: number): Promise<TaskModel> {
   const hasTaskData = taskData?.id && taskData.id !== 0;
 
   if (hasTaskData) {
@@ -35,11 +28,7 @@ export async function addTask(
   });
 }
 
-export async function editTask(
-  dateKey: string,
-  newTask: TaskItem,
-  taskData: TaskModel,
-): Promise<TaskModel> {
+export async function editTask(dateKey: string, newTask: TaskItem, taskData: TaskModel): Promise<TaskModel> {
   const dayTasks = taskData.tasks?.[dateKey] ?? [];
   const mergedTasks: Task = {
     ...taskData.tasks,

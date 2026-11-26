@@ -1,11 +1,11 @@
-// prettier-ignore
 import { Box, Chip, Divider, ListItemIcon, ListItemText, Menu, MenuItem, Typography, useTheme } from '@mui/material';
-import injectMobxStore from '../../../shared/utils/injectMobxStore';
+import { injectMobxStore } from '../../../shared';
 import { SettingId } from '../../settings/models/settings_model';
 import { SettingIcons, SettingsData } from '../../settings';
 import { Logout, TouchApp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { AuthStore } from '../../auth';
+import { useCallback } from 'react';
 
 interface ScheduleMenuUserProps {
   openMenu: null | HTMLElement;
@@ -18,20 +18,31 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
   const navigate = useNavigate();
   const { user, logout } = authStore;
 
-  function onClick(id: SettingId) {
-    if (id === SettingId.Telegram || id === SettingId.WhatsApp) {
-      navigate(`/settings/${id}`, { state: { open: true } });
-    } else {
-      navigate(`/settings/${id}`);
-    }
-  }
+  const onClick = useCallback(
+    (id: SettingId) => {
+      if (id === SettingId.Telegram || id === SettingId.WhatsApp) {
+        navigate(`/settings/${id}`, { state: { open: true } });
+      } else {
+        navigate(`/settings/${id}`);
+      }
+    },
+    [navigate],
+  );
+
+  const handleSettingClick = useCallback(
+    (id: SettingId) => {
+      onClick(id === SettingId.Messengers ? SettingId.Telegram : id);
+      closeUserMenu();
+    },
+    [closeUserMenu, onClick],
+  );
 
   return (
     <Menu
       id="menu-appbar"
       anchorEl={openMenu}
       open={Boolean(openMenu)}
-      onClose={() => closeUserMenu()}
+      onClose={closeUserMenu}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       transformOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
@@ -44,14 +55,7 @@ function ScheduleMenuUser({ openMenu, closeUserMenu, authStore }: ScheduleMenuUs
       {SettingsData.map((item) => {
         const Icon = SettingIcons.get(item.id) ?? TouchApp;
         return (
-          <MenuItem
-            key={item.id}
-            sx={{ py: 1 }}
-            onClick={() => {
-              onClick(item.id === SettingId.Messengers ? SettingId.Telegram : item.id);
-              closeUserMenu();
-            }}
-          >
+          <MenuItem key={item.id} sx={{ py: 1 }} onClick={() => handleSettingClick(item.id)}>
             <ListItemIcon sx={{ minWidth: 36 }}>
               <Icon fontSize="small" sx={{ color: theme.palette.text.primary }} />
             </ListItemIcon>

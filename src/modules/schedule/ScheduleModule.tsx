@@ -1,12 +1,11 @@
 import { Box, Container, Dialog, Stack, useMediaQuery, useTheme } from '@mui/material';
-import injectMobxStore from '../../shared/utils/injectMobxStore';
+import { injectMobxStore, Loader } from '../../shared';
 import ScheduleAppBar from './components/ScheduleAppBar';
 import OptionsDialog from './components/OptionsDialog';
 import ScheduleStore from './stores/ScheduleStore';
 import Scheduling from './components/Scheduling';
 import Calendar from './components/Calendar';
 import AiDialog from './components/AiDialog';
-import Loader from '../../shared/ui/Loader';
 import { useState } from 'react';
 
 interface ScheduleProps {
@@ -18,16 +17,16 @@ function Schedule({ scheduleStore }: ScheduleProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const handleCloseScheduling = () => {
+    scheduleStore.closeScheduling();
+  };
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: theme.palette.background.paper }}>
       <ScheduleAppBar isAiOpen={isAiOpen} setIsAiOpen={setIsAiOpen} />
 
       <Container maxWidth={false} sx={{ py: { xs: 2, md: 3 }, px: { xs: 1.5, sm: 3 } }}>
-        <Stack
-          spacing={{ xs: 2, md: 3 }}
-          direction={{ xs: 'column', md: 'row' }}
-          sx={{ alignItems: 'stretch', minWidth: 0 }}
-        >
+        <Stack spacing={{ xs: 2, md: 3 }} direction={{ xs: 'column', md: 'row' }} sx={{ alignItems: 'stretch', minWidth: 0 }}>
           <Calendar />
           {!isMobile && <Scheduling />}
         </Stack>
@@ -36,7 +35,7 @@ function Schedule({ scheduleStore }: ScheduleProps) {
       {isMobile && (
         <Dialog
           open={scheduleStore.isSchedulingOpen}
-          onClose={scheduleStore.closeScheduling}
+          onClose={handleCloseScheduling}
           fullWidth
           maxWidth="sm"
           slotProps={{

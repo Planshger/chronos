@@ -1,11 +1,10 @@
-import injectMobxStore from '../../../../../shared/utils/injectMobxStore';
-import { useApiError } from '../../../../../shared/errors/ApiError';
+import { injectMobxStore, useApiError, Loader } from '../../../../../shared';
 import { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { authMe, AuthStore } from '../../../../auth';
-import Loader from '../../../../../shared/ui/Loader';
 import PageWithChat from './PageWithChat';
 import PageWithQR from './PageWithQR';
+import { TelegramStatusError } from './TelegramSettings.style';
 
 interface TelegramSettingsProps {
   authStore: AuthStore;
@@ -52,12 +51,12 @@ function TelegramSettings({ authStore }: TelegramSettingsProps) {
 
   if (loadFailed) {
     return (
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, p: 4 }}>
+      <TelegramStatusError>
         <Typography>Не удалось загрузить статус Telegram. Попробуйте ещё раз.</Typography>
-        <Button variant="contained" onClick={() => loadTelegramStatus()}>
+        <Button variant="contained" onClick={loadTelegramStatus}>
           Повторить
         </Button>
-      </Box>
+      </TelegramStatusError>
     );
   }
 

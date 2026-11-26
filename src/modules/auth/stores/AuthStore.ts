@@ -1,6 +1,4 @@
-import UserModel, { initialUser, UserStatus } from '../../../shared/models/user_model';
-import { getToken, setTokenInStorage } from '../../../shared/api/authToken';
-import { BlockedUserError } from '../../../shared/errors/AppError';
+import { UserModel, initialUser, Role, UserStatus, getToken, setTokenInStorage, BlockedUserError } from '../../../shared';
 import { authMe } from '../datasources/authorization_data_source';
 import { makeAutoObservable, runInAction } from 'mobx';
 
@@ -14,11 +12,7 @@ export default class AuthStore {
   private requestId = 0;
 
   constructor(private readonly showError: ShowError) {
-    makeAutoObservable<AuthStore, 'showError' | 'requestId'>(
-      this,
-      { showError: false, requestId: false },
-      { autoBind: true },
-    );
+    makeAutoObservable<AuthStore, 'showError' | 'requestId'>(this, { showError: false, requestId: false }, { autoBind: true });
   }
 
   setUser(user: UserModel): void {
@@ -27,12 +21,25 @@ export default class AuthStore {
     this.user = user;
   }
 
-  logout(): void {
-    this.requestId += 1;
+  private resetSession(isAuthChecked: boolean): number {
+    ++this.requestId;
     this.token = '';
     this.user = initialUser;
-    this.isAuthChecked = true;
+    this.isAuthChecked = isAuthChecked;
+    return this.requestId;
+  }
+
+  logout(): void {
+    this.resetSession(true);
     setTokenInStorage(null);
+  }
+
+  handleUnauthorized(token: string): Role | null {
+    if (token !== this.token) return null;
+
+    const role = this.user.role;
+    this.logout();
+    return role;
   }
 
   async authenticate(token = this.token, userData?: UserModel): Promise<void> {
@@ -41,14 +48,10 @@ export default class AuthStore {
       return;
     }
 
-    const requestId = ++this.requestId;
-    this.token = '';
-    this.user = initialUser;
-    this.isAuthChecked = false;
-    setTokenInStorage(null);
+    const requestId = this.resetSession(false);
 
     try {
-      const user = userData ? userData : await authMe(token);
+      const user = userData ?? (await authMe(token));
       if (requestId !== this.requestId) return;
 
       if (!user) {
@@ -57,12 +60,11 @@ export default class AuthStore {
       }
 
       if (user.status === UserStatus.Blocked) {
-        this.showError(new BlockedUserError());
-        this.logout();
-        return;
+        throw new BlockedUserError();
       }
 
       setTokenInStorage(token);
+
       runInAction(() => {
         this.token = token;
         this.user = user;

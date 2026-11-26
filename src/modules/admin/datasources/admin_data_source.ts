@@ -1,17 +1,14 @@
-import { FilterValuesProps } from '../components/table/AdminTableFilterMenu';
 import { PaginationModel } from '../models/user_pagination_model';
-import { apiRequest } from '../../../shared/api/apiRequest';
-import UserModel from '../../../shared/models/user_model';
-import { queryClient } from '../../../shared/queryClient';
+import { apiRequest, UserModel, queryClient } from '../../../shared';
+import { FilterValuesProps } from '../components/table/menu/AdminTableFilterMenu';
+import { SortOrder } from '../models/sort_model';
+import type { SortField } from '../models/sort_model';
 
 export function getAllUsers(): Promise<UserModel[]> {
   return apiRequest<UserModel[]>('/users');
 }
 
-export async function getUsersWithPagination(
-  page: number,
-  limit: number,
-): Promise<PaginationModel> {
+export async function getUsersWithPagination(page: number, limit: number): Promise<PaginationModel> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   return queryClient.query({
     queryKey: ['usersPag', params],
@@ -19,13 +16,8 @@ export async function getUsersWithPagination(
   });
 }
 
-export async function getSortBy(
-  sortBy: string,
-  page: number,
-  limit: number,
-  order?: 'asc' | 'desc',
-): Promise<PaginationModel> {
-  const sortParam = order === 'desc' ? `-${sortBy}` : sortBy;
+export async function getSortBy(sortBy: SortField, page: number, limit: number, order?: SortOrder): Promise<PaginationModel> {
+  const sortParam = order === SortOrder.Desc ? `-${sortBy}` : sortBy;
   const params = new URLSearchParams({
     page: String(page),
     limit: String(limit),
@@ -34,11 +26,7 @@ export async function getSortBy(
   return apiRequest<PaginationModel>(`/users?${params.toString()}`);
 }
 
-export function getFilterData(
-  page: number,
-  limit: number,
-  filterValues: FilterValuesProps[],
-): Promise<PaginationModel> {
+export function getFilterData(page: number, limit: number, filterValues: FilterValuesProps[]): Promise<PaginationModel> {
   const params = new URLSearchParams({ page: String(page), limit: String(limit) });
   filterValues.forEach((item) => {
     if (item.value !== '') {
@@ -49,7 +37,5 @@ export function getFilterData(
 }
 
 export async function deleteUserData(idsToDelete: number[]) {
-  await Promise.all(
-    idsToDelete.map((id) => apiRequest<void>(`/users/${id}`, { method: 'DELETE' })),
-  );
+  await Promise.all(idsToDelete.map((id) => apiRequest<void>(`/users/${id}`, { method: 'DELETE' })));
 }

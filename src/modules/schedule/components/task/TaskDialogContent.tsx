@@ -1,14 +1,14 @@
 // prettier-ignore
-import { Box, Button, Checkbox, Chip, Dialog, DialogContent, DialogTitle, FormControlLabel, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Button, Checkbox, Chip, Dialog, DialogContent, FormControlLabel, IconButton, Paper, Stack, Typography, useTheme } from '@mui/material';
 import { initialTaskItem, TaskItem, TaskType } from '../../models/task_model';
 import { Add, Close, Delete, Edit, ExpandMore } from '@mui/icons-material';
-import injectMobxStore from '../../../../shared/utils/injectMobxStore';
+import { injectMobxStore, Loader } from '../../../../shared';
 import TaskCreateDialogContent from './TaskCreateDialogContent';
 import TaskEditDialogContent from './TaskEditDialogContent';
 import { ScheduleModal } from '../../stores/ScheduleStore';
 import ScheduleStore from '../../stores/ScheduleStore';
-import Loader from '../../../../shared/ui/Loader';
 import { useEffect, useState } from 'react';
+import { TaskDialogTitle } from './TaskDialogContent.style';
 
 interface TaskDialogContentProps {
   dayTasks: TaskItem[];
@@ -33,81 +33,68 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
     setSelectedIds((prev) => (checked ? [...prev, id] : prev.filter((x) => x !== id)));
   };
 
+  const changeActiveModal = (modal: ScheduleModal) => {
+    scheduleStore.setActiveModal(modal);
+  };
+
+  const setEditModal = (taskId: string) => {
+    changeActiveModal(ScheduleModal.TaskEdit);
+    setEditedTask(taskId);
+  };
+
+  const closeModal = () => {
+    scheduleStore.setActiveModal(null);
+  };
+
+  const deleteTaskButton = () => {
+    scheduleStore.onDeleteTasks(selectedIds);
+    setSelectedIds([]);
+
+    if (selectedIds.length === dayTasks.length) {
+      closeModal();
+    }
+  };
+
   useEffect(() => {
     setSelectedIds([]);
     setExpandedTaskId(undefined);
   }, [activeModal]);
 
   return (
-    <Dialog
-      open={activeModal !== null}
-      onClose={(reason) => {
-        if (reason !== 'backdropClick') return;
-        scheduleStore.setActiveModal(null);
-      }}
-      maxWidth="sm"
-      fullWidth
-    >
-      <DialogTitle
-        sx={{
-          borderBottom: `1px solid ${theme.custom.border.light}`,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        {activeModal === ScheduleModal.TaskCreate
-          ? 'Новое событие'
-          : activeModal === ScheduleModal.TasksList
-            ? 'События дня'
-            : activeModal === ScheduleModal.TaskEdit
-              ? 'Редактирование'
-              : ''}
+    <Dialog open={activeModal !== null} maxWidth="sm" fullWidth>
+      <TaskDialogTitle>
+        {activeModal === ScheduleModal.TaskCreate && 'Новое событие'}
+
+        {activeModal === ScheduleModal.TasksList && 'События дня'}
+
+        {activeModal === ScheduleModal.TaskEdit && 'Редактирование'}
 
         <Stack direction="row" spacing={1}>
           {activeModal === ScheduleModal.TasksList && selectedIds.length > 0 && (
-            <Button
-              size="small"
-              color="error"
-              startIcon={<Delete fontSize="small" />}
-              onClick={() => {
-                scheduleStore.onDeleteTasks(selectedIds);
-                setSelectedIds([]);
-              }}
-            >
+            <Button size="small" color="error" startIcon={<Delete fontSize="small" />} onClick={deleteTaskButton}>
               Удалить ({selectedIds.length})
             </Button>
           )}
 
           {activeModal === ScheduleModal.TasksList && (
-            <IconButton
-              size="small"
-              onClick={() => scheduleStore.setActiveModal(ScheduleModal.TaskCreate)}
-            >
+            <IconButton size="small" onClick={() => changeActiveModal(ScheduleModal.TaskCreate)}>
               <Add fontSize="small" color="primary" />
             </IconButton>
           )}
 
-          <IconButton size="small" onClick={() => scheduleStore.setActiveModal(null)}>
+          <IconButton size="small" onClick={closeModal}>
             <Close fontSize="small" sx={{ color: 'grey.500' }} />
           </IconButton>
         </Stack>
-      </DialogTitle>
+      </TaskDialogTitle>
 
       <DialogContent dividers sx={{ py: 3 }}>
-        {activeModal === ScheduleModal.TasksList ? (
+        {activeModal === ScheduleModal.TasksList && (
           <Stack spacing={2}>
             {dayTasks.length > 0 && (
               <FormControlLabel
                 label={allSelected || someSelected ? 'Снять выделение' : 'Выбрать все'}
-                control={
-                  <Checkbox
-                    size="small"
-                    checked={allSelected}
-                    indeterminate={someSelected}
-                    onChange={() => toggleAll()}
-                  />
-                }
+                control={<Checkbox size="small" checked={allSelected} indeterminate={someSelected} onChange={toggleAll} />}
               />
             )}
 
@@ -143,19 +130,13 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
                   <IconButton
                     className="edit-button"
                     size="small"
-                    onClick={(e) => {
-                      scheduleStore.setActiveModal(ScheduleModal.TaskEdit);
-                      setEditedTask(task.id);
-                    }}
+                    onClick={() => setEditModal(task.id)}
                     sx={{ position: 'absolute', right: 50 }}
                   >
                     <Edit fontSize="small" sx={{ color: theme.palette.text.primary }} />
                   </IconButton>
 
-                  <IconButton
-                    size="small"
-                    onClick={() => setExpandedTaskId(expandedTaskId === task.id ? '' : task.id)}
-                  >
+                  <IconButton size="small" onClick={() => setExpandedTaskId(expandedTaskId === task.id ? '' : task.id)}>
                     <ExpandMore
                       sx={{
                         transition: 'transform 0.2s',
@@ -178,13 +159,13 @@ function TaskDialogContent({ dayTasks, scheduleStore }: TaskDialogContentProps) 
               </Paper>
             ))}
           </Stack>
-        ) : activeModal === ScheduleModal.TaskCreate ? (
-          <TaskCreateDialogContent />
-        ) : activeModal === ScheduleModal.TaskEdit ? (
-          <TaskEditDialogContent
-            task={dayTasks.find((i) => i.id === editedTask) ?? initialTaskItem}
-          />
-        ) : null}
+        )}
+
+        {activeModal === ScheduleModal.TaskCreate && <TaskCreateDialogContent />}
+
+        {activeModal === ScheduleModal.TaskEdit && (
+          <TaskEditDialogContent task={dayTasks.find((i) => i.id === editedTask) ?? initialTaskItem} />
+        )}
 
         {scheduleStore.loading && <Loader size={80} />}
       </DialogContent>
